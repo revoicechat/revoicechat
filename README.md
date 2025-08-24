@@ -2,7 +2,7 @@
 
 You can use one host per server or one host for everything. 
 
-Keep in mind that ```ReVoiceChat-MediaServer``` can get quite big is you store a lot of files.
+Keep in mind that ```ReVoiceChat-MediaServer``` can get quite big if you store a lot of files.
 
 # Install services
 
