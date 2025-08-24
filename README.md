@@ -18,13 +18,15 @@ We recommend using [Nginx Proxy Manager](https://nginxproxymanager.com/).
 
 ## Routes
 
+Assuming you are using `app.yourdomain.me` for the frontend and `core.yourdomain.me` for the backend, here is the table of routes : 
+
 Destination | IP | Port
 ---|---|---
 app.yourdomain.me/* | IP of WebClient | 80
 core.yourdomain.me/* | IP of CoreServer | 8080
 core.yourdomain.me/sse | IP of CoreServer | 8080
 core.yourdomain.me/signal | IP of CoreServer | 8080
-core.yourdomain.me/stun | IP of Stun | 3478
+core.yourdomain.me/stun | IP of CoreServer | 3478
 core.yourdomain.me/media | IP of MediaServer | 88
 
 ## Configuring Nginx Proxy Manager
