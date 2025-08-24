@@ -37,7 +37,7 @@ Add a new proxy host with the following :
 #### Details
 - Domain names : `app.yourdomain.me`
 - Scheme : `http`
-- Forward Hostname / IP : `Your IP`
+- Forward Hostname / IP : `IP of WebClient`
 - Forward Port : `80`
 
 #### Custom locations
