@@ -4,7 +4,7 @@ You can use one host per server or one host for everything.
 
 Keep in mind that ```ReVoiceChat-MediaServer``` can get quite big is you store a lot of files.
 
-# Install
+# Install services
 
 [How to install ReVoiceChat-CoreServer](https://github.com/revoicechat/ReVoiceChat-CoreServer/blob/main/README.md)
 
