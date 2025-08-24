@@ -18,7 +18,14 @@ We recommend using [Nginx Proxy Manager](https://nginxproxymanager.com/).
 
 ## Routes
 
-
+Destination | IP | Port
+---|---|---
+app.yourdomain.me/* | IP of WebClient | 80
+core.yourdomain.me/* | IP of CoreServer | 8080
+core.yourdomain.me/sse | IP of CoreServer | 8080
+core.yourdomain.me/signal | IP of CoreServer | 8080
+core.yourdomain.me/stun | IP of Stun | 3478
+core.yourdomain.me/media | IP of MediaServer | 88
 
 ## Configuring Nginx Proxy Manager
 
@@ -71,7 +78,7 @@ Add a new proxy host with the following :
 
 - Location : `/signal`
 - Scheme : `http`
-- Forware Hostname/IP : `IP of CoreServer`
+- Forware Hostname/IP : `IP of StunServer` (Should be the same as CoreServer)
 - Forward Port : `3478` (default for coturn)
 
 #### Custom location `/media`
