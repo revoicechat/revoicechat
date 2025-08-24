@@ -60,7 +60,7 @@ Add a new proxy host with the following :
 - Forward Port : `8080`
 - Advance (click on the cog) : `proxy_read_timeout 4h;`
 
-#### Custom location /signal
+#### Custom location `/signal`
 - Location : `/signal`
 - Scheme : `http`
 - Forware Hostname/IP : `IP of CoreServer`
