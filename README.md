@@ -88,7 +88,7 @@ Add a new proxy host with the following :
 - Location : `/signal`
 - Scheme : `http`
 - Forware Hostname/IP : `IP of MediaServer`
-- Forward Port : `88` (default for coturn)
+- Forward Port : `88` (default for the VirtualHost)
 
 ### SSL
 - You may want to add SSL, if so, enable `Force SSL` and `HTTP/2 Support`
