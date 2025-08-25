@@ -18,16 +18,16 @@ We recommend using [Nginx Proxy Manager](https://nginxproxymanager.com/).
 
 ## Routes
 
-Assuming you are using `app.yourdomain.me` for the frontend and `core.yourdomain.me` for the backend, here is the table of routes : 
+Assuming you are using `client.yourdomain.me` for the frontend and `server.yourdomain.me` for the backend, here is the table of routes : 
 
 Destination | IP | Port
 ---|---|---
-app.yourdomain.me/* | IP of WebClient | 80
-core.yourdomain.me/* | IP of CoreServer | 8080
-core.yourdomain.me/sse | IP of CoreServer | 8080
-core.yourdomain.me/signal | IP of CoreServer | 8080
-core.yourdomain.me/stun | IP of CoreServer | 3478
-core.yourdomain.me/media | IP of MediaServer | 88
+client.yourdomain.me/* | IP of WebClient | 80
+server.yourdomain.me/* | IP of CoreServer | 8080
+server.yourdomain.me/sse | IP of CoreServer | 8080
+server.yourdomain.me/signal | IP of CoreServer | 8080
+server.yourdomain.me/stun | IP of CoreServer | 3478
+server.yourdomain.me/media | IP of MediaServer | 88
 
 ## Configuring Nginx Proxy Manager
 
@@ -35,7 +35,7 @@ core.yourdomain.me/media | IP of MediaServer | 88
 Add a new proxy host with the following :
 
 #### Details
-- Domain names : `app.yourdomain.me`
+- Domain names : `client.yourdomain.me`
 - Scheme : `http`
 - Forward Hostname / IP : `IP of WebClient`
 - Forward Port : `80`
@@ -54,7 +54,7 @@ Add a new proxy host with the following :
 Add a new proxy host with the following :
 
 #### Details
-- Domain names : `core.yourdomain.me`
+- Domain names : `server.yourdomain.me`
 - Scheme : `http`
 - Forward Hostname / IP : `IP of CoreServer`
 - Forward Port : `8080`
