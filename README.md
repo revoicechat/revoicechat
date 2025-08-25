@@ -12,6 +12,8 @@ Keep in mind that ```ReVoiceChat-MediaServer``` can get quite big if you store a
 
 [How to install ReVoiceChat-WebClient](https://github.com/revoicechat/ReVoiceChat-WebClient/blob/main/INSTALL.md)
 
+[How to install voice services](voice.md)
+
 # Configure reverse proxy
 
 We recommend using [Nginx Proxy Manager](https://nginxproxymanager.com/).
