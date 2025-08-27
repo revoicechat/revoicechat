@@ -26,8 +26,7 @@ Destination | IP | Port
 ---|---|---
 client.yourdomain.me/* | IP of WebClient | 80
 server.yourdomain.me/* | IP of CoreServer | 8080
-server.yourdomain.me/sse | IP of CoreServer | 8080
-server.yourdomain.me/signal | IP of CoreServer | 8080
+server.yourdomain.me/api | IP of CoreServer | 8080
 server.yourdomain.me/stun | IP of CoreServer | 3478
 server.yourdomain.me/media | IP of MediaServer | 88
 
@@ -64,30 +63,31 @@ Add a new proxy host with the following :
 
 #### Custom locations
 
-#### Custom location `/sse`
-- Location : `/sse`
+#### Custom location `/api`
+- Location : `/api`
 - Scheme : `http`
 - Forware Hostname/IP : `IP of CoreServer`
 - Forward Port : `8080`
-- Advance (click on the cog) : `proxy_read_timeout 4h;`
+- Advance (click on the cog) : 
+```nginx
+add_header 'Access-Control-Allow-Origin' '*';
+add_header 'Access-Control-Allow-Credentials' 'true';
+add_header 'Access-Control-Allow-Headers' 'Authorization,Accept,Origin,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
+add_header 'Access-Control-Allow-Methods' 'GET,POST,OPTIONS,PUT,DELETE,PATCH';
 
-#### Custom location `/signal`
-- Location : `/signal`
-- Scheme : `http`
-- Forware Hostname/IP : `IP of CoreServer`
-- Forward Port : `8080`
-- Advance (click on the cog) : `proxy_read_timeout 4h;`
+proxy_read_timeout 8h;
+```
 
 #### Custom location `/stun`
 
-- Location : `/signal`
+- Location : `/stun`
 - Scheme : `http`
 - Forware Hostname/IP : `IP of StunServer` (Should be the same as CoreServer)
 - Forward Port : `3478` (default for coturn)
 
 #### Custom location `/media`
 
-- Location : `/signal`
+- Location : `/media`
 - Scheme : `http`
 - Forware Hostname/IP : `IP of MediaServer`
 - Forward Port : `88` (default for the VirtualHost)
