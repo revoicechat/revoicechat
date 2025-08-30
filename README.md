@@ -70,6 +70,11 @@ Add a new proxy host with the following :
 - Forward Port : `8080`
 - Advance (click on the cog) : 
 ```nginx
+proxy_hide_header 'Access-Control-Allow-Origin';
+proxy_hide_header 'Access-Control-Allow-Credentials';
+proxy_hide_header 'Access-Control-Allow-Headers';
+proxy_hide_header 'Access-Control-Allow-Methods';
+
 add_header 'Access-Control-Allow-Origin' '*';
 add_header 'Access-Control-Allow-Credentials' 'true';
 add_header 'Access-Control-Allow-Headers' 'Authorization,Accept,Origin,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
