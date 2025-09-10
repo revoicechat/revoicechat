@@ -1,4 +1,4 @@
-# Install and configure Voice (VoIP)
+# Install and configure Voice (WebRTC)
 
 ## Prerequisite
 The following ports need to be open and forwarded to your server :

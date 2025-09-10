@@ -12,7 +12,6 @@ Keep in mind that ```ReVoiceChat-MediaServer``` can get quite big if you store a
 
 [How to install ReVoiceChat-WebClient](https://github.com/revoicechat/ReVoiceChat-WebClient/blob/main/INSTALL.md)
 
-[How to install voice services](voice.md)
 
 # Configure reverse proxy
 
@@ -20,50 +19,27 @@ We recommend using [Nginx Proxy Manager](https://nginxproxymanager.com/).
 
 ## Routes
 
-Assuming you are using `client.yourdomain.me` for the frontend and `server.yourdomain.me` for the backend, here is the table of routes : 
+Assuming you are using `revoicechat.yourdomain.me` , here is the table of routes : 
 
 Destination | IP | Port
 ---|---|---
-client.yourdomain.me/* | IP of WebClient | 80
-server.yourdomain.me/* | IP of CoreServer | 8080
-server.yourdomain.me/api | IP of CoreServer | 8080
-server.yourdomain.me/stun | IP of CoreServer | 3478
-server.yourdomain.me/media | IP of MediaServer | 88
+revoicechat.yourdomain.me/* | IP of WebClient | 80
+revoicechat.yourdomain.me/api | IP of CoreServer | 8080
+revoicechat.yourdomain.me/media | IP of MediaServer | 88
 
 ## Configuring Nginx Proxy Manager
 
-### WebClient
 Add a new proxy host with the following :
 
-#### Details
+### Details
 - Domain names : `client.yourdomain.me`
 - Scheme : `http`
 - Forward Hostname / IP : `IP of WebClient`
 - Forward Port : `80`
-
-#### Custom locations
-- None
-
-#### SSL
-- You may want to add SSL, if so, enable `Force SSL` and `HTTP/2 Support`
-
-#### Advanced
-- None
-
-### Core and Media
-
-Add a new proxy host with the following :
-
-#### Details
-- Domain names : `server.yourdomain.me`
-- Scheme : `http`
-- Forward Hostname / IP : `IP of CoreServer`
-- Forward Port : `8080`
 - Websockets support : `enable`
 
-#### Custom locations
-
-#### Custom location `/api`
+### Custom locations
+#### `/api`
 - Location : `/api`
 - Scheme : `http`
 - Forware Hostname/IP : `IP of CoreServer`
@@ -83,22 +59,17 @@ add_header 'Access-Control-Allow-Methods' 'GET,POST,OPTIONS,PUT,DELETE,PATCH';
 proxy_read_timeout 8h;
 ```
 
-#### Custom location `/stun`
-
-- Location : `/stun`
-- Scheme : `http`
-- Forware Hostname/IP : `IP of StunServer` (Should be the same as CoreServer)
-- Forward Port : `3478` (default for coturn)
-
-#### Custom location `/media`
+#### `/media`
 
 - Location : `/media`
 - Scheme : `http`
 - Forware Hostname/IP : `IP of MediaServer`
 - Forward Port : `88` (default for the VirtualHost)
 
+
 ### SSL
 - You may want to add SSL, if so, enable `Force SSL` and `HTTP/2 Support`
 
 ### Advanced
+
 - None
