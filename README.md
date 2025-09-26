@@ -65,7 +65,11 @@ proxy_read_timeout 8h;
 - Scheme : `http`
 - Forware Hostname/IP : `IP of MediaServer`
 - Forward Port : `88` (default for the VirtualHost)
-
+- Advance :
+```nginx
+proxy_set_header  Authorization $http_authorization;
+proxy_pass_header Authorization;
+```
 
 ### SSL
 - You may want to add SSL, if so, enable `Force SSL` and `HTTP/2 Support`
