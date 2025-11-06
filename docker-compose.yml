@@ -1,7 +1,7 @@
 version: '3.8'
 
 include:
-#  - path: ./CoreServer/docker-compose.yml
-#  - path: ./MediaServer/docker-compose.yml
-#  - path: ./WebClient/docker-compose.yml
+  - path: ./CoreServer/docker-compose.yml
+  - path: ./MediaServer/docker-compose.yml
+  - path: ./WebClient/docker-compose.yml
   - path: ./nginx/docker-compose.yml
