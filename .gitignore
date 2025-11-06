@@ -1,0 +1,13 @@
+### IntelliJ IDEA ###
+.idea/*
+!.idea/icon.svg
+*.iws
+*.iml
+*.ipr
+
+/**/server.properties
+/**/server.docker.properties
+/**/application-server.properties
+/**/application-dynamic-*.yml
+
+/jwt
