@@ -1,6 +1,6 @@
 # How to selfhost ReVoiceChat
 
-You can use one host per server or one host for everything. 
+You can use one host per service or one host for everything. 
 
 Keep in mind that ```ReVoiceChat-MediaServer``` can get quite big if you store a lot of files.
 
@@ -32,7 +32,7 @@ revoicechat.yourdomain.me/media | IP of MediaServer | 88
 Add a new proxy host with the following :
 
 ### Details
-- Domain names : `client.yourdomain.me`
+- Domain names : `revoicechat.yourdomain.me`
 - Scheme : `http`
 - Forward Hostname / IP : `IP of WebClient`
 - Forward Port : `80`
