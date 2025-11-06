@@ -37,7 +37,26 @@ else
     exit 1
 fi
 
+echo "📋 Copying configuration files..."
+
+# Copy CoreServer configuration template to root
+if [ -f "./ReVoiceChat-CoreServer/server.exemple.properties" ]; then
+    cp "./ReVoiceChat-CoreServer/server.exemple.properties" "./server.core.properties"
+    echo "✅ CoreServer config copied to ./server.core.properties"
+else
+    echo "⚠️  Warning: server.exemple.properties not found"
+fi
+
+# Copy MediaServer configuration template to root
+if [ -f "./ReVoiceChat-MediaServer/www/settings.ini.exemple" ]; then
+    cp "./ReVoiceChat-MediaServer/www/settings.ini.exemple" "./settings.media.ini"
+    echo "✅ MediaServer config copied to ./settings.media.ini"
+else
+    echo "⚠️  Warning: settings.ini.exemple not found"
+fi
+
 echo "✅ Project initialization completed successfully!"
 echo "📝 Next steps:"
-echo "   - Configure your environment variables"
+echo "   - Edit './server.core.properties' with your configuration"
+echo "   - Edit './settings.media.ini' with your configuration"
 echo "   - Run './deploy-update.sh' to start the services"

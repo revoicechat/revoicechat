@@ -11,3 +11,5 @@
 /**/application-dynamic-*.yml
 
 /jwt
+server.core.properties
+settings.media.ini
