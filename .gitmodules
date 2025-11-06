@@ -1,0 +1,6 @@
+[submodule "ReVoiceChat-CoreServer"]
+	path = ReVoiceChat-CoreServer
+	url = https://github.com/revoicechat/ReVoiceChat-CoreServer.git
+[submodule "ReVoiceChat-WebClient"]
+	path = ReVoiceChat-WebClient
+	url = https://github.com/revoicechat/ReVoiceChat-WebClient.git
