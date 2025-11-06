@@ -7,3 +7,6 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
+networks:
+  default:
+    name: app-network
