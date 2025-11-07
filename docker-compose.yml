@@ -4,4 +4,5 @@ include:
   - path: ./ReVoiceChat-CoreServer/docker-compose.yml
   - path: ./ReVoiceChat-MediaServer/docker-compose.yml
   - path: ./ReVoiceChat-WebClient/docker-compose.yml
+  - path: ./ReVoiceChat-AdminDashboard/docker-compose.yml
   - path: ./nginx/docker-compose.yml

@@ -7,3 +7,6 @@
 [submodule "ReVoiceChat-WebClient"]
 	path = ReVoiceChat-WebClient
 	url = https://github.com/revoicechat/ReVoiceChat-WebClient.git
+[submodule "ReVoiceChat-AdminDashboard"]
+	path = ReVoiceChat-AdminDashboard
+	url = https://github.com/revoicechat/ReVoiceChat-AdminDashboard.git
