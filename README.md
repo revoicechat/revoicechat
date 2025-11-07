@@ -10,7 +10,7 @@ This repository can help you run all service.
 
 - Clone the project with all submodules : 
 ```shell
-git clone -r https://github.com/revoicechat/ReVoiceChat-Selfhost.git
+git clone --recursive https://github.com/revoicechat/ReVoiceChat-Selfhost.git
 ```
 - Init the project : 
 ```shell
