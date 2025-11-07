@@ -1,5 +1,3 @@
-version: '3.8'
-
 include:
   - path: ./ReVoiceChat-CoreServer/docker-compose.yml
   - path: ./ReVoiceChat-MediaServer/docker-compose.yml
