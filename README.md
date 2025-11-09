@@ -90,6 +90,34 @@ proxy_read_timeout 8h;
 ```nginx
 proxy_set_header  Authorization $http_authorization;
 proxy_pass_header Authorization;
+
+client_max_body_size 120M;
+
+# Rate limiter (optionnal)
+limit_rate 15000k;
+limit_rate_after 5000k; 
+
+# Remove header
+proxy_hide_header 'Access-Control-Allow-Headers';
+proxy_hide_header 'Access-Control-Allow-Origin';
+proxy_hide_header 'Access-Control-Allow-Credentials';
+proxy_hide_header 'Access-Control-Allow-Methods';
+
+# CORS headers
+add_header 'Access-Control-Allow-Origin' '*' always;
+add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;
+add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization' always;
+
+# OPTIONS preflight
+if ($request_method = OPTIONS) {
+    add_header 'Access-Control-Allow-Origin' '*' always;
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, PATCH, DELETE, OPTIONS' always;
+    add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization' always;
+    add_header 'Access-Control-Max-Age' 1728000 always;
+    add_header 'Content-Length' 0 always;
+    add_header 'Content-Type' 'text/plain; charset=UTF-8' always;
+    return 204;
+}
 ```
 
 #### SSL
