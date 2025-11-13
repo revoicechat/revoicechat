@@ -24,7 +24,7 @@ echo "📝 Changes detected, creating commit..."
 git add .
 
 # Create commit with timestamp
-COMMIT_MSG="Update submodules - $(date '+%Y-%m-%d %H:%M:%S')"
+COMMIT_MSG="ci(submodules): Update submodules - $(date '+%Y-%m-%d %H:%M:%S')"
 git commit -m "$COMMIT_MSG"
 
 echo "🚀 Pushing changes to remote..."
