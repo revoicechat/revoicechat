@@ -13,3 +13,4 @@
 /jwt
 server.core.properties
 settings.media.ini
+.env

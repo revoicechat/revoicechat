@@ -55,6 +55,14 @@ else
     echo "⚠️  Warning: settings.ini.exemple not found"
 fi
 
+# Copy .env configuration template to root
+if [ -f "./.env.exemple" ]; then
+    cp "./.env.exemple" "./.env"
+    echo "✅ .env.exemple copied to ./.env"
+else
+    echo "⚠️  Warning: .env.exemple not found"
+fi
+
 echo "✅ Project initialization completed successfully!"
 echo "📝 Next steps:"
 echo "   - Edit './server.core.properties' with your configuration"
