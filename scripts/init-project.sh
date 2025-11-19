@@ -48,8 +48,8 @@ else
 fi
 
 # Copy MediaServer configuration template to root
-if [ -f "./ReVoiceChat-MediaServer/www/settings.ini.exemple" ]; then
-    cp "./ReVoiceChat-MediaServer/www/settings.ini.docker.exemple" "./settings.media.ini"
+if [ -f "./ReVoiceChat-MediaServer/settings.ini.exemple" ]; then
+    cp "./ReVoiceChat-MediaServer/settings.ini.docker.exemple" "./settings.media.ini"
     echo "✅ MediaServer config copied to ./settings.media.ini"
 else
     echo "⚠️  Warning: settings.ini.exemple not found"

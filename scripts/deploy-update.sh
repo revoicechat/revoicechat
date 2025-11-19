@@ -25,8 +25,8 @@ fi
 
 # Copy MediaServer config from root to submodule (overwrite if exists)
 if [ -f "./settings.media.ini" ]; then
-    cp -f "./settings.media.ini" "./ReVoiceChat-MediaServer/www/settings.ini"
-    echo "✅ MediaServer config copied to ./ReVoiceChat-MediaServer/www/settings.ini"
+    cp -f "./settings.media.ini" "./ReVoiceChat-MediaServer/settings.ini"
+    echo "✅ MediaServer config copied to ./ReVoiceChat-MediaServer/settings.ini"
 else
     echo "⚠️  Warning: ./settings.media.ini not found"
 fi
