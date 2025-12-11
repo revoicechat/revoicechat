@@ -14,3 +14,6 @@
 server.core.properties
 settings.media.ini
 .env
+
+### Sonar ###
+.scannerwork

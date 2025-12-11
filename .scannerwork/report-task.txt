@@ -1,6 +1,0 @@
-projectKey=ReVoiceChat-SelfHost
-serverUrl=http://localhost:9000
-serverVersion=25.9.0.112764
-dashboardUrl=http://localhost:9000/dashboard?id=ReVoiceChat-SelfHost
-ceTaskId=a8fe7db9-ed36-4135-84fe-4ceb7fb6c994
-ceTaskUrl=http://localhost:9000/api/ce/task?id=a8fe7db9-ed36-4135-84fe-4ceb7fb6c994
