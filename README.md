@@ -1,7 +1,7 @@
 > [!CAUTION]
 > This application is NOT production ready yet
 >
-> The main feature are implemented but there is still a lot of complementary feature missing
+> The main features are implemented but there is still a lot of complementary features missing
 
 # How to selfhost ReVoiceChat
 
