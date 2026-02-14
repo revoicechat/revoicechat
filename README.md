@@ -1,3 +1,8 @@
+> [!CAUTION]
+> This application is NOT production ready yet
+>
+> The main features are implemented but there is still a lot of complementary features missing
+
 # How to selfhost ReVoiceChat
 
 You can use one host per service or one host for everything. 
