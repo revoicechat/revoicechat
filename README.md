@@ -3,6 +3,10 @@
 >
 > The main features are implemented but there is still a lot of complementary features missing
 
+# WebClient
+
+![screenshot](screenshot.png)
+
 # How to selfhost ReVoiceChat
 
 You can use one host per service or one host for everything. 
