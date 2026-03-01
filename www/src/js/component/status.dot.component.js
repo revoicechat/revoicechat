@@ -41,8 +41,8 @@ class DotComponent extends HTMLElement {
 
             .dot {
                 position: absolute;
-                right: -0.25rem;
-                bottom: -0.25rem;
+                right: -0.5rem;
+                bottom: -0.45rem;
                 width: 0.9rem;
                 height: 0.9rem;
                 border-style: solid;

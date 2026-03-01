@@ -2,6 +2,7 @@ import {containsOnlyEmotes} from "../lib/emote.utils.js";
 import MediaServer from "../app/media/media.server.js";
 import CoreServer from "../app/core/core.server.js";
 import {isUUID} from "../lib/string.utils.js";
+import {renderEmojis} from "./emoji.component.js";
 
 class MessageComponent extends HTMLElement {
     /** @type string */
@@ -171,6 +172,7 @@ class MessageComponent extends HTMLElement {
             contentDiv.innerHTML = `<p style="color: #ff6b6b;">Error parsing markdown: ${error.message}</p>`;
         }
         this.#renderReactions(contentDiv)
+        renderEmojis(this.shadowRoot);
     }
 
     #renderCodeTemplate(contentDiv) {
@@ -273,6 +275,8 @@ class MessageComponent extends HTMLElement {
     /** @param {string} data */
     #span(data) {
         const span = document.createElement("span")
+        span.style.display = "flex"
+        span.style.alignItems = "center"
         span.innerText = data
         return span;
     }

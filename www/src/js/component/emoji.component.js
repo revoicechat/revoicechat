@@ -48,7 +48,7 @@ class EmojiPicker {
         this.element = picker;
         this.renderEmojis();
         this.attachEvents();
-
+        renderEmojis(picker);
         return picker;
     }
 
@@ -81,6 +81,7 @@ class EmojiPicker {
         for (const item of grid.querySelectorAll('.emoji-item')) {
             item.onclick = () => this.onEmojiSelect(item);
         }
+        renderEmojis(grid);
     }
 
     attachEvents() {
@@ -194,4 +195,14 @@ function initCustomEmojiCategory(picker, name, icon, emojis) {
     picker.addCustomEmojiCategory(name, emojiCategory)
 }
 
-export { EmojiPicker, initCustomGeneral, initCustomServer, initCustomUser }
+/** @param {HTMLElement|ShadowRoot} element */
+function renderEmojis(element) {
+    twemoji.parse(element, {
+        folder: 'assets',
+        ext: '.svg',
+        base: MediaServer.emoteAssets(),
+        className: "emoji"
+    })
+}
+
+export { EmojiPicker, initCustomGeneral, initCustomServer, initCustomUser, renderEmojis }

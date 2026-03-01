@@ -438,8 +438,9 @@ svg {
 
 .sidebar.users .content .icon {
     border-radius: 9999px;
-    width: 2rem;
-    height: 2rem;
+    min-width: 2rem;
+    max-width: 2rem;
+    aspect-ratio: auto;
 }
 
 .message-container .icon {
@@ -665,13 +666,15 @@ svg {
     opacity: 0.7;
 }
 
+
+
 .message-answer-to svg {
     height: 1rem;
     width: 1rem;
 }
 
 .message-answer-preview {
-    margin-top: 2px;
+    font-style: italic;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -805,8 +808,9 @@ svg {
 
 .status-bloc-1 .icon {
     border-radius: 9999px;
-    width: 2.5rem;
-    height: 2.5rem;
+    min-width: 2.7rem;
+    max-width: 2.7rem;
+    aspect-ratio: auto;
 }
 
 
@@ -1489,4 +1493,14 @@ summary::marker {
     background-color: var(--qua-bg-color);
     color: var(--pri-placeholder-color);
     text-wrap: nowrap;
+}
+
+.emoji {
+    width: 1rem;
+    height: 1rem;
+    display: inline;
+}
+
+.no-wrap-text {
+    white-space: nowrap;
 }

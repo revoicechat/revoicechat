@@ -46,6 +46,10 @@ export default class MediaServer {
         return `${MediaServer.#instance.url}/emote/${id}?t=${t}`
     }
 
+    static emoteAssets() {
+        return `${MediaServer.#instance.url}/emote/`
+    }
+
     /**
      * @param {string} id
      * @param {string} t

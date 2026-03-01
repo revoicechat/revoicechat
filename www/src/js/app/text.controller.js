@@ -5,6 +5,7 @@ import MediaServer from "./media/media.server.js";
 import CoreServer from "./core/core.server.js";
 import Modal from "../component/modal.component.js";
 import {emojiPicker} from "./emoji.js";
+import {renderEmojis} from "../component/emoji.component.js";
 
 export default class TextController {
     static MODE_SEND = 0;
@@ -70,7 +71,7 @@ export default class TextController {
         if (this.#repliedMessage) {
             element.classList.remove("hidden");
             const message = document.createElement("div");
-            message.innerHTML = `<span data-i18n="message.answer.to">Reply to</span>
+            message.innerHTML = `<span data-i18n="message.answer.to" class="no-wrap-text">Reply to</span>
                                  <span> </span>
                                  <span style="font-weight: bold">${this.#repliedMessage.user.displayName}</span>`;
             message.style.width = "100%";
@@ -462,6 +463,7 @@ export default class TextController {
 
         const label = document.createElement('span');
         label.dataset.i18n = 'message.answer.to';
+        label.classList.add('no-wrap-text')
         label.textContent = 'Reply to';
 
         const messagePreview = document.createElement('div');
@@ -505,6 +507,7 @@ export default class TextController {
         }
 
         i18n.translatePage(answerHolder);
+        renderEmojis(answerHolder);
         return answerHolder;
     }
 
