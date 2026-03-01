@@ -103,6 +103,7 @@
 .only-emoji .emoji {
     width: 2rem;
     height: 2rem;
+    padding-right: 0.3rem;
 }
 
 .emoji {
