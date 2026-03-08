@@ -82,11 +82,6 @@ export default class UserController {
         if(this.id === id){
             document.getElementById("user-dot").setAttribute('color', color);
         }
-
-        // Dynamic elements
-        for(const dot of document.getElementsByName(`dot-${id}`)){
-            dot.setAttribute('color', color);
-        }
     }
 
     logout(){

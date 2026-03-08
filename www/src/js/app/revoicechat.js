@@ -8,7 +8,7 @@ import ServerController from './server.controller.js';
 import MobileController from "./utils/mobile.js";
 import { reloadEmojis } from './emoji.js';
 import { Sse } from "./core/sse.js";
-import {getCookie, getQueryVariable, initTools} from "../lib/tools.js";
+import { getCookie, getQueryVariable, initTools } from "../lib/tools.js";
 import '../component/components.js';
 import { i18n } from "../lib/i18n.js";
 import MediaServer from "./media/media.server.js";
@@ -81,7 +81,7 @@ export default class ReVoiceChat {
         this.user.settings.buildMessageExemple();
         this.router.routeTo(getQueryVariable('r'));
 
-        if(this.user.isAdmin()){
+        if (this.user.isAdmin()) {
             await this.adminSettings.load();
         }
     }
@@ -145,7 +145,7 @@ class SSEHandlers {
             'ROOM_MESSAGE': (data) => this.room.textController.message(data),
             'DIRECT_MESSAGE': () => { },
             'NEW_USER_IN_SERVER': (data) => this.server.updateUserInServer(data),
-            'USER_STATUS_UPDATE': (data) => this.user.setStatus(data),
+            'USER_STATUS_UPDATE': async (data) => { this.user.setStatus(data); await this.room.loadUsers(); },
             'USER_UPDATE': (data) => this.user.update(data),
             'VOICE_JOINING': (data) => this.room.voiceController.userJoining(data),
             'VOICE_LEAVING': (data) => this.room.voiceController.userLeaving(data),

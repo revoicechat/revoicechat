@@ -237,7 +237,7 @@ export default class Room {
             for (const role of roles) {
                 const usersInRole = [...users.allUser].filter((user) => { return (role.members.includes(user.id) && !excludedUsers.includes(user.id)) })
 
-                const onlineUsers = [...usersInRole].filter((user) => { return user.status !== "OFFLINE" } ).length;
+                const onlineUsers = [...usersInRole].filter((user) => { return user.status !== "OFFLINE" }).length;
                 if (onlineUsers > 0) {
                     userList.appendChild(this.#createSeparator(`${role.name} - ${usersInRole.length}`));
                 }
@@ -285,7 +285,7 @@ export default class Room {
             </div>
         `;
 
-        if(offline){
+        if (offline) {
             DIV.classList.add("offline");
         }
 
@@ -327,13 +327,6 @@ export default class Room {
 
         this.voiceController.updateSelf(this.id);
         this.voiceController.updateJoinButton(this.id);
-    }
-
-    #roomCreateSeparator(data) {
-        const DIV = document.createElement('div');
-        DIV.className = "separator";
-        DIV.innerHTML = `<h3 class="title">${data.name.toUpperCase()}</h3>`;
-        return DIV;
     }
 
     /**
