@@ -14,13 +14,13 @@ bash "./scripts/i18n/export-i18n.sh" || { printf "${RED}export-i18n.sh failed${N
 
 cd "ReVoiceChat-i18n"
 step "Updating i18n files..."
-bash "./.scripts/update-i18n.sh" -src ../.tmp-i18n || { printf "${RED}update-i18n.sh failed${NC}\n"; cd ..; exit 1; }
+bash "../scripts/i18n/update-i18n.sh" -src ../.tmp-i18n || { printf "${RED}update-i18n.sh failed${NC}\n"; cd ..; exit 1; }
 
 step "Updating README progress table..."
 bash "./.scripts/generate-progress.sh" || { printf "${RED}generate-progress.sh failed${NC}\n"; cd ..; exit 1; }
 
 step "Generating .generated files..."
-bash "./.scripts/generate-i18n.sh" || { printf "${RED}generate-i18n.sh failed${NC}\n"; cd ..; exit 1; }
+bash "../scripts/i18n/generate-i18n.sh" || { printf "${RED}generate-i18n.sh failed${NC}\n"; cd ..; exit 1; }
 cd ..
 
 step "Importing back to source projects..."
