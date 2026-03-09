@@ -4,6 +4,7 @@
 # Except these file types
 !*/
 !/.gitignore
+!/.gitattributes
 !LICENSE
 !*.md
 !lang.json
