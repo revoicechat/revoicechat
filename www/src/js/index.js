@@ -1,5 +1,5 @@
 import { SpinnerOnButton } from './component/button.spinner.component.js';
-import {apiFetch, getCookie, getQueryVariable, initTools, setCookie} from "./lib/tools.js";
+import {apiFetch, getCookie, getQueryVariable, getUserLanguage, initTools, setCookie} from "./lib/tools.js";
 import './component/icon.component.js';
 import { i18n } from "./lib/i18n.js";
 import Modal from "./component/modal.component.js";
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         switchToRegister();
     }
 
-    await i18n.translate("en");
+    await i18n.translate(getUserLanguage());
 
     document.getElementById("register-host").onchange = () => { getHostSettings() }
     document.getElementById("login-button").onclick = userLogin

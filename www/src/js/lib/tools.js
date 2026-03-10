@@ -226,6 +226,11 @@ async function apiFetch(url, options = {}) {
     return fetch(url, options);
 }
 
+function getUserLanguage() {
+  const lang = navigator.language || navigator.languages?.[0] || 'en';
+  return lang.split('-')[0];
+}
+
 export {
     initTools,
     tauriActive,
@@ -239,4 +244,5 @@ export {
     humanFileSize,
     statusToColor,
     apiFetch,
+    getUserLanguage
 };

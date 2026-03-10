@@ -8,6 +8,7 @@ import CoreServer from "./core/core.server.js";
 import Modal from "../component/modal.component.js";
 import { UserNotificationRepresentation } from "../representation/user.representation.js";
 import { MessageRepresentation } from "../representation/room.representation.js";
+import { getUserLanguage } from "../lib/tools.js";
 
 export default class UserSettingsController {
     #user;
@@ -15,7 +16,7 @@ export default class UserSettingsController {
     #inputAdvanced = false;
     #currentTab;
     #theme = 'dark';
-    #lang = 'en';
+    #lang = getUserLanguage();
     /** @type {"default"|"compact"}  */
     messageSetting = 'default';
     #password = {
