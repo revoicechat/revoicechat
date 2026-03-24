@@ -27,7 +27,7 @@ export class ServerSettingsMemberController {
                         }
                     }
                 });
-        document.getElementById("server-setting-members").setAttribute("server-id", this.serverSettings.server.id);
+        document.getElementById("server-moderation-panel").setAttribute("server-id", this.serverSettings.server.id);
     }
 
     /**

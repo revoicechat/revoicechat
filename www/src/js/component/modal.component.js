@@ -12,7 +12,7 @@
  *   preConfirm: () => *
  * }} ModalOpt
  */
-import { i18n } from "../lib/i18n.js";
+import {i18n} from "../lib/i18n.js";
 
 class ModalOptions {
     /** @type {"error"|"success"|null} */
@@ -21,7 +21,7 @@ class ModalOptions {
     title;
     /** @type string */
     text;
-    /** @type string */
+    /** @type {string|HTMLElement} */
     html;
     /** @type string */
     width;
@@ -169,8 +169,12 @@ export default class Modal {
                 textEl.textContent = options.text;
                 textEl.style.display = 'block';
             } else if (options.html) {
-                textEl.innerHTML = options.html;
                 textEl.style.display = 'block';
+                if (typeof options.html === 'string') {
+                    textEl.innerHTML = options.html;
+                } else {
+                    textEl.appendChild(options.html)
+                }
             } else {
                 textEl.textContent = '';
                 textEl.style.display = 'none';

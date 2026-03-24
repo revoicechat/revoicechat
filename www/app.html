@@ -232,6 +232,11 @@
                         <revoice-icon-users></revoice-icon-users> <span data-i18n="server.members">Members</span>
                     </button>
 
+                    <!-- Moderation -->
+                    <button class="sub-category" id="server-setting-tab-moderation">
+                        <revoice-icon-moderation></revoice-icon-moderation> <span data-i18n="server.moderation">Moderation</span>
+                    </button>
+
                     <!-- Invitation -->
                     <button class="sub-category hidden" id="server-setting-tab-invitations">
                         <revoice-icon-envelope></revoice-icon-envelope> <span data-i18n="server.invitations">Invitations</span>
@@ -314,6 +319,10 @@
                 <div class="hidden" id="server-setting-content-members">
                     <h1 data-i18n="server.members">Members</h1>
                     <div id="server-setting-members" class="config-members-list"></div>
+                </div>
+
+                <div class="hidden" id="server-setting-content-moderation">
+                    <revoice-moderation-panel id="server-moderation-panel"></revoice-moderation-panel>
                 </div>
 
                 <!-- Invitations -->
@@ -527,6 +536,11 @@
                         <revoice-icon-users></revoice-icon-users> <span data-i18n="admin.members">Members</span>
                     </button>
 
+                    <!-- Moderation -->
+                    <button class="sub-category" id="admin-setting-tab-moderation">
+                        <revoice-icon-moderation></revoice-icon-moderation> <span data-i18n="admin.moderation">Moderation</span>
+                    </button>
+
                     <!-- Invitation -->
                     <button class="sub-category" id="admin-setting-tab-invitations">
                         <revoice-icon-envelope></revoice-icon-envelope> <span data-i18n="admin.invitations">Invitations</span>
@@ -570,9 +584,12 @@
 
                     <h1 data-i18n="admin.members">Members</h1>
                     <div id="admin-setting-members-list" class="config-members-list"></div>
-                    <revoice-moderation-panel id="members-moderation-panel"></revoice-moderation-panel>
                 </div>
 
+              <!-- Moderation -->
+              <div class="hidden" id="admin-setting-content-moderation">
+                  <revoice-moderation-panel id="admin-moderation-panel"></revoice-moderation-panel>
+              </div>
                 <!-- Invitations -->
                 <div class="hidden" id="admin-setting-content-invitations">
                     <h1 data-i18n="server.invitations">Invitations</h1>

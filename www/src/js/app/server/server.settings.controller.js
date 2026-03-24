@@ -6,6 +6,7 @@ import { ServerSettingsRoleController } from "./server.settings.role.controller.
 import { ServerSettingsMemberController } from "./server.settings.member.controller.js";
 import CoreServer from "../core/core.server.js";
 import Router from "../router.js";
+import {ServerSettingsModerationController} from "./server.settings.moderation.controller.js";
 
 export default class ServerSettingsController {
     /** @type {ServerController} */
@@ -21,6 +22,7 @@ export default class ServerSettingsController {
         this.server = server;
         this.overview = new ServerSettingsOverviewController(this)
         this.member = new ServerSettingsMemberController(this)
+        this.moderation = new ServerSettingsModerationController(this)
         this.room = new ServerSettingsRoomController(this)
         this.emote = new ServerSettingsEmoteController(this)
         this.invitation = new ServerSettingsInvitationController(this)
@@ -35,6 +37,7 @@ export default class ServerSettingsController {
         await this.#loadRisks();
         this.overview.load();
         this.member.load();
+        this.moderation.load();
     }
 
     riskModify() {
@@ -99,6 +102,7 @@ export default class ServerSettingsController {
             { button: 'roles', risks: ['UPDATE_ROLE', 'ADD_USER_ROLE', 'ADD_ROLE'] },
             { button: 'emotes', risks: ['UPDATE_EMOTE', 'REMOVE_EMOTE', 'ADD_EMOTE'] },
             { button: 'members', risks: null },
+            { button: 'moderation', risks: null }, // TODO add risks
             { button: 'invitations', risks: ['SERVER_INVITATION_ADD', 'SERVER_INVITATION_FETCH'] }
         ]
 

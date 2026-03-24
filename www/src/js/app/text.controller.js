@@ -1,11 +1,11 @@
 import Alert from './utils/alert.js';
-import { humanFileSize, sanitizeString, timestampToText } from "../lib/tools.js";
-import { i18n } from "../lib/i18n.js";
+import {humanFileSize, sanitizeString, timestampToText} from "../lib/tools.js";
+import {i18n} from "../lib/i18n.js";
 import MediaServer from "./media/media.server.js";
 import CoreServer from "./core/core.server.js";
 import Modal from "../component/modal.component.js";
-import { emojiPicker } from "./emoji.js";
-import { renderEmojis } from "../component/emoji.component.js";
+import {emojiPicker} from "./emoji.js";
+import {renderEmojis} from "../component/emoji.component.js";
 
 export default class TextController {
     static MODE_SEND = 0;
@@ -450,8 +450,9 @@ export default class TextController {
 
     /**
      * @param {MessageRepresentation} messageData
+     * @param {boolean} urlPreview
      */
-    create(messageData) {
+    create(messageData, {urlPreview = true} = {}) {
         const CONTAINER = document.createElement('div');
         CONTAINER.className = `message-container-message`;
         if (messageData.answeredTo) {
@@ -460,7 +461,7 @@ export default class TextController {
         } else {
             CONTAINER.appendChild(this.#createHeader(messageData, true));
         }
-        CONTAINER.appendChild(this.#createContent(messageData));
+        CONTAINER.appendChild(this.#createContent(messageData, urlPreview));
         const MESSAGE = document.createElement('div');
         MESSAGE.id = `container-${messageData.id}`;
         MESSAGE.className = "message-container";
@@ -568,11 +569,14 @@ export default class TextController {
         MESSAGE.appendChild(picture);
     }
 
-    /** @param {MessageRepresentation} messageData */
-    #createContent(messageData) {
+    /**
+     * @param {MessageRepresentation} messageData
+     * @param {boolean} urlPreview
+     */
+    #createContent(messageData, urlPreview = true) {
         const CONTENT = document.createElement('revoice-message');
         CONTENT.id = messageData.id;
-        CONTENT.setAttribute("url-preview", messageData?.messageUrlPreview?.toString())
+        CONTENT.setAttribute("url-preview", urlPreview && messageData?.messageUrlPreview?.toString())
         CONTENT.innerHTML = `
             <script type="application/json" slot="medias">
                 ${JSON.stringify(messageData.medias)}

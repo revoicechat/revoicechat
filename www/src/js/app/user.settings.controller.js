@@ -313,7 +313,7 @@ export default class UserSettingsController {
         message.emotes = [];
         message.reactions = [];
         message.user = user;
-        return RVC.room.textController.create(message);
+        return RVC.room.textController.create(message, {urlPreview: false});
     }
 
 

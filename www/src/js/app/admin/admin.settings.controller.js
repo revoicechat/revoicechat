@@ -41,6 +41,7 @@ export default class AdminSettingsController {
         document.getElementById('admin-setting-tab-servers').onclick = () => this.select('servers');
         document.getElementById('admin-setting-tab-emotes').onclick = () => this.select('emotes');
         document.getElementById('admin-setting-tab-members').onclick = () => this.select('members');
+        document.getElementById('admin-setting-tab-moderation').onclick = () => this.select('moderation');
         document.getElementById('admin-setting-tab-invitations').onclick = () => this.select('invitations');
     }
 }
