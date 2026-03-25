@@ -778,6 +778,7 @@ class ModerationPanel extends HTMLElement {
         this.shadow.querySelectorAll(".mp-filter").forEach(btn => {
             btn.classList.toggle("active", btn.dataset.key === this.#filter);
         });
+        i18n.translatePage(this.shadow)
     }
 
     #render() {
