@@ -1,0 +1,32 @@
+# Test files
+test*
+
+# Stored files
+www/data/attachments/*
+www/data/attachments/thumbnail/*
+www/data/profiles/*
+www/data/emojis/*
+www/data/emojis/global/*
+
+#  Keep files
+!www/data/attachments/.keep
+!www/data/attachments/thumbnail/
+!www/data/attachments/thumbnail/.keep
+!www/data/attachments/logo
+!www/data/profiles/default-avatar
+!www/data/profiles/.keep
+!www/data/emojis/.keep
+!www/data/emojis/global/.keep
+
+# Settings
+settings.ini
+
+### IntelliJ IDEA ###
+.idea
+!.idea/icon.svg
+*.iws
+*.iml
+*.ipr
+
+### Sonar ###
+.scannerwork

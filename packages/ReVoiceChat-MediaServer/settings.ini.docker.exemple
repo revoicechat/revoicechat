@@ -1,0 +1,3 @@
+[api]
+user_me_url = http://host.docker.internal:8080/api/user/me
+media_url = http://host.docker.internal:8080/api/media

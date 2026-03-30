@@ -1,0 +1,15 @@
+services:
+  php-app:
+    build: .
+    container_name: php-server
+    ports:
+      - "127.0.0.1:${MEDIA_SERVER_PORT:-8081}:80"
+    volumes:
+      # Mount local www/data directory into container
+      - ./www/data:/var/www/html/data
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+networks:
+  default:
+    name: app-network
