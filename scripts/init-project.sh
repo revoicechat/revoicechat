@@ -10,27 +10,22 @@ echo "🚀 Starting project initialization..."
 echo "🔄 Pulling latest changes from repository..."
 git pull
 
-echo "🔄 Updating submodules to committed versions..."
-# --init: initialize submodules if not already done
-# --recursive: update nested submodules as well
-git submodule update --init --recursive
-
 echo "🔑 Generating JWT keys..."
 
 # Check if the generate script exists
-if [ ! -f "./ReVoiceChat-CoreServer/scripts/generate_jwtKey.sh" ]; then
+if [ ! -f "./core-server/scripts/generate_jwtKey.sh" ]; then
     echo "❌ Error: generate_jwtKey.sh script not found"
     exit 1
 fi
 
 # Make the script executable if it isn't already
-chmod +x ./ReVoiceChat-CoreServer/scripts/generate_jwtKey.sh
+chmod +x ./core-server/scripts/generate_jwtKey.sh
 
 # Execute the JWT key generation script
-./ReVoiceChat-CoreServer/scripts/generate_jwtKey.sh
+./core-server/scripts/generate_jwtKey.sh
 
 # Verify that keys were generated
-if [ -f "./ReVoiceChat-CoreServer/jwt/privateKey.pem" ] && [ -f "./ReVoiceChat-CoreServer/jwt/publicKey.pem" ]; then
+if [ -f "./core-server/jwt/privateKey.pem" ] && [ -f "./core-server/jwt/publicKey.pem" ]; then
     echo "✅ JWT keys successfully generated"
 else
     echo "❌ Error: JWT keys were not created"
@@ -40,16 +35,16 @@ fi
 echo "📋 Copying configuration files..."
 
 # Copy CoreServer configuration template to root
-if [ -f "./ReVoiceChat-CoreServer/server.exemple.properties" ]; then
-    cp "./ReVoiceChat-CoreServer/server.docker.exemple.properties" "./server.core.properties"
+if [ -f "./core-server/server.exemple.properties" ]; then
+    cp "./core-server/server.docker.exemple.properties" "./server.core.properties"
     echo "✅ CoreServer config copied to ./server.core.properties"
 else
     echo "⚠️  Warning: server.exemple.properties not found"
 fi
 
 # Copy MediaServer configuration template to root
-if [ -f "./ReVoiceChat-MediaServer/settings.ini.exemple" ]; then
-    cp "./ReVoiceChat-MediaServer/settings.ini.docker.exemple" "./settings.media.ini"
+if [ -f "./media-server/settings.ini.exemple" ]; then
+    cp "./media-server/settings.ini.docker.exemple" "./settings.media.ini"
     echo "✅ MediaServer config copied to ./settings.media.ini"
 else
     echo "⚠️  Warning: settings.ini.exemple not found"

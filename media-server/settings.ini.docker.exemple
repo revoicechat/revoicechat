@@ -1,0 +1,3 @@
+[api]
+user_me_url = http://backend:8080/api/user/me
+media_url = http://backend:8080/api/media
