@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="default">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+
+    <link href="src/css/main.css" rel="stylesheet" />
+    <link href="src/css/mobile.css" rel="stylesheet" />
+    <link href="src/css/emoji.css" rel="stylesheet" />
+    <link href="src/css/themes.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/png" href="src/img/favicon.png" />
+    <title>ReVoiceChat - App</title>
+</head>
+
+<body>
+    <!-- App Container -->
+    <div class="main app hidden" id="route-app">
+        <!-- Sidebar instances and hosts-->
+        <div class="sidebar instances-list">
+            <div class="header">
+                <button id="private-open">
+                    <img src="src/img/favicon.png" alt="DM" data-i18n-title="private.title" />
+                </button>
+            </div>
+
+            <div class="instances scrollbar" id="instances"></div>
+        </div>
+
+        <!-- Private Container -->
+        <div class="private hidden" id="route-private">
+            <!-- Sidebar Private messages-->
+            <div class="sidebar private-messages" id="friends-sidebar">
+                <div class="header">
+                    <revoice-icon-private-discussion></revoice-icon-private-discussion>
+                    <h2 data-i18n="private.messages.title">Private messages</h2>
+                     <div class="pull-right">
+                        <button id="private-message-new"><revoice-icon-circle-plus></revoice-icon-circle-plus></button>
+                    </div>
+                </div>
+
+                <!-- User List -->
+                <div class="content scrollbar" id="friends">
+                    <!-- JS -->
+                </div>
+            </div>
+
+            <!-- Private messages -->
+            <div class="room">
+                <!-- Room Header -->
+                <div class="room-header">
+                    <button class="mobile-btn" id="privateToggleSidebar"><revoice-icon-menu-burger></revoice-icon-menu-burger></button>
+                    <div style="display: flex; column-gap: 0.5rem">
+                        <span id="private-room-icon"></span>
+                        <h3 class="room-name" id="private-room-name"></h3>
+                    </div>
+                    <button class="mobile-btn" id="privateToggleUsers"><revoice-icon-users></revoice-icon-users></button>
+                </div>
+
+                <!-- Text Container -->
+                <div class="room-container" id="private-container">
+                    <div class="room-cache scrollbar" id="private-cache-container"></div>
+                    <!-- Chat Control -->
+                    <div class="room-control-container">
+                        <div class="text-control">
+                            <div class="text-control-reply hidden" id="private-text-reply-message" data-message-id="">
+                            </div>
+                            <!-- NO VERTICAL SPACE NEEDED HERE -->
+                            <div class="text-control-file hidden" id="private-text-attachment-div">
+                                <input type="file" id="private-text-attachment" multiple>
+                                <button class="emoji-btn" id="private-attachment-button-remove"><revoice-icon-trash></revoice-icon-trash></button>
+                            </div>
+                            <div class="text-control-text">
+                                <textarea rows="1" id="private-text-input"></textarea>
+                                <button class="emoji-btn" id="private-attachment-button-add"><revoice-icon-paper-clip></revoice-icon-paper-clip></button>
+                                <button class="emoji-btn" id="private-emoji-picker-button"><revoice-icon-emoji></revoice-icon-emoji></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Public Container -->
+        <div class="public hidden" id="route-public">
+            <div class="overlay" id="overlay"></div>
+            <!-- Sidebar server -->
+            <div class="sidebar server">
+                <!-- Server info -->
+                <div class="header">
+                    <img id="server-picture" src="src/img/favicon.png" alt="Server profile" />
+                    <h2 id="server-name">[SERVER-NAME]</h2>
+                    <div class="pull-right">
+                        <button id="server-setting-open"><revoice-icon-cog-6></revoice-icon-cog-6></button>
+                    </div>
+                </div>
+
+                <!-- Room List -->
+                <div class="rooms scrollbar" id="rooms"></div>
+
+                <!-- Voice control -->
+                <div class="voice-control hidden" id="voice-control-panel">
+                    <div class="element">
+                        <button id="stream-webcam" title="Enable your camera" data-i18n-title="voice.camera.enable">
+                            <revoice-icon-camera></revoice-icon-camera>
+                        </button>
+                    </div>
+                    <div class="element">
+                        <button id="stream-display" title="Share your screen" data-i18n-title="voice.screen.share">
+                            <revoice-icon-display></revoice-icon-display>
+                        </button>
+                    </div>
+                    <div class="element">
+                        <button id="voice-self-mute" title="Mute" data-i18n-title="voice.mute">
+                            <revoice-icon-microphone></revoice-icon-microphone>
+                        </button>
+                    </div>
+                    <div class="element">
+                        <button id="voice-self-deaf" title="Deaf" data-i18n-title="voice.deaf">
+                            <revoice-icon-speaker></revoice-icon-speaker>
+                        </button>
+                    </div>
+                    <div class="element">
+                        <button id="voice-join-action" class="connect join">[JOIN]</button>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div id="status-container" class="status-container">
+                    <div class="status-bloc-1">
+                        <div class="relative">
+                            <img id="user-picture" alt="PFP" class="icon ring-2" />
+                            <revoice-status-dot id="user-dot" color="gray"></revoice-status-dot>
+                        </div>
+                        <div class="user">
+                            <h2 class="name" id="user-name">[USERNAME]</h2>
+                            <p class="status" id="user-status">[USER STATUS]</p>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <button id="user-setting-open"><revoice-icon-cog-6></revoice-icon-cog-6></button>
+                    </div>
+                </div>
+            </div>
+            <!-- Room Container -->
+            <div class="room">
+
+                <!-- Room Header -->
+                <div class="room-header">
+                    <button class="mobile-btn" id="toggleSidebar"><revoice-icon-menu-burger></revoice-icon-menu-burger></button>
+                    <div style="display: flex; column-gap: 0.5rem">
+                        <span id="room-icon"></span>
+                        <h3 class="room-name" id="room-name"></h3>
+                    </div>
+                    <button class="mobile-btn" id="toggleUsers"><revoice-icon-users></revoice-icon-users></button>
+                </div>
+
+                <!-- Text Container -->
+                <div class="room-container" id="text-container">
+                    <div class="room-cache scrollbar" id="cache-container"></div>
+
+                    <!-- Chat Control -->
+                    <div class="room-control-container">
+                        <div class="text-control">
+                            <div class="text-control-reply hidden" id="text-reply-message" data-message-id="">
+                            </div>
+                            <!-- NO VERTICAL SPACE NEEDED HERE -->
+                            <div class="text-control-file hidden" id="text-attachment-div">
+                                <input type="file" id="text-attachment" multiple>
+                                <button class="emoji-btn" id="attachment-button-remove"><revoice-icon-trash></revoice-icon-trash></button>
+                            </div>
+                            <div class="text-control-text">
+                                <textarea rows="1" id="text-input"></textarea>
+                                <button class="emoji-btn" id="attachment-button-add"><revoice-icon-paper-clip></revoice-icon-paper-clip></button>
+                                <button class="emoji-btn" id="emoji-picker-button"><revoice-icon-emoji></revoice-icon-emoji></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice Container -->
+                <div class="room-container hidden" id="voice-container">
+                    <div class="stream" id="stream-container"></div>
+                </div>
+
+            </div>
+            <!-- Sidebar users-->
+            <div class="sidebar users" id="sidebar-users">
+                <div class="header">
+                    <revoice-icon-users></revoice-icon-users>
+                    <h2 data-i18n="users.title">Users</h2>
+                </div>
+
+                <!-- User List -->
+                <div class="content scrollbar" id="user-list">
+                    <!-- JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="emoji-picker" id="emoji-picker"></div>
+        <voice-context-menu id="voice-context-menu"></voice-context-menu>
+        <stream-context-menu id="stream-context-menu"></stream-context-menu>
+    </div>
+
+    <!-- Server Settings Containter -->
+    <div class="main config hidden" id="route-server-settings">
+        <div class="config-container-left">
+            <h2 data-i18n="server.settings">Server settings</h2>
+            <div class="config-left">
+                <div class="category">
+                    <!-- Overview -->
+                    <button class="sub-category" id="server-setting-tab-overview">
+                        <revoice-icon-information></revoice-icon-information> <span data-i18n="server.overview">Overview</span>
+                    </button>
+
+                    <!-- Rooms -->
+                    <button class="sub-category hidden" id="server-setting-tab-rooms">
+                        <revoice-icon-chat-bubble></revoice-icon-chat-bubble> <span data-i18n="server.rooms">Rooms</span>
+                    </button>
+
+                    <!-- Roles -->
+                    <button class="sub-category hidden" id="server-setting-tab-roles">
+                        <revoice-icon-role></revoice-icon-role> <span data-i18n="server.roles">Roles</span>
+                    </button>
+
+                    <!-- Emotes -->
+                    <button class="sub-category hidden" id="server-setting-tab-emotes">
+                        <revoice-icon-emoji></revoice-icon-emoji> <span data-i18n="server.emotes">Emotes</span>
+                    </button>
+
+                    <!-- Members -->
+                    <button class="sub-category" id="server-setting-tab-members">
+                        <revoice-icon-users></revoice-icon-users> <span data-i18n="server.members">Members</span>
+                    </button>
+
+                    <!-- Moderation -->
+                    <button class="sub-category" id="server-setting-tab-moderation">
+                        <revoice-icon-moderation></revoice-icon-moderation> <span data-i18n="server.moderation">Moderation</span>
+                    </button>
+
+                    <!-- Invitation -->
+                    <button class="sub-category hidden" id="server-setting-tab-invitations">
+                        <revoice-icon-envelope></revoice-icon-envelope> <span data-i18n="server.invitations">Invitations</span>
+                    </button>
+                </div>
+
+                <!-- Delete -->
+                <div class="category">
+                    <button class="sub-category red background-darkred hidden" id="server-delete">
+                        <revoice-icon-trash></revoice-icon-trash> <span data-i18n="server.delete">Delete</span>
+                    </button>
+                </div>
+
+                <!-- Exit -->
+                <div class="category">
+                    <button class="sub-category" id="server-setting-close">
+                        <revoice-icon-circle-x></revoice-icon-circle-x> <span data-i18n="common.exit">Exit</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="config-container-right">
+            <div class="config-right">
+                <!-- Overview -->
+                <div class="hidden" id="server-setting-content-overview">
+                    <h1 data-i18n="server.overview">Overview</h1>
+                    <p><span data-i18n="server.id">Server ID</span> : <span id="server-setting-overview-uuid" class="selectable">[SERVER UUID]</span></p>
+
+                    <input type="file" id="overview-server-picture-new" accept="image/webp,image/png,image/jpg,image/jpeg,image/gif" style="display:none;">
+                    <input type="hidden" id="overview-server-picture" name="imagePath">
+                    <img id="setting-server-picture" alt="Preview PFP" class="icon large-icon">
+                    <br />
+                    <div class="config-buttons">
+                        <button class="button" id="server-overview-select-picture" data-i18n="server.picture.upload">Upload a server picture</button>
+                    </div>
+
+                    <h2 data-i18n="server.name">Server name</h2>
+                    <p><span id="server-setting-overview-name" class="selectable">[SERVER NAME]</span></p>
+                    <input type="text" id="server-setting-overview-name-input" value="[SERVER NAME]" class="hidden">
+
+                    <button id="server-setting-overview-save" class="config-button hidden" data-i18n="common.save">Save</button>
+                </div>
+
+                <!-- Rooms -->
+                <div class="hidden" id="server-setting-content-rooms">
+                    <h1 data-i18n="server.rooms">Rooms</h1>
+
+                    <div class="config-buttons">
+                        <button id="server-setting-room-add">
+                            <revoice-icon-circle-plus></revoice-icon-circle-plus> <span data-i18n="room.add">Room</span>
+                        </button>
+                        <button id="server-setting-category-add">
+                            <revoice-icon-folder-plus></revoice-icon-folder-plus> <span data-i18n="room.category.add">Category</span>
+                        </button>
+                    </div>
+                    <div class="server-structure-container">
+                        <div class="server-structure-panel">
+                            <div class="server-structure-tree-container" id="treeContainer">
+                                <div class="server-structure-drop-zone" id="rootDropZone"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="server-setting-structure-save" class="config-button" data-i18n="common.save">Save</button>
+                </div>
+
+                <!-- Roles -->
+                <div class="hidden" id="server-setting-content-roles">
+                    <h1 data-i18n="server.roles">Roles</h1>
+                    <revoice-server-roles id="server-setting-roles-component" server-id="" entity=""></revoice-server-roles>
+                </div>
+
+                <!-- Emotes -->
+                <div class="hidden" id="server-setting-content-emotes">
+                    <h1 data-i18n="server.emotes">Emotes</h1>
+                </div>
+
+                <!-- Members -->
+                <div class="hidden" id="server-setting-content-members">
+                    <h1 data-i18n="server.members">Members</h1>
+                    <div id="server-setting-members" class="config-members-list"></div>
+                </div>
+
+                <div class="hidden" id="server-setting-content-moderation">
+                    <revoice-moderation-panel id="server-moderation-panel"></revoice-moderation-panel>
+                </div>
+
+                <!-- Invitations -->
+                <div class="hidden" id="server-setting-content-invitations">
+                    <h1 data-i18n="server.invitations">Invitations</h1>
+                    <button id='server-setting-invitation-create' data-i18n="invitation.new">New invitation</button>
+
+                    <h2 data-i18n="invitation.valid">Valid invitation</h2>
+                    <div id="server-setting-invitation" class="config-invitation-list">
+                        <!-- JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Settings Container -->
+    <div class="main config hidden" id="route-user-settings">
+        <div class="config-container-left">
+            <h2 data-i18n="user.settings">User settings</h2>
+            <div class="config-left">
+                <div class="category">
+                    <!-- Overview -->
+                    <button class="sub-category" id="user-setting-tab-overview">
+                        <revoice-icon-information></revoice-icon-information> <span data-i18n="user.overview">Overview</span>
+                    </button>
+
+                    <!-- Appearance -->
+                    <button class="sub-category" id="user-setting-tab-appearance">
+                        <revoice-icon-appearance></revoice-icon-appearance> <span data-i18n="user.appearance">Appearance</span>
+                    </button>
+
+                    <!-- Emotes -->
+                    <button class="sub-category" id="user-setting-tab-emotes">
+                        <revoice-icon-emoji></revoice-icon-emoji> <span data-i18n="user.emotes">Emotes</span>
+                    </button>
+
+                    <!-- Input -->
+                    <button class="sub-category" id="user-setting-tab-audio-input">
+                        <revoice-icon-microphone></revoice-icon-microphone> <span data-i18n="user.audio.input">Audio input</span>
+                    </button>
+
+                    <!-- Output -->
+                    <button class="sub-category" id="user-setting-tab-audio-output">
+                        <revoice-icon-speaker></revoice-icon-speaker> <span data-i18n="user.audio.output">Audio output</span>
+                    </button>
+                </div>
+
+                <!-- Logout -->
+                <div class="category">
+                    <button class="sub-category red background-darkred" id="user-setting-tab-logout">
+                        <revoice-icon-logout></revoice-icon-logout> <span data-i18n="user.logout">Logout</span>
+                    </button>
+                </div>
+
+                <!-- Exit -->
+                <div class="category">
+                    <button class="sub-category" id="user-setting-close">
+                        <revoice-icon-circle-x></revoice-icon-circle-x> <span data-i18n="common.exit">Exit</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="config-container-right">
+            <div class="config-right">
+                <!-- Overview -->
+                <div class="hidden" id="user-setting-content-overview">
+                    <h1 data-i18n="user.overview">Overview</h1>
+                    <p><span data-i18n="user.id">User ID</span> : <span id="setting-user-uuid" class="selectable">[USER UUID]</span></p>
+                    <br />
+                    <input type="file" id="overview-picture-new" accept="image/webp,image/png,image/jpg,image/jpeg,image/gif" style="display:none;">
+                    <input type="hidden" id="overview-picture" name="imagePath">
+                    <img id="setting-user-picture" alt="Preview PFP" class="icon large-icon">
+
+                    <br />
+                    <div class="config-buttons">
+                        <button class="button" id="overview-select-picture" data-i18n="user.picture.upload">Upload a profile picture</button>
+                    </div>
+
+                    <h2 data-i18n="user.displayname">Display name</h2>
+                    <input type="text" id="settings-user-name" value="[DISPLAYNAME]">
+
+                    <br />
+                    <div class="config-buttons">
+                        <button class="button" id="overview-change-password" data-i18n="user.password.change">Change password</button>
+                        <button id="overview-save" class="button" data-i18n="user.save">Save Settings</button>
+                    </div>
+                </div>
+
+                <div class="hidden" id="user-setting-content-appearance">
+                    <!-- Language -->
+                    <div id="user-setting-content-language">
+                        <h1 data-i18n="user.language">Language</h1>
+                        <form id="setting-language-form" class="theme-form">
+                            <select id="setting-language-selection"></select>
+                        </form>
+                    </div>
+                    <br />
+                    <!-- Themes -->
+                    <div id="user-setting-content-themes">
+                        <h1 data-i18n="user.themes">Themes</h1>
+                        <form id="setting-themes-form" class="theme-form"></form>
+                    </div>
+                    <br />
+                    <!-- Messages -->
+                    <div id="user-setting-content-message">
+                        <h1 data-i18n="user.message">Messages</h1>
+                        <form id="setting-message-form" class="theme-form">
+                            <select id="setting-message-selection"></select>
+                        </form>
+                        <div id="setting-message-exemple"></div>
+                    </div>
+                </div>
+
+                <!-- Emotes -->
+                <div class="hidden" id="user-setting-content-emotes">
+                    <h1 data-i18n="user.emotes">Emotes</h1>
+                    <revoice-emoji-manager path="me" id="user-setting-emotes-form"></revoice-emoji-manager>
+                </div>
+
+                <!-- Audio input -->
+                <div class="hidden" id="user-setting-content-audio-input">
+                    <h1 data-i18n="audio.input">Audio input</h1>
+
+                    <h2 data-i18n="audio.volume">Volume</h2>
+
+                    <form class="voice-settings">
+                        <label for="input-volume" data-i18n="audio.volume.label" data-i18n-value="0" id="input-volume-label">[VOLUME]</label>
+                        <input type="range" id="input-volume" min="0" max="1.5" step="0.01">
+                    </form>
+
+                    <h2 id="voice-sensitivity" data-i18n="voice.sensitivity">Voice detection</h2>
+
+                    <form class="voice-settings">
+                        <label for="gate-threshold" data-i18n="voice.sensitivity.label" data-i18n-value="0" id="gate-threshold-label">[THRESHOLD]</label>
+                        <input type="range" id="gate-threshold" min="-100" max="0" step="1">
+
+                        <div class="config-buttons">
+                            <button class="config-button voice-toggleable" type="button" id="gate-default" data-i18n="voice.default">Default</button>
+                        </div>
+                    </form>
+
+                    <h2 class="voice-toggleable" data-i18n="compressor.title">Compressor</h2>
+                    <form class="voice-settings voice-toggleable">
+                        <div class="config-buttons">
+                            <button class="config-button" type="button" id="compressor-enabled" data-i18n="compressor.enabled" data-i18n-title="compressor.enabled.tooltip">Enabled</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Audio output -->
+                <div class="hidden" id="user-setting-content-audio-output">
+                    <h1 data-i18n="audio.output">Audio output</h1>
+
+                    <h2 data-i18n="audio.voice">Voice</h2>
+                    <form class="voice-settings">
+                        <label for="input-volume" data-i18n-value="0" id="output-voice-label">[VOICE]</label>
+                        <input type="range" id="output-voice-volume" min="0" max="1" step="0.01">
+                    </form>
+                    <div class="config-buttons">
+                        <button class="config-button" type="button" id="audio-output-try-voicechat" data-i18n="audio.try.voicechat">Try out !</button>
+                    </div>
+
+                    <h2 data-i18n="audio.notification">Notification</h2>
+                    <form class="voice-settings">
+                        <label for="input-volume" id="output-notification-label">[NOTIFICATION]</label>
+                        <input type="range" id="output-notification-volume" min="0" max="1" step="0.01">
+                    </form>
+                    <div class="config-buttons">
+                        <button class="config-button" type="button" id="audio-output-try-notification" data-i18n="audio.try.notification">Try out !</button>
+                    </div>
+
+                    <h2 data-i18n="audio.stream">Stream</h2>
+                    <form class="voice-settings">
+                        <label for="input-volume" data-i18n-value="0" id="output-stream-label">[STREAM]</label>
+                        <input type="range" id="output-stream-volume" min="0" max="1" step="0.01">
+                    </form>
+                    <div class="config-buttons">
+                        <button class="config-button" type="button" id="audio-output-try-stream" data-i18n="audio.try.stream">Try out !</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Settings Containter -->
+    <div class="main config hidden" id="route-admin-setting">
+        <div class="config-container-left">
+            <h2 data-i18n="admin.title">Admin Dashboard</h2>
+            <div class="config-left">
+                <div class="category">
+                    <!-- Overview -->
+                    <button class="sub-category" id="admin-setting-tab-overview">
+                        <revoice-icon-information></revoice-icon-information> <span data-i18n="admin.overview">Overview</span>
+                    </button>
+
+                    <!-- Rooms -->
+                    <button class="sub-category" id="admin-setting-tab-servers">
+                        <revoice-icon-server-stack></revoice-icon-server-stack> <span data-i18n="admin.servers">Servers</span>
+                    </button>
+
+                    <!-- Emotes -->
+                    <button class="sub-category" id="admin-setting-tab-emotes">
+                        <revoice-icon-emoji></revoice-icon-emoji> <span data-i18n="admin.emotes">Emotes</span>
+                    </button>
+
+                    <!-- Members -->
+                    <button class="sub-category" id="admin-setting-tab-members">
+                        <revoice-icon-users></revoice-icon-users> <span data-i18n="admin.members">Members</span>
+                    </button>
+
+                    <!-- Moderation -->
+                    <button class="sub-category" id="admin-setting-tab-moderation">
+                        <revoice-icon-moderation></revoice-icon-moderation> <span data-i18n="admin.moderation">Moderation</span>
+                    </button>
+
+                    <!-- Invitation -->
+                    <button class="sub-category" id="admin-setting-tab-invitations">
+                        <revoice-icon-envelope></revoice-icon-envelope> <span data-i18n="admin.invitations">Invitations</span>
+                    </button>
+                </div>
+
+                <!-- Exit -->
+                <div class="category">
+                    <button class="sub-category" id="admin-setting-close">
+                        <revoice-icon-circle-x></revoice-icon-circle-x> <span data-i18n="common.exit">Exit</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="config-container-right">
+            <div class="config-right">
+                <!-- Overview -->
+                <div class="hidden" id="admin-setting-content-overview">
+                    <h1 data-i18n="admin.overview">Overview</h1>
+
+                    <h2>Technical parameters</h2>
+                    <div id="admin-setting-technical-list"></div>
+                </div>
+
+                <!-- Servers -->
+                <div class="hidden" id="admin-setting-content-servers">
+                    <h1 data-i18n="admin.servers">Servers</h1>
+                    <div id="admin-setting-server-list"></div>
+                </div>
+
+                <!-- Emotes -->
+                <div class="hidden" id="admin-setting-content-emotes">
+                    <h1 data-i18n="admin.emotes">Emotes</h1>
+                </div>
+
+                <!-- Members -->
+                <div class="hidden" id="admin-setting-content-members">
+                    <h1 data-i18n="admin.admins">Admins</h1>
+                    <div id="admin-setting-admins-list" class="config-members-list"></div>
+
+                    <h1 data-i18n="admin.members">Members</h1>
+                    <div id="admin-setting-members-list" class="config-members-list"></div>
+                </div>
+
+              <!-- Moderation -->
+              <div class="hidden" id="admin-setting-content-moderation">
+              </div>
+                <!-- Invitations -->
+                <div class="hidden" id="admin-setting-content-invitations">
+                    <h1 data-i18n="server.invitations">Invitations</h1>
+                    <button id='admin-setting-invitation-create' data-i18n="invitation.new">New invitation</button>
+
+                    <h2 data-i18n="invitation.valid">Valid invitation</h2>
+                    <div id="admin-setting-invitation" class="config-invitation-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="src/js/lib/twemoji.min.js"></script>
+    <script src="src/js/lib/marked.min.js"></script>
+    <script src="src/js/lib/highlight.min.js"></script>
+
+    <!-- App -->
+    <script src="src/js/app/revoicechat.js" type="module"></script>
+</body>
+
+</html>

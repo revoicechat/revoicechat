@@ -1,0 +1,512 @@
+*[data-theme="dark"] {
+    /* Background */
+    --pri-bg-color: #121214;
+    --sec-bg-color: #1a1a1e;
+    --ter-bg-color: #202024;
+    --qua-bg-color: #43434d;
+    --blockquote-bg-color: #FFFFFF10;
+    --code-bg-color: #21262d;
+
+    /* Border */
+    --pri-bd-color: #43434d;
+    --sec-bd-color: #ffffff;
+
+    /* Text */
+    --pri-text-color: #ffffff;
+    --pri-placeholder-color: #9ca3af;
+
+    /* Active */
+    --pri-active-color: #2c2c30;
+
+    /* Hover */
+    --pri-hover-color: #242427;
+    --sec-hover-color: #43434d;
+
+    /* Button */
+    --pri-button-bg-color: #5E8C61;
+    --pri-button-hover-color: #3D6B47;
+    --pri-button-text-color: var(--pri-text-color);
+    --sec-button-bg-color: #00000000;
+    --sec-button-hover-color: #2c2c30;
+    --sec-button-text-color: var(--pri-text-color);
+    --ter-button-bg-color: #a22121;
+    --ter-button-hover-color: #731818;
+    --ter-button-text-color: var(--pri-text-color);
+
+    --notification-color: #6fc281;
+    --notification-mention-color: #b70e0e;
+
+    /* hljs */
+    --hljs-theme: 'src/css/highlightjs/dark.css';
+    --hljs-background: #1c1b1b;
+
+    --active-ban-color: #a22121;
+    --text-timeouts-color: #fb883c;
+    --voice-timeouts-color: #71717a;
+    --total-moderation-color: var(--pri-button-bg-color, #5E8C61);
+}
+
+*[data-theme="darker"] {
+    /* Background color */
+    --pri-bg-color: #000000;
+    --sec-bg-color: #000000;
+    --ter-bg-color: #000000;
+    --qua-bg-color: #000000;
+    --blockquote-bg-color: #FFFFFF10;
+    --code-bg-color: #21262d;
+
+    /* Border color */
+    --pri-bd-color: #f5f5dc;
+    --sec-bd-color: #f5f5dc;
+
+    /* Text */
+    --pri-text-color: #ffffff;
+    --pri-placeholder-color: #9ca3af;
+
+    /* Active */
+    --pri-active-color: #2c2c30;
+
+    /* Hover */
+    --pri-hover-color: #242427;
+    --sec-hover-color: #43434d;
+
+    /* Button */
+    --pri-button-bg-color: #5E8C61;
+    --pri-button-hover-color: #3D6B47;
+    --pri-button-text-color: var(--pri-text-color);
+    --sec-button-bg-color: #00000000;
+    --sec-button-hover-color: #2c2c30;
+    --sec-button-text-color: var(--pri-text-color);
+    --ter-button-bg-color: #a22121;
+    --ter-button-hover-color: #731818;
+    --ter-button-text-color: var(--pri-text-color);
+
+    --notification-color: #6fc281;
+    --notification-mention-color: #b70e0e;
+
+    /* hljs */
+    --hljs-theme: 'src/css/highlightjs/darker.css';
+    --hljs-background: #000000;
+}
+
+*[data-theme="light"] {
+    /* Background */
+    --pri-bg-color: #f2f2f2;
+    --sec-bg-color: #ffffff;
+    --ter-bg-color: #f1f8ff;
+    --qua-bg-color: #dadada;
+    --blockquote-bg-color: #00000010;
+    --code-bg-color: #d0dbea;
+
+    /* Border */
+    --pri-bd-color: rgb(224, 224, 224);
+    --sec-bd-color: #3c3c3d;
+
+    /* Text */
+    --pri-text-color: black;
+    --pri-placeholder-color: black;
+
+    /* Active */
+    --pri-active-color: #ffffff;
+
+    /* Hover */
+    --pri-hover-color: #dadada;
+    --sec-hover-color: #e8e6de;
+
+    /* Button */
+    --pri-button-bg-color: #5E8C61;
+    --pri-button-hover-color: #3D6B47;
+    --pri-button-text-color: var(--pri-bg-color);
+    --sec-button-bg-color: #00000000;
+    --sec-button-hover-color: var(--qua-bg-color);
+    --sec-button-text-color: var(--pri-text-color);
+    --ter-button-bg-color: #a22121;
+    --ter-button-hover-color: #731818;
+    --ter-button-text-color: var(--pri-text-color);
+
+    --notification-color: #6fc281;
+    --notification-mention-color: #b70e0e;
+
+    /* hljs */
+    --hljs-theme: 'src/css/highlightjs/light.css';
+    --hljs-background: #f6f6f6;
+}
+
+*[data-theme="femboy"] {
+    /* Background */
+    --pri-bg-color: #c4d0e3;
+    --sec-bg-color: #e6dde9;
+    --ter-bg-color: #facec2;
+    --qua-bg-color: #ff999c;
+    --blockquote-bg-color: #00000010;
+    --code-bg-color: var(--hljs-background);
+
+    /* Border */
+    --pri-bd-color: #c4d0e3;
+    --sec-bd-color: #c4d0e3;
+
+    /* Text */
+    --pri-text-color: black;
+    --pri-placeholder-color: #878890;
+
+    /* Active */
+    --pri-active-color: #facec2;
+
+    /* Hover */
+    --pri-hover-color: #ff999c;
+    --sec-hover-color: #facec2;
+
+    /* Button */
+    --pri-button-bg-color: #facec2;
+    --pri-button-hover-color: #ff999c;
+    --pri-button-text-color: var(--pri-text-color);
+    --sec-button-bg-color: #b91c1c;
+    --sec-button-hover-color: #ff999c;
+    --sec-button-text-color: var(--pri-text-color);
+    --ter-button-bg-color: #a22121;
+    --ter-button-hover-color: #731818;
+    --ter-button-text-color: var(--pri-text-color);
+
+    --notification-color: #6fc281;
+    --notification-mention-color: #b70e0e;
+
+    /* hljs */
+    --hljs-theme: 'src/css/highlightjs/femboy.css';
+    --hljs-background: #ffffff;
+}
+
+body {
+    color: var(--pri-text-color);
+}
+
+/* Fixed colors */
+.green {
+    color: #22c55e !important;
+}
+
+.red {
+    color: #ff0000 !important;
+}
+
+.background-green {
+    background-color: #22c55e !important;
+}
+
+.background-green:hover {
+    background-color: #1b8b44 !important;
+}
+
+.background-orange {
+    background-color: #fb883c !important;
+}
+
+.background-red {
+    background-color: #ff0000 !important;
+}
+
+.background-red:hover {
+    background-color: #9e0505 !important;
+}
+
+.background-gray {
+    background-color: #71717a !important;
+}
+
+.background-darkred:hover {
+    background-color: #9e0505 !important;
+}
+
+/* Element */
+.app button:hover {
+    background-color: var(--sec-button-hover-color);
+}
+
+/* Sidebars */
+.sidebar.private-messages,
+.sidebar.instances-list,
+.sidebar.server {
+    border-color: var(--pri-bd-color);
+    background-color: var(--pri-bg-color);
+}
+
+.sidebar.users {
+    border-color: var(--pri-bd-color);
+    background-color: var(--sec-bg-color);
+}
+
+.sidebar .header {
+    border-color: var(--pri-bd-color);
+}
+
+.instances .element.active {
+    background-color: var(--pri-active-color);
+}
+
+/* Rooms */
+
+.rooms summary,
+.rooms .element {
+    border-color: var(--pri-bd-color);
+}
+
+.rooms summary {
+    font-weight: 600;
+}
+
+.sidebar.users summary,
+.rooms summary:hover {
+    color: var(--pri-text-color);
+}
+
+.sidebar.users summary {
+    color: var(--pri-placeholder-color);
+}
+
+.rooms .element:hover {
+    background-color: var(--pri-hover-color);
+}
+
+.rooms .element.active {
+    background-color: var(--pri-active-color);
+    font-weight: 600;
+}
+
+/* Room */
+.room {
+    border-color: var(--pri-bd-color);
+}
+
+.room-header {
+    background-color: var(--sec-bg-color);
+    border-color: var(--pri-bd-color);
+}
+
+.room-name {
+    font-weight: 600;
+}
+
+.room-container {
+    background-color: var(--sec-bg-color);
+}
+
+/* Status */
+.status-container {
+    border-color: var(--pri-bd-color);
+    background-color: var(--ter-bg-color);
+}
+
+.status-bloc-1 .status {
+    color: var(--pri-placeholder-color);
+}
+
+/* Chat */
+.room-control-container {
+    border-color: var(--pri-bd-color);
+    background-color: var(--sec-bg-color);
+}
+
+.text-control input,
+.text-control textarea {
+    background-color: var(--ter-bg-color);
+}
+
+.text-control input::placeholder,
+.text-control textarea::placeholder {
+    color: var(--pri-placeholder-color);
+}
+
+/* Voice control */
+.voice-control {
+    border-color: var(--pri-bd-color);
+    background-color: var(--ter-bg-color);
+}
+
+.voice-control .element .disconnected {
+    background-color: #22c55e;
+}
+
+.voice-control .element .disconnected:hover {
+    background-color: #189345;
+}
+
+.voice-control .element .waiting {
+    background-color: #ffa500;
+}
+
+.voice-control .element .connected {
+    background-color: #ee3434;
+}
+
+.voice-control .element .connected:hover {
+    background-color: #b62727;
+}
+
+.voice-profile:hover {
+    background-color: var(--sec-bg-color);
+}
+
+.voice-control button:hover,
+.voice-profile button:hover {
+    background-color: var(--sec-button-hover-color);
+}
+
+.voice-profile .gate .icon {
+    border-color: #00000000;
+    border-width: 3px;
+}
+
+.voice-profile .user .name {
+    color: var(--pri-placeholder-color);
+}
+
+.voice-profile .gate.active .icon {
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-color: #22c55e;
+    border-width: 3px;
+}
+
+.voice-profile .gate.active .user .name {
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    color: var(--pri-text-color);
+}
+
+/* Message */
+.message-container:hover {
+    background-color: var(--pri-hover-color);
+}
+
+.message-timestamp {
+    color: var(--pri-placeholder-color);
+}
+
+.message-context-menu .icon:hover {
+    background-color: var(--sec-hover-color);
+}
+
+/* User profile */
+.user-profile:hover {
+    background-color: var(--sec-hover-color);
+}
+
+/* Server config */
+.config-container-left {
+    border-color: var(--pri-bd-color);
+    background-color: var(--pri-bg-color);
+}
+
+.config-container-right {
+    background-color: var(--sec-bg-color);
+}
+
+.config .sub-category:hover {
+    background-color: var(--pri-hover-color);
+}
+
+.config .sub-category.active {
+    background-color: var(--pri-active-color);
+    color: var(--pri-button-bg-color);
+}
+
+.config input,
+.config select,
+form.popup input,
+form.popup select {
+    background-color: var(--sec-bg-color);
+    border-color: var(--pri-bd-color);
+    color: var(--pri-text-color);
+}
+
+.config label,
+form.popup label {
+    font-weight: 800;
+    color: var(--pri-text-color);
+}
+
+.voice-settings label {
+    font-weight: 400;
+    color: var(--pri-text-color);
+}
+
+.config-item {
+    background-color: var(--ter-bg-color);
+}
+
+.config-item:hover {
+    background-color: var(--pri-hover-color);
+}
+
+.config-right button {
+    background-color: var(--pri-button-bg-color);
+    color: var(--pri-button-text-color);
+}
+
+.config-right button:hover {
+    background-color: var(--pri-button-hover-color);
+}
+
+.theme-select-button {
+    padding: 0;
+    background-color: var(--sec-button-bg-color) !important;
+    color: var(--sec-button-text-color) !important;
+}
+
+.theme-select-button:hover {
+    background-color: var(--sec-button-hover-color) !important;
+}
+
+.theme-select-button[disabled] {
+    background-color: var(--sec-button-hover-color) !important;
+}
+
+textarea.config-item:hover {
+    background-color: var(--sec-hover-color);
+}
+
+/* Server room structure */
+.server-structure-panel {
+    background-color: var(--pri-bg-color);
+    border: 1px solid var(--pri-bd-color);
+}
+
+.server-structure-panel h2 {
+    color: var(--pri-text-color);
+}
+
+.server-structure-item-id {
+    color: var(--pri-text-color);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.server-structure-tree-item {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.server-structure-form-group label {
+    color: var(--pri-text-color);
+}
+
+.server-structure-item-name {
+    font-weight: 500;
+    color: var(--pri-text-color);
+}
+
+.server-structure-tree-item.drag-over {
+    border-color: rgb(34 197 94);
+    background-color: var(--sec-hover-color);
+}
+
+.server-structure-drop-zone.drag-over {
+    border-color: rgb(34 197 94);
+    background-color: var(--sec-hover-color);
+}
+
+.server-structure-drop-zone {
+    border: 0 dashed var(--pri-bd-color);
+    color: rgb(156, 163, 175);
+}
+
+@media screen and (max-width: 600px) {
+    .room-control-container {
+        background-color: var(--ter-bg-color);
+    }
+}

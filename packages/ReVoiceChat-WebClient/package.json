@@ -1,0 +1,26 @@
+{
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "tauri:android:init": "tauri android init",
+    "tauri:android:dev": "tauri android dev",
+    "tauri:android:build": "tauri android build",
+    "tauri:android:build:release": "tauri android build --release"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.9.2",
+    "@vitest/coverage-v8": "^4.0.15",
+    "@vitest/ui": "^4.0.15",
+    "jsdom": "^25.0.1",
+    "vitest": "^4.0.15"
+  },
+  "dependencies": {
+    "@tauri-apps/plugin-opener": "^2.5.2"
+  }
+}

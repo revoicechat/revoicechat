@@ -1,0 +1,192 @@
+:host {
+    display: block;
+    padding: 0 10px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+/* Markdown content styling */
+.markdown-content{
+    user-select: text;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    color: #58a6ff;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 5px;
+    margin: 10px 0 5px 0;
+}
+
+.markdown-content p {
+    color: var(--pri-text-color);
+    margin: 0;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    padding-left: 20px;
+    color: var(--pri-text-color);
+}
+
+.markdown-content li {
+    margin: 8px 0;
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid #58a6ff;
+    margin: 16px 0;
+    color: #8b949e;
+    background: var(--blockquote-bg-color);
+    border-radius: 0 6px 6px 0;
+    padding: 16px;
+}
+
+.markdown-content code:not(.hljs) {
+    background: var(--code-bg-color);
+    color: var(--pri-text-color);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Fira Code', Consolas, monospace;
+    font-size: 0.9em;
+}
+
+.markdown-content pre {
+    background: var(--hljs-background);
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 8px 0;
+    border: 1px solid #30363d;
+}
+
+.markdown-content a {
+    color: #58a6ff;
+    text-decoration: none;
+}
+
+.markdown-content a:hover {
+    text-decoration: underline;
+}
+
+.markdown-content hr {
+    border: none;
+    border-top: 1px solid #30363d;
+    margin: 24px 0;
+}
+
+.markdown-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+}
+
+.markdown-content th,
+.markdown-content td {
+    border: 1px solid #30363d;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.markdown-content th {
+    background: #21262d;
+    color: #58a6ff;
+    font-weight: bold;
+}
+
+.only-emoji {
+    font-size: 2rem;
+}
+
+.only-emoji .emoji {
+    width: 2rem;
+    height: 2rem;
+    padding-right: 0.3rem;
+}
+
+.stickers-emoji {
+    font-size: 5rem;
+}
+
+.stickers-emoji .emoji {
+    width: 5rem;
+    height: 5rem;
+    padding-right: 0.3rem;
+}
+
+.emoji {
+    width: 1rem;
+    height: 1rem;
+    display: inline;
+}
+
+a.media {
+    cursor: pointer;
+    pointer-events: initial;
+}
+
+img.media {
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 10px;
+}
+video.media {
+    max-width: 300px;
+    max-height: 300px;
+}
+.file-type-link {
+    max-height: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    width: 300px;
+    column-gap: 10px;
+    padding: 10px;
+    background-color: var(--ter-bg-color);
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+.file-type-link:hover {
+    background-color: var(--pri-active-color);
+}
+svg {
+    max-height: 24px;
+    height: 24px;
+}
+
+.message-reactions {
+    display: flex;
+    column-gap: 0.5rem;
+}
+
+.message-reaction {
+    display: flex;
+    column-gap: 0.5rem;
+    align-items: center;
+    border-radius: 0.6rem;
+    border: var(--pri-bd-color) 1px solid;
+    padding: 0.1rem 0.3rem;
+    font-size: 1rem;
+}
+
+.message-reaction img, .only-emoji  .message-reaction .emoji {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.message-reaction:hover {
+    cursor: pointer;
+    background-color: var(--pri-bg-color);
+}
+
+.message-reaction.self {
+    background-color: var(--pri-bg-color);
+    border-color: var(--pri-button-bg-color);
+    color: var(--pri-button-bg-color);
+}
+
+.message-reaction.self:hover {
+    background-color: var(--pri-button-hover-color);
+}

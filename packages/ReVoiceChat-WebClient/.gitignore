@@ -1,0 +1,16 @@
+# .gitignore
+test*
+
+### IntelliJ IDEA ###
+.idea/*
+!.idea/icon.svg
+*.iws
+*.iml
+*.ipr
+
+**/coverage
+
+node_modules*
+package-lock.json
+
+.scannerwork

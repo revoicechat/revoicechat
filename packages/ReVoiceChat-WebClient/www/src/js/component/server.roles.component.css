@@ -1,0 +1,139 @@
+.role-settings-main {
+    display: flex;
+    width: max-content;
+}
+
+.role-settings-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 15rem;
+    height: -webkit-fill-available;
+}
+
+.config-item {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+}
+
+.role-priority {
+    font-size: 0.75rem;
+    color: #95a5a6;
+    padding-left: 0.75rem;
+}
+
+.room-container {
+    padding-left: 2rem;
+    background-color: #00000000;
+}
+
+.risk-category {
+    margin-bottom: 2rem;
+}
+
+.risk-category-header {
+    font-weight: 700;
+    padding-bottom: 0.5rem;
+}
+
+.risk-big-category-header {
+    font-weight: 900;
+    font-size: larger;
+    padding-bottom: 0.5rem;
+    padding-top: 1rem;
+}
+
+.risk-container {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.risk-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: var(--pri-bg-color);
+    border-radius: 0.25rem;
+    border-left: 4px solid;
+    border-left-color: var(--pri-bd-color);
+}
+
+.risk-name {
+    padding-right: 10px;
+}
+
+.risk-toggle {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.detail-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #43434d;
+}
+
+.icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+}
+
+.detail-header h2 {
+    flex: 1;
+}
+
+.detail-priority {
+    font-size: 0.875rem;
+    color: #95a5a6;
+}
+
+.error-message {
+    background-color: rgb(220, 38, 38);
+    color: white;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin: 1rem;
+    text-align: center;
+}
+
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-right: 0.2rem;
+}
+
+.tab button.active {
+    background-color: var(--pri-active-color);
+    color: var(--pri-button-bg-color);
+}
+
+.risk-management-section {
+    display: flex;
+    column-gap: 2rem;
+}
+
+.risk-member-item {
+    max-width: 15rem;
+    min-width: 15rem;
+}
+
+.risk-member-item .name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 10rem;
+    min-width: 10rem;
+}
+
+.config-section {
+    min-width: 15rem;
+}

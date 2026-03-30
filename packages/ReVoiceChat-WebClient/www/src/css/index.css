@@ -1,0 +1,88 @@
+/* LOGIN */
+.main.login {
+    background: #43434D;
+    background: radial-gradient(circle, rgba(67, 67, 77, 1) 0%, rgba(18, 18, 20, 1) 100%);
+}
+
+.login {
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    margin-top: 2.5rem;
+    border-radius: 0.25rem;
+    padding: 0.75rem 2.5rem;
+    background-color: #43434d;
+}
+
+.login-form {
+    width: 30rem;
+}
+
+.login-form button {
+    display: flex;
+    margin-top: 1.5rem;
+    width: 100%;
+    background-color: var(--pri-button-bg-color);
+    color: #ffffff;
+    justify-content: center;
+    align-items: center;
+}
+
+button:hover:disabled,
+button:disabled {
+    background-color: grey !important;
+    cursor: not-allowed;
+}
+
+.login-form button:hover {
+    background-color: var(--pri-button-hover-color);
+}
+
+.login-form .switch {
+    cursor: pointer;
+    border: none;
+    background: none !important;
+    padding: 0 !important;
+    font-family: arial, sans-serif;
+    text-decoration: underline;
+    color: var(--pri-button-bg-color);
+}
+
+.login-form .switch:hover {
+    color: var(--pri-button-hover-color);
+}
+
+.login-element {
+    margin-bottom: 1.5rem;
+}
+
+.login-element label {
+    display: block;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.login-element input {
+    margin-top: 0.5rem;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    border-width: 1px;
+    border-radius: 10px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.75rem;
+    width: 100%;
+    border-color: #ffffff;
+    background-color: #43434d;
+    color: #ffffff;
+}
+
+.password-reject {
+    border-color: red !important;
+}
+
+.password-accept {
+    border-color: green !important;
+}
