@@ -2,11 +2,11 @@
 
 # Install services
 
-[How to install ReVoiceChat-CoreServer](https://github.com/revoicechat/ReVoiceChat-CoreServer/blob/main/README.md)
+[How to install ReVoiceChat-CoreServer](https://github.com/revoicechat/core-server/blob/main/README.md)
 
-[How to install ReVoiceChat-MediaServer](https://github.com/revoicechat/ReVoiceChat-MediaServer/blob/main/INSTALL.md)
+[How to install ReVoiceChat-MediaServer](https://github.com/revoicechat/media-server/blob/main/INSTALL.md)
 
-[How to install ReVoiceChat-WebClient](https://github.com/revoicechat/ReVoiceChat-WebClient/blob/main/INSTALL.md)
+[How to install ReVoiceChat-WebClient](https://github.com/revoicechat/web-client/blob/main/INSTALL.md)
 
 
 ## Configure reverse proxy

@@ -1,23 +1,5 @@
 # How to install ReVoiceChat-WebClient
 
-## Clone this repository
-
-For this guide, we will use ```/srv/rvc``` but you can use any directory (don't forget to change ```/srv/rvc``` to your path)
-
-```sh
-git clone https://github.com/revoicechat/ReVoiceChat-WebClient
-```
-```sh
-cd ReVoiceChat-WebClient/
-```
-
-## Option A : Auto install
-### Run installer (debian)
-```sh
-sudo ./install.sh
-```
-
-## Option B : Manual install
 ### Install Apache2 (skip this if you already installed MediaServer)
 ```sh
 sudo apt-get install apache2-utils apache2 -y
