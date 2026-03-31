@@ -1,4 +1,4 @@
-# How to install ReVoiceChat-MediaServer
+# How to install the media server
 
 ## Install Apache2 and PHP
 ```sh
@@ -26,7 +26,7 @@ sudo systemctl restart apache2
 For this guide, we will use ```/srv/rvc``` but you can use any directory (don't forget to change ```/srv/rvc``` to your path)
 
 ```sh
-git clone https://github.com/revoicechat/ReVoiceChat-MediaServer
+git clone https://github.com/revoicechat/revoicechat
 ```
 
 ## Create VirtualHost

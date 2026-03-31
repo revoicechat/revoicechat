@@ -17,15 +17,15 @@ class TestOpenGraphService {
   void testWithOneUrl() {
     // Given
     var text = """
-        look https://github.com/revoicechat/ReVoiceChat-CoreServer for
-        the core part of ReVoiceChat""";
+        look https://github.com/revoicechat for
+        the ReVoiceChat repositories""";
     // When
     var result = new OpenGraphService(new HttpFetcherImpl()).extract(text);
     // Then
     assertThat(result).isNotNull();
-    assertThat(result.getBasic().url()).isEqualTo("https://github.com/revoicechat/ReVoiceChat-CoreServer");
-    assertThat(result.getBasic().title()).contains("revoicechat/ReVoiceChat-CoreServer");
-    assertThat(result.getPage().description()).contains("Backend server of revoicechat");
+    assertThat(result.getBasic().url()).isEqualTo("https://github.com/revoicechat");
+    assertThat(result.getBasic().title()).contains("revoicechat");
+    assertThat(result.getPage().description()).contains("Take back control of your communications.");
     assertThat(result.getPage().siteName()).isEqualTo("GitHub");
     assertThat(result.getImage().image()).startsWith("https://opengraph.githubassets.com/");
   }
@@ -33,7 +33,7 @@ class TestOpenGraphService {
   @ParameterizedTest
   @ValueSource(strings = {
       """
-          - https://github.com/revoicechat/ReVoiceChat-CoreServer
+          - https://github.com/revoicechat
           - https://github.com/revoicechat/revoicechat""",
       "no url",
       ""
@@ -52,17 +52,17 @@ class TestOpenGraphService {
   void testWithError() {
     assertThat(new OpenGraphService(_ -> {
       throw new IOException();
-    }).extract("https://github.com/revoicechat/ReVoiceChat-CoreServer")).isNull();
+    }).extract("https://github.com/revoicechat")).isNull();
   }
 
   @Test
   void testHasPreview() {
     var service = new OpenGraphService(new HttpFetcherImpl());
     assertThat(service.hasPreview("""
-        look https://github.com/revoicechat/ReVoiceChat-CoreServer for
+        look https://github.com/revoicechat for
         the core part of ReVoiceChat""")).isTrue();
     assertThat(service.hasPreview("""
-        - https://github.com/revoicechat/ReVoiceChat-CoreServer
+        - https://github.com/revoicechat
         - https://github.com/revoicechat/revoicechat""")).isFalse();
     assertThat(service.hasPreview("no url")).isFalse();
     assertThat(service.hasPreview("")).isFalse();

@@ -8,13 +8,13 @@ rm -rf .tmp-i18n
 mkdir -p .tmp-i18n
 
 files=(
-  "ReVoiceChat-CoreServer/i18n/src/main/resources/error_en.properties"
-  "ReVoiceChat-CoreServer/i18n/src/main/resources/risks_en.properties"
-  "ReVoiceChat-WebClient/www/src/i18n/admin-dashboard_en.properties"
-  "ReVoiceChat-WebClient/www/src/i18n/frontend_en.properties"
-  "ReVoiceChat-WebClient/www/src/i18n/login_en.properties"
-  "ReVoiceChat-WebClient/www/src/i18n/server-settings_en.properties"
-  "ReVoiceChat-WebClient/www/src/i18n/user-settings_en.properties"
+  "core-server/i18n/src/main/resources/error_en.properties"
+  "core-server/i18n/src/main/resources/risks_en.properties"
+  "web-client/www/src/i18n/admin-dashboard_en.properties"
+  "web-client/www/src/i18n/frontend_en.properties"
+  "web-client/www/src/i18n/login_en.properties"
+  "web-client/www/src/i18n/server-settings_en.properties"
+  "web-client/www/src/i18n/user-settings_en.properties"
 )
 
 count=0

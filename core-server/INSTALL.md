@@ -1,4 +1,4 @@
-# Host to install ReVoiceChat-CoreServer
+# Host to install the core server
 
 ## Install Java 25
 
@@ -45,13 +45,13 @@ CREATE DATABASE revoicechat_db OWNER = revoicechat_user;
 For this guide, we will use `/srv/rvc` but you can use any directory
 
 ```sh
-git clone https://github.com/revoicechat/ReVoiceChat-CoreServer
+git clone https://github.com/revoicechat/revoicechat
 ```
 
 ## generate rsa key for JWT tokens
 
 ```sh
-cd ReVoiceChat-CoreServer/
+cd revoicechat/core-server/
 ./scripts/generate_jwtKey.sh
 ```
 
@@ -82,7 +82,7 @@ cp rvc-core.service.example rvc-core.service
 ```
 - Link the service file
 ```sh
-sudo systemctl link /srv/rvc/ReVoiceChat-CoreServer/rvc-core.service
+sudo systemctl link /srv/rvc/core-server/rvc-core.service
 ```
 - Reload daemon
 ```sh

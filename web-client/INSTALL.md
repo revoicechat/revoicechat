@@ -1,14 +1,14 @@
-# How to install ReVoiceChat-WebClient
+# How to install the web client
 
 ## Clone this repository
 
 For this guide, we will use ```/srv/rvc``` but you can use any directory (don't forget to change ```/srv/rvc``` to your path)
 
 ```sh
-git clone https://github.com/revoicechat/ReVoiceChat-WebClient
+git clone https://github.com/revoicechat/revoicechat
 ```
 ```sh
-cd ReVoiceChat-WebClient/
+cd revoicechat/web-client/
 ```
 
 ## Option A : Auto install

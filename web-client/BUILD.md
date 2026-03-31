@@ -1,4 +1,4 @@
-## How to build ReVoiceChat-WebClient
+## How to build the web client
 
 ### Production
 

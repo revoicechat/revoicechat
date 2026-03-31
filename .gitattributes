@@ -2,9 +2,3 @@
 scripts/* linguist-detectable=false
 *.sh linguist-detectable=false
 
-ReVoiceChat-CoreServer/** linguist-vendored=false
-ReVoiceChat-CoreServer/** linguist-detectable=true
-ReVoiceChat-MediaServer/** linguist-vendored=false
-ReVoiceChat-MediaServer/** linguist-detectable=true
-ReVoiceChat-WebClient/** linguist-vendored=false
-ReVoiceChat-WebClient/** linguist-detectable=true

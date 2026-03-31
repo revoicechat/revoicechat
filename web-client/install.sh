@@ -4,7 +4,7 @@ function pause(){
  echo ""
 }
 
-echo "ReVoiceChat-WebClient installer"
+echo "ReVoiceChat web client installer"
 pause
 
 echo "Installing Apache2 ..."

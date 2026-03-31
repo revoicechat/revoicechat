@@ -11,7 +11,7 @@
 
 You can use one host per service or one host for everything. 
 
-Keep in mind that ```ReVoiceChat-MediaServer``` can get quite big if you store a lot of files.
+Keep in mind that ```media-server``` can get quite big if you store a lot of files.
 
 # Install using docker
 
@@ -19,7 +19,7 @@ This repository can help you run all service.
 
 - Clone the project with all submodules : 
 ```shell
-git clone --recursive https://github.com/revoicechat/ReVoiceChat-Selfhost.git
+git clone https://github.com/revoicechat/revoicechat.git
 ```
 - Init the project : 
 ```shell

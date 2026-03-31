@@ -3,9 +3,7 @@
 [<img src="logo.png" width="30"/>](.idea/icon.svg)
 ![RevoiceChat](https://img.shields.io/badge/RevoiceChat-Web%20Client-1E90E7?style=for-the-badge)
 
-# ReVoiceChat-WebClient
-
-Proof of concept RevoiceChat Webclient
+Web client part of RevoiceChat
 
 ![screenshot](screenshot.png)
 
