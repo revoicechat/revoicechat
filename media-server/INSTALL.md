@@ -21,14 +21,6 @@ sudo a2enmod rewrite
 sudo systemctl restart apache2
 ```
 
-## Clone this repository
-
-For this guide, we will use ```/srv/rvc``` but you can use any directory (don't forget to change ```/srv/rvc``` to your path)
-
-```sh
-git clone https://github.com/revoicechat/revoicechat
-```
-
 ## Create VirtualHost
 
 Create new **VirtualHost**
@@ -42,15 +34,15 @@ VirtualHost exemple :
     Header set Access-Control-Allow-Origin "*"
     Header set Access-Control-Allow-Methods: GET,POST,OPTIONS,DELETE
 
-    DocumentRoot /srv/rvc/ReVoiceChat-MediaServer/www/
+    DocumentRoot /srv/rvc/revoicechat/media-server/www/
     DirectoryIndex index.php
 
-    <Directory /srv/rvc/ReVoiceChat-MediaServer/www/>
+    <Directory /srv/rvc/revoicechat/media-server/www/>
         AllowOverride all
         Require all granted
     </Directory>
 
-    <Directory /srv/rvc/html/ReVoiceChat-MediaServer/www/data/>
+    <Directory /srv/rvc/revoicechat/media-server/www/data/>
         AllowOverride None
         Require all denied
     </Directory>

@@ -3,13 +3,15 @@ RewriteCond %{REQUEST_URI} !\.php$
 
 # Attachements
 RewriteRule ^media/attachments/([0-9A-Za-z-]*)$ index.php?attachment=$1 [L]
-RewriteRule ^media/attachments/([0-9A-Za-z-]*)/thumbnail$ index.php?attachment=$1&thumbnail [L]
+RewriteRule ^media/attachments/thumbnail/([0-9A-Za-z-]*)$ index.php?attachment=$1&thumbnail [L]
 
 # Profiles
 RewriteRule ^media/profiles/([0-9A-Za-z-]*)$ index.php?profiles=$1 [L]
+RewriteRule ^media/profiles/server/([0-9A-Za-z-]*)$ index.php?profiles=$1&server [L]
 
 # Emotes
 RewriteRule ^media/emote/([0-9A-Za-z-.]*)$ emote.php?any&id=$1 [L]
+RewriteRule ^media/emote/assets/([0-9A-Za-z-.]*)$ emote.php?assets&id=$1 [L]
 
 # Other
 RewriteRule ^media/([0-9A-Za-z-.]*)$ index.php?$1 [L]

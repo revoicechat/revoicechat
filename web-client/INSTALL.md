@@ -1,23 +1,5 @@
 # How to install the web client
 
-## Clone this repository
-
-For this guide, we will use ```/srv/rvc``` but you can use any directory (don't forget to change ```/srv/rvc``` to your path)
-
-```sh
-git clone https://github.com/revoicechat/revoicechat
-```
-```sh
-cd revoicechat/web-client/
-```
-
-## Option A : Auto install
-### Run installer (debian)
-```sh
-sudo ./install.sh
-```
-
-## Option B : Manual install
 ### Install Apache2 (skip this if you already installed MediaServer)
 ```sh
 sudo apt-get install apache2-utils apache2 -y
