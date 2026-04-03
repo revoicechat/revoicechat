@@ -8,11 +8,6 @@ set -e  # Exit on any error
 echo "🔄 Pulling latest changes from repository..."
 git pull
 
-echo "🔄 Updating submodules to committed versions..."
-# --init: initialize submodules if not already done
-# --recursive: update nested submodules as well
-git submodule update --init --recursive
-
 echo "📋 Copying configuration files to submodules..."
 
 # Copy CoreServer config from root to submodule (overwrite if exists)
