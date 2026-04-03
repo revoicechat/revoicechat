@@ -9,11 +9,9 @@
 
 # How to selfhost ReVoiceChat
 
-You can use one host per service or one host for everything. 
-
 Keep in mind that ```media-server``` can get quite big if you store a lot of files.
 
-# Install using docker (or [Install manually (Debian based)](INSTALL.md) )
+## Install using docker (or [manually (Debian based)](INSTALL.md) )
 
 This repository can help you run all service.
 
@@ -36,7 +34,7 @@ sudo ./scripts/deploy-update.sh
 ```
 NB : this script will automatically update the project
 
-# First time setup
+## First time setup
 
 ### How to gain admin rights
 - Connect to the WebClient with your server IP.
