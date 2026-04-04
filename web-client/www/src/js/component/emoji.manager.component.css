@@ -21,11 +21,8 @@ button {
 }
 
 .add-section {
-    background-color: var(--sec-bg-color);
-    border: 1px solid var(--pri-bd-color);
-    border-radius: 0.25rem;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
+    padding: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .add-section h2 {
@@ -128,7 +125,6 @@ button {
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: default;
     border-radius: 0.25rem;
-    padding: 1rem;
     background-color: var(--ter-bg-color);
     border: 1px solid transparent;
     height: fit-content;
@@ -136,7 +132,6 @@ button {
 
 .config-item:hover {
     background-color: var(--pri-hover-color);
-    border-color: var(--pri-bd-color);
 }
 
 .emoji-header {

@@ -280,7 +280,8 @@ class ModerationPanel extends HTMLElement {
         for (const def of filterDefs) {
             const btn = document.createElement("button");
             btn.className = "mp-filter" + (this.#filter === def.key ? " active" : "");
-            btn.innerHTML = `<revoice-icon-${def.icon}></revoice-icon-${def.icon}> <span data-i18n="${def.label}">${def.label}</span>`;
+            const icon = def.icon ? `<revoice-icon-${def.icon}></revoice-icon-${def.icon}>` : ''
+            btn.innerHTML = `${icon}<span data-i18n="${def.label}">${def.label}</span>`;
             btn.dataset.key = def.key;
             btn.addEventListener("click", () => {
                 this.#filter = def.key;
