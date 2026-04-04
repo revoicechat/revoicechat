@@ -243,7 +243,7 @@ class ModerationPanel extends HTMLElement {
             btn.dataset.i18n = def.label;
             btn.addEventListener("click", () => {
                 this.#tab = def.key;
-                this.#render();
+                this.#rerenderList();
             });
             container.appendChild(btn);
         }
@@ -558,6 +558,7 @@ class ModerationPanel extends HTMLElement {
 
     #buildListContainer() {
         const wrap = document.createElement("div");
+        wrap.id = "mp-list-container";
         wrap.className = "mp-list-container";
 
         if (this.#tab === "sanctions") {

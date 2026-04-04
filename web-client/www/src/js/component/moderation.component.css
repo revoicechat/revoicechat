@@ -104,7 +104,6 @@ svg {
     cursor: pointer;
     color: var(--pri-placeholder-color, #9ca3af);
     margin-bottom: -1px;
-    transition: all 0.15s;
     font-family: inherit;
 }
 
