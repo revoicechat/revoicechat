@@ -2,17 +2,12 @@ import TextController from "./text.controller.js";
 import Modal from "../component/modal.component.js";
 import { i18n } from "../lib/i18n.js";
 import CoreServer from "./core/core.server.js";
+import RoomController from "./room.controller.js";
 
-export default class PrivateRoomController {
-    /** @type {TextController} */
-    textController;
-    id;
-    name;
-    type;
-
+export default class PrivateRoomController extends RoomController{
     /** @param {UserController} user */
     constructor(user) {
-        this.user = user;
+        super(user);
         this.textController = new TextController(user, this, true);
         this.attachEvents();
     }

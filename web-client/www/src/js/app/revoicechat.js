@@ -121,7 +121,7 @@ export default class ReVoiceChat {
         return this.user.settings
     }
 
-    /** @param {import('./types.js').ProfilPictureUpdate} data */
+    /** @param {ProfilPictureUpdate} data */
     updateAllPicture(data) {
         const time = Date.now();
         for (const picture of document.querySelectorAll(`img[data-id="${data.id}"]`)) {

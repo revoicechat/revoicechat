@@ -1,14 +1,12 @@
 import VoiceCall from "./voice/voice.js";
-import { LanguageController } from "./language.controller.js";
-import { SpinnerOnButton } from "../component/button.spinner.component.js";
-import { getAllDeclaredDataThemes } from "../component/theme.component.js";
-import { i18n } from "../lib/i18n.js";
+import {LanguageController} from "./language.controller.js";
+import {SpinnerOnButton} from "../component/button.spinner.component.js";
+import {getAllDeclaredDataThemes} from "../component/theme.component.js";
+import {i18n} from "../lib/i18n.js";
 import MediaServer from "./media/media.server.js";
 import CoreServer from "./core/core.server.js";
 import Modal from "../component/modal.component.js";
-import { UserNotificationRepresentation } from "../representation/user.representation.js";
-import { MessageRepresentation } from "../representation/room.representation.js";
-import { getUserLanguage } from "../lib/tools.js";
+import {getUserLanguage} from "../lib/tools.js";
 
 export default class UserSettingsController {
     #user;
@@ -202,13 +200,19 @@ export default class UserSettingsController {
             </form>`,
             didOpen: () => {
                 const currentPassword = document.getElementById('popup-current-password');
-                currentPassword.oninput = () => { this.#password.password = currentPassword.value };
+                currentPassword.oninput = () => {
+                    this.#password.password = currentPassword.value
+                };
 
                 const newPassword = document.getElementById('popup-new-password');
-                newPassword.oninput = () => { this.#password.newPassword = newPassword.value };
+                newPassword.oninput = () => {
+                    this.#password.newPassword = newPassword.value
+                };
 
                 const confirmPassword = document.getElementById('popup-confirm-password');
-                confirmPassword.oninput = () => { this.#password.confirmPassword = confirmPassword.value };
+                confirmPassword.oninput = () => {
+                    this.#password.confirmPassword = confirmPassword.value
+                };
 
                 i18n.translatePage(document.getElementById("popup-new-password"))
             }
@@ -216,7 +220,7 @@ export default class UserSettingsController {
         }).then(async (result) => {
             console.log(result)
             if (result.isConfirmed) {
-                await CoreServer.fetch(`/user/me`, 'PATCH', { password: this.#password });
+                await CoreServer.fetch(`/user/me`, 'PATCH', {password: this.#password});
             }
         });
     }
@@ -232,13 +236,12 @@ export default class UserSettingsController {
     async #overviewChangeName() {
         const displayName = document.getElementById("settings-user-name").value
         if (displayName && displayName !== "") {
-            const result = await CoreServer.fetch(`/user/me`, 'PATCH', { displayName: displayName });
+            const result = await CoreServer.fetch(`/user/me`, 'PATCH', {displayName: displayName});
             if (result) {
                 this.#user.displayName = result.displayName
                 document.getElementById("settings-user-name").value = result.displayName;
             }
-        }
-        else {
+        } else {
             await Modal.toggleError(i18n.translateOne("user.name.error"));
         }
     }
@@ -300,19 +303,20 @@ export default class UserSettingsController {
     }
 
     #fakeMessage(text) {
-        const user = new UserNotificationRepresentation()
-        user.id = this.#user.id;
-        user.displayName = this.#user.displayName;
-        const message = new MessageRepresentation();
-        message.id = "setting-message-exemple-body";
-        message.text = text;
-        message.roomId = "test";
-        message.createdDate = "2025-12-23 24:00Z";
-        message.updatedDate = null;
-        message.medias = [];
-        message.emotes = [];
-        message.reactions = [];
-        message.user = user;
+        const message = /** @type {MessageRepresentation} */{
+            id: "setting-message-exemple-body",
+            text: text,
+            roomId: "test",
+            createdDate: "2025-12-23 24:00Z",
+            updatedDate: null,
+            medias: [],
+            emotes: [],
+            reactions: [],
+            user: {
+                id: this.#user.id,
+                displayName: this.#user.displayName,
+            },
+        }
         return RVC.room.textController.create(message, {urlPreview: false});
     }
 
@@ -410,18 +414,16 @@ export default class UserSettingsController {
 
     #inputVolumeUpdate(data) {
         this.voice.self.volume = Number.parseFloat(data.value)
-        void this.save();
+        this.save();
         this.#room.voiceController.setSelfVolume();
     }
 
     #gateApplyParameter(param, data) {
-        switch (param) {
-            case 'gate-threshold':
-                this.voice.gate.threshold = Number.parseInt(data.value);
-                break;
+        if (param === 'gate-threshold') {
+            this.voice.gate.threshold = Number.parseInt(data.value);
         }
 
-        void this.save();
+        this.save();
         this.#room.voiceController.updateGate();
     }
 
@@ -434,7 +436,7 @@ export default class UserSettingsController {
 
     #compressorEnabled() {
         this.voice.compressor.enabled = !this.voice.compressor.enabled;
-        void this.save();
+        this.save();
         this.#audioInputLoad();
     }
 

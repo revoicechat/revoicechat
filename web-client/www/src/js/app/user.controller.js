@@ -5,6 +5,8 @@ import CoreServer from "./core/core.server.js";
 import PrivateRoomController from "./private.room.controller.js";
 
 export default class UserController {
+    /** @type {SanctionRepresentation[]} */
+    sanctions
     /** @type {UserSettingsController} */
     settings;
     /** @type {string} */
@@ -27,6 +29,7 @@ export default class UserController {
             this.id = result.id;
             this.displayName = result.displayName;
             this.#type = result.type;
+            this.sanctions = await CoreServer.fetch(`/sanctions?userId=${this.id}&active=true`);
             
             document.getElementById("status-container").classList.add(result.id);
             document.getElementById("user-name").innerText = result.displayName;

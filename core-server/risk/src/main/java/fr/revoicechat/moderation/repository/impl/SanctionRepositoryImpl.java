@@ -1,5 +1,8 @@
 package fr.revoicechat.moderation.repository.impl;
 
+import static java.lang.Boolean.TRUE;
+
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +30,6 @@ public class SanctionRepositoryImpl implements SanctionRepository {
   public static final String SERVER = "server";
   public static final String TARGETED_USER = "targetedUser";
   public static final String TYPE = "type";
-  public static final String ACTIVE = "active";
 
   @PersistenceContext EntityManager entityManager;
 
@@ -97,7 +99,18 @@ public class SanctionRepositoryImpl implements SanctionRepository {
   }
 
   private Predicate activeClause(SanctionFilterParams params, CriteriaBuilder cb, Root<Sanction> root) {
-    return cb.equal(root.get(ACTIVE), params.getActive());
+    var now = Instant.now();
+    var notRevoked = cb.or(
+        cb.isNull(root.get("revokedBy")),
+        cb.isNull(root.get("revokedAt")),
+        cb.greaterThanOrEqualTo(root.get("revokedAt"), now)
+    );
+    var notExpired = cb.or(
+        cb.isNull(root.get("expiresAt")),
+        cb.greaterThanOrEqualTo(root.get("expiresAt"), now)
+    );
+    var isActive = cb.and(notRevoked, notExpired);
+    return TRUE.equals(params.getActive()) ? isActive : cb.not(isActive);
   }
 
   private UUID parseUuid(String value) {
