@@ -60,6 +60,7 @@ function curl_core(string $url, $data = null, $method = null, $auth_needed = tru
     }
 
     $response = curl_exec($ch);
+    error_log("$response");
 
     if ($response === false) {
         $error = curl_error($ch);
