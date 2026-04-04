@@ -5,7 +5,6 @@ import MediaServer from "../media/media.server.js";
 import CoreServer from "../core/core.server.js";
 import ReVoiceChat from "../revoicechat.js";
 import Modal from "../../component/modal.component.js";
-import { i18n } from "../../lib/i18n.js";
 
 export default class VoiceController {
     /** @type {VoiceCall|null} */
@@ -14,7 +13,7 @@ export default class VoiceController {
     #activeRoom;
     /** @type {UserController} */
     #user;
-    /** @type {Room} */
+    /** @type {RoomController} */
     #room;
     /** @type {VoiceContextMenu} */
     #contextMenu;
@@ -29,7 +28,7 @@ export default class VoiceController {
 
     /**
      * @param {UserController} user
-     * @param {Room} room
+     * @param {RoomController} room
      */
     constructor(user, room) {
         this.#user = user;

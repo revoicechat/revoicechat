@@ -15,7 +15,7 @@ export default class TextController {
 
     /** @type {UserController} */
     #user;
-    /** @type {Room} */
+    /** @type {RoomController} */
     #room;
     /** @type {string|null} */
     #editId;
@@ -43,7 +43,7 @@ export default class TextController {
 
     /**
      * @param {UserController} user
-     * @param {Room} room
+     * @param {RoomController} room
      */
     constructor(user, room, privateRoom = false) {
         this.#user = user;

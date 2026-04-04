@@ -4,21 +4,18 @@ import CoreServer from "./core/core.server.js";
 import MediaServer from './media/media.server.js';
 import { statusToColor } from "../lib/tools.js";
 import { i18n } from '../lib/i18n.js';
+import RoomController from "./room.controller.js";
 
-export default class PublicRoom {
-    /** @type {TextController} */
-    textController;
+export default class PublicRoom extends RoomController{
     /** @type {VoiceController} */
     voiceController;
-    id;
-    name;
-    type;
     #serverId;
 
     /**
      * @param {UserController} user
      */
     constructor(user) {
+        super(user);
         this.textController = new TextController(user, this);
         this.voiceController = new VoiceController(user, this);
     }

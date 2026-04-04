@@ -17,11 +17,11 @@ const REQUEST_STATUSES = {
 
 function fmtDate(dt) {
     return dt
-            ? new Date(dt).toLocaleString("en-GB", {
-                day: "2-digit", month: "short", year: "numeric",
-                hour: "2-digit", minute: "2-digit",
-            })
-            : i18n.translateOne("moderation.ban.permanent");
+        ? new Date(dt).toLocaleString("en-GB", {
+            day: "2-digit", month: "short", year: "numeric",
+            hour: "2-digit", minute: "2-digit",
+        })
+        : i18n.translateOne("moderation.ban.permanent");
 }
 
 function parseHtml(html) {
@@ -130,12 +130,12 @@ class ModerationPanel extends HTMLElement {
     get #filtered() {
         return this.#sanctions.filter(s => {
             const matchType =
-                    this.#getMatchType(s);
+                this.#getMatchType(s);
             if (!matchType) return false;
             if (!this.#search) return true;
             const q = this.#search.toLowerCase();
             return this.#userName(s.targetedUser).toLowerCase().includes(q)
-                    || (s.reason ?? "").toLowerCase().includes(q);
+                || (s.reason ?? "").toLowerCase().includes(q);
         });
     }
 
@@ -243,7 +243,11 @@ class ModerationPanel extends HTMLElement {
             btn.dataset.i18n = def.label;
             btn.addEventListener("click", () => {
                 this.#tab = def.key;
-                this.#render();
+                for (const tab of container.querySelectorAll(".mp-tab")) {
+                    tab.classList.remove("active");
+                }
+                btn.classList.add("active");
+                this.#rerenderList();
             });
             container.appendChild(btn);
         }
@@ -334,7 +338,7 @@ class ModerationPanel extends HTMLElement {
         sub.appendChild(document.createTextNode("By "));
         sub.appendChild(byStrong);
         sub.appendChild(document.createTextNode(
-                " · " + fmtDate(sanction.startAt) + " → " + fmtDate(sanction.expiresAt)
+            " · " + fmtDate(sanction.startAt) + " → " + fmtDate(sanction.expiresAt)
         ));
         meta.appendChild(sub);
         rowMain.appendChild(meta);
@@ -558,6 +562,7 @@ class ModerationPanel extends HTMLElement {
 
     #buildListContainer() {
         const wrap = document.createElement("div");
+        wrap.id = "mp-list-container";
         wrap.className = "mp-list-container";
 
         if (this.#tab === "sanctions") {
@@ -832,15 +837,15 @@ class ModerationPanel extends HTMLElement {
 
     get #apiRoute() {
         return this.#serverId === "APP"
-                ? '/sanctions'
-                : `/servers/${this.#serverId}/sanctions`;
+            ? '/sanctions'
+            : `/servers/${this.#serverId}/sanctions`;
     }
 
     /** @return {Promise<UserRepresentation[]>} */
     async fetchApiUser() {
         return this.#serverId === "APP"
-                ? CoreServer.fetch(`/user`)
-                : CoreServer.fetch(`/server/${this.#serverId}/user`);
+            ? CoreServer.fetch(`/user`)
+            : CoreServer.fetch(`/server/${this.#serverId}/user`);
     }
 }
 
