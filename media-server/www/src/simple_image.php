@@ -2,7 +2,7 @@
 
 /*
 * File: SimpleImage.php
-* Author: Simon Jarvis
+* Author: Simon Jarvis (modified by ReVoiceChat contibutor)
 * Copyright: 2006 Simon Jarvis
 * Date: 08/11/06
 * Link: http://www.white-hat-web-design.co.uk/blog/resizing-images-with-php/
@@ -22,7 +22,6 @@
 
 class SimpleImage
 {
-
     var $image;
     var $image_type;
 
@@ -84,33 +83,37 @@ class SimpleImage
 
     function output($image_type = IMAGETYPE_JPEG)
     {
+        switch ($image_type) {
+            case IMAGETYPE_JPEG:
+                imagejpeg($this->image);
+                break;
 
-        if ($image_type == IMAGETYPE_JPEG) {
-            imagejpeg($this->image);
-        } elseif ($image_type == IMAGETYPE_GIF) {
+            case IMAGETYPE_GIF:
+                imagegif($this->image);
+                break;
 
-            imagegif($this->image);
-        } elseif ($image_type == IMAGETYPE_PNG) {
+            case IMAGETYPE_PNG:
+                imagepng($this->image);
+                break;
 
-            imagepng($this->image);
+            default:
+                error_log("Unsupported image type");
+                break;
         }
     }
 
     function getWidth()
     {
-
         return imagesx($this->image);
     }
 
     function getHeight()
     {
-
         return imagesy($this->image);
     }
 
     function resizeToHeight($height)
     {
-
         $ratio = $height / $this->getHeight();
         $width = $this->getWidth() * $ratio;
         $this->resize($width, $height);
