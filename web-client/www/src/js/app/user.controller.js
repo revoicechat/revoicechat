@@ -71,7 +71,7 @@ export default class UserController {
     }
 
     isAdmin(){
-        return (this.#type == "ADMIN");
+        return (this.#type === "ADMIN");
     }
 
     /** @param {UserStatusUpdate} data */

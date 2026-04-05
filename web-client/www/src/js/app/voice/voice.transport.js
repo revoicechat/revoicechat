@@ -20,7 +20,7 @@ export class EncodedVoice {
         let offset = 0;
 
         // Timestamp
-        view.setUint32(offset, Number.parseInt(timestamp / 1000), true);
+        view.setUint32(offset, Math.round(timestamp / 1000), true);
         offset += 4;
 
         // User info

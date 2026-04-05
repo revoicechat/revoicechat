@@ -36,7 +36,7 @@ export default class VoiceCall {
         threshold: -40
     }
 
-    #codec = structuredClone(Codec.DEFAULT_VOICE_USER);
+    #codec = /** @type {AudioEncoderConfig} */ structuredClone(Codec.DEFAULT_VOICE_USER);
     #socket;
     #encoder;
     #audioCollector;
@@ -66,7 +66,7 @@ export default class VoiceCall {
             this.#settings = user.settings.voice;
         }
         else {
-            this.#settings = DEFAULT_SETTINGS;
+            this.#settings = VoiceCall.DEFAULT_SETTINGS;
         }
 
         // Determine sampleRate
@@ -75,7 +75,7 @@ export default class VoiceCall {
         audioCtx.close();
 
         // Determine buffer length
-        this.#bufferMaxLength = Number.parseInt(this.#codec.sampleRate * (this.#codec.opus.frameDuration / 1_000_000));
+        this.#bufferMaxLength = Math.round(this.#codec.sampleRate * (this.#codec.opus.frameDuration / 1_000_000));
     }
 
     async open(voiceUrl, roomId, token, controller, anormalClosureHandler) {
@@ -136,7 +136,7 @@ export default class VoiceCall {
             this.#encoder = null;
         }
 
-        // Close audioContext
+        // Close audio context
         if (this.#audioContext && this.#audioContext.state !== "closed") {
             this.#audioContext.close();
             this.#audioContext = null;
@@ -275,7 +275,7 @@ export default class VoiceCall {
         this.#encoder = new AudioEncoder({
             output: (chunk) => {
                 if (this.#socket.readyState === WebSocket.OPEN) {
-                    this.#socket.send(new EncodedVoice(Number.parseInt(this.#audioTimestamp / 1000), this.#user.id, this.#gateState, EncodedVoice.user, chunk, false).data);
+                    this.#socket.send(new EncodedVoice(Math.round(this.#audioTimestamp / 1000), this.#user.id, this.#gateState, EncodedVoice.user, chunk, false).data);
                 }
             },
             error: (error) => { throw new Error(`Encoder setup failed:\n${error.name}\nCurrent codec :${this.#codec.codec}`) },
@@ -348,7 +348,7 @@ export default class VoiceCall {
         // Connect gain to gate
         this.#gainNode.connect(this.#gateNode);
 
-        // Create AudioCollector
+        // Create audio collector
         this.#audioCollector = new AudioWorkletNode(this.#audioContext, "MonoCollector", {
             channelCount: 1,
             channelCountMode: "explicit",
@@ -367,10 +367,10 @@ export default class VoiceCall {
             // Connect gate to compressor
             this.#gateNode.connect(this.#compressorNode);
 
-            // Connect compressor to audioCollector
+            // Connect compressor to audio collector
             this.#compressorNode.connect(this.#audioCollector);
         } else {
-            // Connect gate to audioCollector (i.e. bypass compressor)
+            // Connect gate to audio collector (i.e. bypass compressor)
             this.#gateNode.connect(this.#audioCollector);
         }
 
@@ -397,7 +397,7 @@ export default class VoiceCall {
                 // Remove this frame from buffer
                 this.#buffer = this.#buffer.slice(this.#bufferMaxLength);
 
-                // Create audioData object to feed encoder
+                // Create audio data object to feed encoder
                 const audioData = new AudioData({
                     format: "f32-planar",
                     sampleRate: this.#audioContext.sampleRate,
@@ -417,7 +417,7 @@ export default class VoiceCall {
 
                 audioData.close();
 
-                // Update audioTimestamp (add 20ms / 20000µs)
+                // Update audio timestamp (add 20 milliseconds / 20000 nanoseconds)
                 this.#audioTimestamp += (frame.length / this.#audioContext.sampleRate) * 1_000_000;
             }
         }

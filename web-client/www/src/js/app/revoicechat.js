@@ -123,7 +123,7 @@ export default class ReVoiceChat {
 
     /** @param {ProfilPictureUpdate} data */
     updateAllPicture(data) {
-        const time = Date.now();
+        const time = Date.now().toString();
         for (const picture of document.querySelectorAll(`img[data-id="${data.id}"]`)) {
             picture.src = MediaServer.profiles(data.id, time);
         }

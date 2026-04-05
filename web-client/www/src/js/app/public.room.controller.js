@@ -221,37 +221,19 @@ export default class PublicRoom extends RoomController{
     }
 
     async loadUsers() {
-        /** @type {UserRepresentation[]} */
+        /** @type {RoomPresenceRepresentation} */
         const users = await CoreServer.fetch(`/room/${this.id}/user`, 'GET');
+        /** @type {ServerRoleRepresentation[]} */
         const roles = await CoreServer.fetch(`/server/${this.#serverId}/role`, 'GET');
 
         const excludedUsers = [];
         const offlineUsers = [];
-        if (users && users.allUser && roles) {
+        if (users?.allUser && roles) {
             const userList = document.getElementById("user-list");
             userList.innerHTML = "";
 
-            for (const role of roles) {
-                const usersInRole = [...users.allUser].filter((user) => { return (role.members.includes(user.id) && !excludedUsers.includes(user.id)) })
-
-                const onlineUsers = [...usersInRole].filter((user) => { return user.status !== "OFFLINE" }).length;
-                if (onlineUsers > 0) {
-                    userList.appendChild(this.#createSeparator(`${role.name} - ${onlineUsers}`));
-                }
-
-                const sortedByDisplayName = [...usersInRole].sort((a, b) => {
-                    return a.displayName.localeCompare(b.displayName);
-                });
-
-                for (const user of sortedByDisplayName) {
-                    if (user.status === "OFFLINE") {
-                        offlineUsers.push(this.#createUser(user, role.color, true));
-                    }
-                    else {
-                        userList.appendChild(this.#createUser(user, role.color));
-                    }
-                    excludedUsers.push(user.id);
-                }
+            for (const role of roles.toSorted((a, b) => a.priority - b.priority)) {
+                this.#buildUserSectionByRole(users, role, excludedUsers, userList, offlineUsers);
             }
 
             if (offlineUsers.length > 0) {
@@ -260,6 +242,32 @@ export default class PublicRoom extends RoomController{
                     userList.appendChild(user);
                 }
             }
+        }
+    }
+
+    #buildUserSectionByRole(users, role, excludedUsers, userList, offlineUsers) {
+        const usersInRole = [...users.allUser].filter((user) => {
+            return (role.members.includes(user.id) && !excludedUsers.includes(user.id))
+        })
+
+        const onlineUsers = [...usersInRole].filter((user) => {
+            return user.status !== "OFFLINE"
+        }).length;
+        if (onlineUsers > 0) {
+            userList.appendChild(this.#createSeparator(`${role.name} - ${onlineUsers}`));
+        }
+
+        const sortedByDisplayName = [...usersInRole].sort((a, b) => {
+            return a.displayName.localeCompare(b.displayName);
+        });
+
+        for (const user of sortedByDisplayName) {
+            if (user.status === "OFFLINE") {
+                offlineUsers.push(this.#createUser(user, role.color, true));
+            } else {
+                userList.appendChild(this.#createUser(user, role.color));
+            }
+            excludedUsers.push(user.id);
         }
     }
 
@@ -303,7 +311,7 @@ export default class PublicRoom extends RoomController{
         document.getElementById("text-input").placeholder = `Send a message in ${this.name}`;
         document.getElementById("text-input").focus();
 
-        // Keep voice controls if voiceCall is active
+        // Keep voice controls if voice call is active
         if (!this.voiceController.isCallActive()) {
             document.getElementById("voice-control-panel").classList.add('hidden');
         }

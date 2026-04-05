@@ -45,12 +45,12 @@ export default class Listener {
         audioData.copyTo(channelData, { planeIndex: 0 });
         buffer.copyToChannel(channelData, 0);
 
-        // Play the AudioBuffer
+        // Play the audio buffer
         const source = this.#audioContext.createBufferSource();
         source.buffer = buffer;
 
-        source.connect(this.#gainNode); // connect audio source to gain
-        this.#gainNode.connect(this.#outputGain); // connect user gain to main gain
+        source.connect(this.#gainNode); // Connect audio source to gain
+        this.#gainNode.connect(this.#outputGain); // Connect user gain to main gain
         this.#outputGain.connect(this.#audioContext.destination); // connect main gain to output
 
         this.#playhead = Math.max(this.#playhead, this.#audioContext.currentTime) + buffer.duration;
@@ -84,7 +84,7 @@ export default class Listener {
         if (this.#decoder !== null && this.#decoder.state === "configured") {
             this.#decoder.decode(new EncodedAudioChunk({
                 type: "key",
-                timestamp: Number.parseInt(timestamp * 1000),
+                timestamp: Math.round(timestamp * 1000),
                 data: new Uint8Array(data),
             }));
         } else {

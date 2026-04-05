@@ -83,10 +83,10 @@ export default class UserSettingsController {
 
     #loadVoiceSettings(storedSettings) {
         if (storedSettings.voice) {
-            this.voice.self = storedSettings.voice.self ? storedSettings.voice.self : defaultVoice.self;
-            this.voice.users = storedSettings.voice.users ? storedSettings.voice.users : {};
-            this.voice.compressor = storedSettings.voice.compressor ? storedSettings.voice.compressor : defaultVoice.compressor;
-            this.voice.gate = storedSettings.voice.gate ? storedSettings.voice.gate : defaultVoice.gate;
+            this.voice.self = storedSettings.voice.self || this.voice.self;
+            this.voice.users = storedSettings.voice.users || this.voice.users;
+            this.voice.compressor = storedSettings.voice.compressor || this.voice.compressor;
+            this.voice.gate = storedSettings.voice.gate || this.voice.gate;
         }
     }
 
@@ -368,7 +368,7 @@ export default class UserSettingsController {
 
     #audioInputLoad() {
         // Volume
-        i18n.updateValue(document.getElementById("input-volume-label"), Number.parseInt((this.voice.self.volume * 100)).toString());
+        i18n.updateValue(document.getElementById("input-volume-label"), String(Math.round(this.voice.self.volume * 100)));
         document.getElementById("input-volume").value = this.voice.self.volume;
 
         // Voice detection
@@ -392,7 +392,7 @@ export default class UserSettingsController {
     #audioInputUpdateUI(param, element) {
         switch (param) {
             case 'input-volume':
-                i18n.updateValue(document.getElementById("input-volume-label"), Number.parseInt((element.value * 100)).toString());
+                i18n.updateValue(document.getElementById("input-volume-label"), String(Math.round(element.value * 100)));
                 break;
             case 'gate-threshold': {
                 i18n.updateValue(document.getElementById("gate-threshold-label"), (element.value).toString());
@@ -481,13 +481,13 @@ export default class UserSettingsController {
     #audioOutputUpdateUI(param, value) {
         switch (param) {
             case 'output-notification-volume':
-                document.getElementById('output-notification-label').innerText = `Volume ${Number.parseInt(value * 100)}%`;
+                document.getElementById('output-notification-label').innerText = `Volume ${Math.round(value * 100)}%`;
                 break;
             case 'output-voice-volume':
-                document.getElementById('output-voice-label').innerText = `Volume ${Number.parseInt(value * 100)}%`;
+                document.getElementById('output-voice-label').innerText = `Volume ${Math.round(value * 100)}%`;
                 break;
             case 'output-stream-volume':
-                document.getElementById('output-stream-label').innerText = `Volume ${Number.parseInt(value * 100)}%`;
+                document.getElementById('output-stream-label').innerText = `Volume ${Math.round(value * 100)}%`;
                 break;
         }
     }

@@ -44,6 +44,7 @@ export default class TextController {
     /**
      * @param {UserController} user
      * @param {RoomController} room
+     * @param {boolean} privateRoom
      */
     constructor(user, room, privateRoom = false) {
         this.#user = user;
@@ -56,11 +57,16 @@ export default class TextController {
             this.#elements.textAttachmentDiv = document.getElementById("private-text-attachment-div");
             this.#elements.attachmentsAdd = document.getElementById("private-attachment-button-add");
             this.#elements.attachmentsRemove = document.getElementById("private-attachment-button-remove");
-            this.#core.send = async (roomId, data) => { return await CoreServer.fetch(`/private-message/${roomId}/message`, 'PUT', data) }
-            this.#core.load = async (roomId) => { return await CoreServer.fetch(`/private-message/${roomId}/message`, 'GET') }
-            this.#core.loadMore = async (roomId, firstMessageId) => { return await CoreServer.fetch(`/private-message/${roomId}/message?lastMessage=${firstMessageId}`, 'GET') }
-        }
-        else {
+            this.#core.send = async (roomId, data) => {
+                return await CoreServer.fetch(`/private-message/${roomId}/message`, 'PUT', data)
+            }
+            this.#core.load = async (roomId) => {
+                return await CoreServer.fetch(`/private-message/${roomId}/message`, 'GET')
+            }
+            this.#core.loadMore = async (roomId, firstMessageId) => {
+                return await CoreServer.fetch(`/private-message/${roomId}/message?lastMessage=${firstMessageId}`, 'GET')
+            }
+        } else {
             this.#elements.cacheContainer = document.getElementById("cache-container");
             this.#elements.textReplyMessage = document.getElementById("text-reply-message");
             this.#elements.textInput = document.getElementById("text-input");
@@ -68,9 +74,15 @@ export default class TextController {
             this.#elements.textAttachmentDiv = document.getElementById("text-attachment-div");
             this.#elements.attachmentsAdd = document.getElementById("attachment-button-add");
             this.#elements.attachmentsRemove = document.getElementById("attachment-button-remove");
-            this.#core.send = async (roomId, data) => { return await CoreServer.fetch(`/room/${roomId}/message`, 'PUT', data) }
-            this.#core.load = async (roomId) => { return await CoreServer.fetch(`/room/${roomId}/message`, 'GET') }
-            this.#core.loadMore = async (roomId, firstMessageId) => { return await CoreServer.fetch(`/room/${roomId}/message?lastMessage=${firstMessageId}`, 'GET'); }
+            this.#core.send = async (roomId, data) => {
+                return await CoreServer.fetch(`/room/${roomId}/message`, 'PUT', data)
+            }
+            this.#core.load = async (roomId) => {
+                return await CoreServer.fetch(`/room/${roomId}/message`, 'GET')
+            }
+            this.#core.loadMore = async (roomId, firstMessageId) => {
+                return await CoreServer.fetch(`/room/${roomId}/message?lastMessage=${firstMessageId}`, 'GET');
+            }
         }
         this.#observeReply();
     }
@@ -142,7 +154,7 @@ export default class TextController {
                 textContent.classList.add('hidden');
             }
             let obj = {};
-            obj[roomId] = { content: textContent, scrollTop: null, firstMessageId: null };
+            obj[roomId] = {content: textContent, scrollTop: null, firstMessageId: null};
             Object.assign(this.#cachedRooms, obj);
 
             textContent.addEventListener('scroll', () => {
@@ -230,7 +242,7 @@ export default class TextController {
     }
 
     async #loadMore(element) {
-        if (element && element.scrollTop === 0) {
+        if (element?.scrollTop === 0) {
             let lastScrollHeight = this.#elements.cacheContainer.scrollHeight;
 
             /** @type {PageResult<MessageRepresentation>} */
@@ -252,7 +264,7 @@ export default class TextController {
 
     /** @param {MessageNotification} data */
     message(data) {
-        if (data.action === "ADD" && this.#user.id != data.message.user.id) {
+        if (data.action === "ADD" && this.#user.id !== data.message.user.id) {
             Alert.play('messageNew');
         }
 
@@ -260,27 +272,29 @@ export default class TextController {
         const room = this.#cachedRooms[data.message.roomId];
         if (room) {
             switch (data.action) {
-                case "ADD":
+                case "ADD": {
                     const isAtBottom = this.#isScrollAtBottom(this.#elements.cacheContainer);
-
                     // Add message
                     room.content.appendChild(this.create(message));
-
                     // Scroll auto
                     if (isAtBottom && this.#elements.cacheContainer.scrollTop < this.#elements.cacheContainer.scrollHeight) {
                         this.#elements.cacheContainer.scrollTop = this.#elements.cacheContainer.scrollHeight;
                     }
                     break;
-                case "MODIFY":
+                }
+                case "MODIFY": {
                     document.getElementById(message.id).replaceWith(this.#createContent(message));
                     document.getElementById(`header-message-${message.id}`).replaceWith(this.#createHeader(message));
                     break;
-                case "REMOVE":
+                }
+                case "REMOVE": {
                     document.getElementById(`container-${message.id}`).remove();
                     break;
-                default:
+                }
+                default: {
                     console.error("Unsupported action : ", data.action);
                     break;
+                }
             }
         }
         if (data.action === "ADD" && this.#room.id !== data.message.roomId) {
@@ -353,7 +367,7 @@ export default class TextController {
     async send() {
         let textInput = sanitizeString(this.#elements.textInput.value);
 
-        if ((textInput == "" || textInput == null) && !this.#elements.textAttachment) {
+        if ((textInput === "" || textInput == null) && !this.#elements.textAttachment) {
             return;
         }
 
@@ -368,7 +382,7 @@ export default class TextController {
         if (this.#elements.textAttachment && this.mode === TextController.MODE_SEND) {
             for (const element of this.#elements.textAttachment.files) {
                 if (element.size < this.#attachmentMaxSize) {
-                    data.medias.push({ name: element.name });
+                    data.medias.push({name: element.name});
                     attachments[element.name] = element;
                 } else {
                     await Modal.toggle({
@@ -419,7 +433,7 @@ export default class TextController {
                 break;
 
             case TextController.MODE_EDIT:
-                result = await CoreServer.fetch(`/message/${editId}`, 'PATCH', data);
+                result = await CoreServer.fetch(`/message/${this.#editId}`, 'PATCH', data);
                 break;
 
             default:
@@ -442,7 +456,7 @@ export default class TextController {
     oninput(input) {
         input.style.height = "auto";
         input.style.height = input.scrollHeight + "px";
-        if (input.value == "") {
+        if (input.value === "") {
             this.mode = TextController.MODE_SEND;
             this.#editId = null;
         }
@@ -514,7 +528,7 @@ export default class TextController {
         answerDiv.onclick = () => {
             const originalMessage = document.getElementById(`container-${answeredTo.id}`);
             if (originalMessage) {
-                originalMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                originalMessage.scrollIntoView({behavior: 'smooth', block: 'center'});
                 originalMessage.style.backgroundColor = 'var(--highlight-color, rgba(59, 130, 246, 0.1))';
                 setTimeout(() => {
                     originalMessage.style.backgroundColor = '';

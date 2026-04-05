@@ -1,5 +1,4 @@
 import ServerSettingsController from "./server/server.settings.controller.js";
-import { statusToColor } from "../lib/tools.js";
 import MediaServer from "./media/media.server.js";
 import CoreServer from "./core/core.server.js";
 import { i18n } from "../lib/i18n.js";
@@ -7,9 +6,7 @@ import Modal from "../component/modal.component.js";
 import Router from "./router.js";
 
 export default class ServerController {
-    /** @type {Room} */
-    room;
-    /** @type {string} */
+    /** @type {string|null} */
     id;
     /** @type {string} */
     name;
@@ -19,7 +16,9 @@ export default class ServerController {
     #popupData = null;
 
     /**
-     * @param {Room} room
+     * @param {PublicRoom} room
+     * @param {Router} router
+     * @param {UserController} user
      */
     constructor(room, router, user) {
         this.room = room;
@@ -200,6 +199,7 @@ export default class ServerController {
                 const select = document.getElementById('modal-serverId');
                 select.oninput = () => { this.#popupData = select.value };
 
+                /** @type {ServerRepresentation[]} */
                 const publicServers = await CoreServer.fetch('/server/discover');
                 for (const instance of publicServers) {
                     const option = document.createElement('option');
@@ -247,7 +247,7 @@ export default class ServerController {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 if (!this.#popupData.name) {
-                    Modal.toggleError(i18n.translateOne("server.create.error.name"));
+                    await Modal.toggleError(i18n.translateOne("server.create.error.name"));
                     return;
                 }
                 if (await CoreServer.fetch(`/server/`, 'PUT', this.#popupData)) {
@@ -290,7 +290,7 @@ export default class ServerController {
                     }
                 }
                 else {
-                    Modal.toggleError(i18n.translateOne("server.delete.abort", this.name))
+                    await Modal.toggleError(i18n.translateOne("server.delete.abort", this.name))
                 }
             }
         });

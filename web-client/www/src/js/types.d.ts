@@ -129,6 +129,13 @@ export class SanctionRevocationRequestRepresentation {
     canRequestAgain: boolean;
 }
 
+export class RoomPresenceRepresentation {
+    id: string;
+    name: string;
+    allUser: UserRepresentation[];
+    connectedUser: ConnectedUserRepresentation[];
+}
+
 export class RoomRepresentation {
     id: string;
     name: string;
@@ -217,6 +224,26 @@ export class EmoteRepresentation {
     id: string;
     name: string;
     keywords: string[];
+}
+
+export class ServerRoleRepresentation {
+    id: string;
+    name: string;
+    color: string;
+    priority: number;
+    serverId: string;
+    risks: RiskRepresentation[];
+    members: string[];
+}
+
+export interface RiskType {}
+
+export type RiskMode = "ENABLE" | "DISABLE" | "DEFAULT";
+
+export class RiskRepresentation {
+    type: RiskType;
+    entity: string|null;
+    mode: RiskMode;
 }
 
 export class MediaSettings {

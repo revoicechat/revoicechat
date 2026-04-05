@@ -1,3 +1,4 @@
+/** @abstract */
 export default class RoomController {
     /** @type {TextController} */
     textController;
