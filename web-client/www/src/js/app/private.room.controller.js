@@ -3,6 +3,7 @@ import Modal from "../component/modal.component.js";
 import { i18n } from "../lib/i18n.js";
 import CoreServer from "./core/core.server.js";
 import RoomController from "./room.controller.js";
+import {getTextSanction} from "./utils/sanctions.utils.js";
 
 export default class PrivateRoomController extends RoomController{
     /** @param {UserController} user */
@@ -16,6 +17,10 @@ export default class PrivateRoomController extends RoomController{
         const rooms = await CoreServer.fetch(`/private-message`);
         if(rooms){
             
+        }
+        const sanction = getTextSanction(null, this.user.sanctions)
+        if (sanction) {
+            this.textController.disableText(sanction)
         }
     }
 

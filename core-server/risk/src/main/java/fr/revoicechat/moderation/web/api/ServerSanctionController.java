@@ -8,11 +8,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import fr.revoicechat.moderation.representation.NewSanction;
-import fr.revoicechat.moderation.representation.SanctionFilterParams;
 import fr.revoicechat.moderation.representation.SanctionRepresentation;
 import fr.revoicechat.moderation.representation.SanctionRevocationRequestRepresentation;
-
-import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -21,8 +18,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 
 @Path("servers/{serverId}/sanctions")
-@Tag(name = "sanctions")
-@Tag(name = "server")
+@Tag(name = "Sanctions")
+@Tag(name = "Server")
 public interface ServerSanctionController {
 
   @Operation(summary = "Get a server-level sanction by ID")

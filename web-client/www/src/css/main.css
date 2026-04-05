@@ -806,6 +806,14 @@ svg {
     height: 20vh;
 }
 
+.join.disabled {
+    background-color: var(--qua-bg-color) !important;
+}
+
+.join.disabled svg {
+    fill: var(--pri-bg-color) !important;
+}
+
 /* STATUS */
 
 .status-container {

@@ -5,6 +5,7 @@ import MediaServer from './media/media.server.js';
 import { statusToColor } from "../lib/tools.js";
 import { i18n } from '../lib/i18n.js';
 import RoomController from "./room.controller.js";
+import {getTextSanction} from "./utils/sanctions.utils.js";
 
 export default class PublicRoom extends RoomController{
     /** @type {VoiceController} */
@@ -308,8 +309,12 @@ export default class PublicRoom extends RoomController{
         document.getElementById("room-icon").innerHTML = `<revoice-icon-chat-bubble></revoice-icon-chat-bubble>`;
         document.getElementById("voice-container").classList.add('hidden');
         document.getElementById("text-container").classList.remove('hidden');
-        document.getElementById("text-input").placeholder = `Send a message in ${this.name}`;
-        document.getElementById("text-input").focus();
+        const sanction = getTextSanction(this.#serverId, this.user.sanctions)
+        if (sanction) {
+            this.textController.disableText(sanction)
+        } else  {
+            this.textController.enableText(this.name)
+        }
 
         // Keep voice controls if voice call is active
         if (!this.voiceController.isCallActive()) {

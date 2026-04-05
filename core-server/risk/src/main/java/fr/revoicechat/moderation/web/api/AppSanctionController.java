@@ -20,7 +20,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 
 @Path("sanctions")
-@Tag(name = "sanctions", description = "Manage app sanctions")
+@Tag(name = "Sanctions", description = "Manage app sanctions")
 public interface AppSanctionController {
 
   @Operation(summary = "Get all sanctions with potential filter")

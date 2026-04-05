@@ -56,6 +56,7 @@ export default class TextController {
             this.#elements.textAttachment = document.getElementById("private-text-attachment");
             this.#elements.textAttachmentDiv = document.getElementById("private-text-attachment-div");
             this.#elements.attachmentsAdd = document.getElementById("private-attachment-button-add");
+            this.#elements.emojiPicker = document.getElementById("private-emoji-picker-button");
             this.#elements.attachmentsRemove = document.getElementById("private-attachment-button-remove");
             this.#core.send = async (roomId, data) => {
                 return await CoreServer.fetch(`/private-message/${roomId}/message`, 'PUT', data)
@@ -73,6 +74,7 @@ export default class TextController {
             this.#elements.textAttachment = document.getElementById("text-attachment");
             this.#elements.textAttachmentDiv = document.getElementById("text-attachment-div");
             this.#elements.attachmentsAdd = document.getElementById("attachment-button-add");
+            this.#elements.emojiPicker = document.getElementById("emoji-picker-button");
             this.#elements.attachmentsRemove = document.getElementById("attachment-button-remove");
             this.#core.send = async (roomId, data) => {
                 return await CoreServer.fetch(`/room/${roomId}/message`, 'PUT', data)
@@ -85,6 +87,24 @@ export default class TextController {
             }
         }
         this.#observeReply();
+    }
+
+    /** @param {SanctionRepresentation} sanction */
+    disableText(sanction) {
+        this.#elements.textInput.disabled = true;
+        this.#elements.textInput.placeholder = i18n.translateOne('ban.sanctioned');
+        this.#elements.attachmentsAdd.style.display = "none";
+        this.#elements.emojiPicker.style.display = "none";
+    }
+
+    /** @param {string} name */
+    enableText(name) {
+        this.#elements.textInput.disabled = false;
+        this.#elements.textInput.placeholder = `Send a message in ${name}`;
+        this.#elements.textInput.focus();
+        this.#elements.attachmentsAdd.style.display = "";
+        this.#elements.emojiPicker.style.display = "";
+
     }
 
     /** Setup observer for replied container */

@@ -36,7 +36,8 @@ public class SanctionService {
 
   @Transactional
   public boolean isAppBanned() {
-    return sanctionRepository.getSanctions(userHolder.getId()).anyMatch(Sanction::isActive);
+    return sanctionRepository.getSanctions(userHolder.getId())
+                             .anyMatch(sanction -> sanction.getType().equals(BAN) && sanction.isActive());
   }
 
   @Transactional

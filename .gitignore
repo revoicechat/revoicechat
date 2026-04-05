@@ -47,3 +47,6 @@ media-server/www/data/emojis/global/*
 
 # Settings
 media-server/settings.ini
+
+node_modules
+**/package-lock.json

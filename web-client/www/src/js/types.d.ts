@@ -109,7 +109,7 @@ export class SanctionUserRepresentation {
 export class SanctionRepresentation {
     id: string;
     targetedUser: SanctionUserRepresentation;
-    server: string;
+    server: string|null;
     type: SanctionType;
     startAt: string;
     expiresAt: string;
