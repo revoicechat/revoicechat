@@ -114,6 +114,9 @@ class NoiseGate extends AudioWorkletProcessor {
             this.isOpen = openNow;
             this.port.postMessage({ open: this.isOpen });
         }
+
+        // Must return true so Chrome continue to execute process()
+        return true;
     }
 }
 
