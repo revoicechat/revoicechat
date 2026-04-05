@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import fr.revoicechat.core.notification.service.message.MessageNotifier;
+import fr.revoicechat.core.notification.service.room.RoomNotifier;
 import fr.revoicechat.core.repository.page.PageResult;
 import fr.revoicechat.core.representation.MessageRepresentation;
 import fr.revoicechat.core.representation.NewPrivateMessageRoom;
@@ -22,12 +23,14 @@ public class PrivateMessageControllerImpl implements PrivateMessageController {
   private final MessageService messageService;
   private final MessagePageResult messagePageResult;
   private final MessageNotifier messageNotifier;
+  private final RoomNotifier roomNotifier;
 
-  public PrivateMessageControllerImpl(final PrivateMessageService privateMessageService, final MessageService messageService, final MessagePageResult messagePageResult, final MessageNotifier messageNotifier) {
+  public PrivateMessageControllerImpl(final PrivateMessageService privateMessageService, final MessageService messageService, final MessagePageResult messagePageResult, final MessageNotifier messageNotifier, final RoomNotifier roomNotifier) {
     this.privateMessageService = privateMessageService;
     this.messageService = messageService;
     this.messagePageResult = messagePageResult;
     this.messageNotifier = messageNotifier;
+    this.roomNotifier = roomNotifier;
   }
 
   @Override
@@ -37,7 +40,9 @@ public class PrivateMessageControllerImpl implements PrivateMessageController {
 
   @Override
   public RoomRepresentation create(final NewPrivateMessageRoom newRoom) {
-    return Mapper.map(privateMessageService.create(newRoom));
+    var room = privateMessageService.create(newRoom);
+    roomNotifier.add(room);
+    return Mapper.map(room);
   }
 
   @Override
