@@ -8,12 +8,12 @@ import MediaServer from "./media/media.server.js";
 
 export default class PrivateRoomController extends RoomController {
     id;
-    #textController
+    textController
 
     /** @param {UserController} user */
     constructor(user) {
         super(user);
-        this.#textController = new TextController(user, this, true);
+        this.textController = new TextController(user, this, true);
         this.attachEvents();
     }
 
@@ -28,15 +28,17 @@ export default class PrivateRoomController extends RoomController {
             }
         }
 
+        await this.textController.getAttachmentMaxSize();
+
         const sanction = getTextSanction(null, this.user.sanctions)
         if (sanction) {
-            this.#textController.disableText(sanction)
+            this.textController.disableText(sanction)
         }
     }
 
     attachEvents() {
         document.getElementById('private-message-new').addEventListener('click', () => this.#newRoom());
-        this.#textController.attachEvents();
+        this.textController.attachEvents();
     }
 
     #createRoomSelector(room) {
@@ -125,11 +127,11 @@ export default class PrivateRoomController extends RoomController {
 
         /*const sanction = getTextSanction(this.#serverId, this.user.sanctions)
         if (sanction) {
-            this.#textController.disableText(sanction)
+            this.textController.disableText(sanction)
         } else {
-            this.#textController.enableText(this.name)
+            this.textController.enableText(this.name)
         }*/
 
-        this.#textController.load(this.id);
+        this.textController.load(this.id);
     }
 }

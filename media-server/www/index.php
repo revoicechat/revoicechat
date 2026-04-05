@@ -135,7 +135,7 @@ function post_attachment_upload(string $id)
         if (in_array(exif_imagetype($file), SUPPORTED_IMAGETYPE)) {
             $image = new SimpleImage();
             $image->load($file);
-            $image->resizeToHeight(250);
+            $image->resizeToHeight(256);
             $image->save($uploadDir . "thumbnail/" . $id);
         }
 

@@ -15,6 +15,8 @@ export default class UserController {
     displayName;
     /** @type {string} */
     #type;
+    /** @type {PrivateRoomController} */
+    privateRooms;
 
     constructor() {
         this.privateRooms = new PrivateRoomController(this)

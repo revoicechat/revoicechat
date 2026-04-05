@@ -327,9 +327,12 @@ export default class TextController {
                 roomToNotify.classList.remove('hidden');
                 roomToNotify.setAttribute('mentions', '' + (roomToNotify.mentionsAttribute + mention))
             }
-            const serverToNotify = document.getElementById(`server-notification-dot-${data.message.serverId}`);
-            serverToNotify.classList.remove('hidden');
-            serverToNotify.setAttribute('mentions', '' + (serverToNotify.mentionsAttribute + mention));
+
+            if (!this.#privateRoom) {
+                const serverToNotify = document.getElementById(`server-notification-dot-${data.message.serverId}`);
+                serverToNotify.classList.remove('hidden');
+                serverToNotify.setAttribute('mentions', '' + (serverToNotify.mentionsAttribute + mention));
+            }
         }
 
         room.scrollTop = room.scrollHeight;
