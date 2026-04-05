@@ -15,9 +15,35 @@ server.core.properties
 settings.media.ini
 .env
 
+### Sonar ###
+.scannerwork
+
 ### i18n ###
 /.generated
 /.tmp-i18n
 
-### Sonar ###
-.scannerwork
+### Core Server ###
+revoicechat.service
+
+### Media Server ###
+
+# Stored files
+media-server/www/data/attachments/*
+media-server/www/data/attachments/thumbnail/*
+media-server/www/data/profiles/*
+media-server/www/data/emojis/*
+media-server/www/data/emojis/global/*
+
+#  Keep files
+!media-server/www/data/attachments/.keep
+!media-server/www/data/attachments/thumbnail/
+!media-server/www/data/attachments/thumbnail/.keep
+!media-server/www/data/attachments/logo
+!media-server/www/data/profiles/default-avatar
+!media-server/www/data/profiles/.keep
+!media-server/www/data/emojis/.keep
+!media-server/www/data/emojis/global/.keep
+!media-server/www/data/emojis/assets/*
+
+# Settings
+media-server/settings.ini
