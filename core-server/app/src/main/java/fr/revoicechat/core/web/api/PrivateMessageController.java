@@ -10,12 +10,14 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 
 import fr.revoicechat.core.repository.page.PageResult;
 import fr.revoicechat.core.representation.MessageRepresentation;
+import fr.revoicechat.core.representation.NewPrivateMessageRoom;
 import fr.revoicechat.core.representation.RoomRepresentation;
 import fr.revoicechat.core.technicaldata.message.MessageFilterParams;
 import fr.revoicechat.core.technicaldata.message.NewMessage;
 import fr.revoicechat.openapi.api.LoggedApi;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -27,6 +29,10 @@ public interface PrivateMessageController extends LoggedApi {
   @Operation(summary = "Get all Private message discussion")
   @GET
   List<RoomRepresentation> findAll();
+
+  @Operation(summary = "Create a private message room")
+  @POST
+  RoomRepresentation create(NewPrivateMessageRoom newRoom);
 
   @Operation(summary = "Get specific private message discussion")
   @GET
@@ -54,5 +60,4 @@ public interface PrivateMessageController extends LoggedApi {
   @PUT
   @Path("{id}/message")
   MessageRepresentation sendMessage(@PathParam("id") UUID roomId, NewMessage representation);
-
 }

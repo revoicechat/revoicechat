@@ -6,6 +6,7 @@ import java.util.UUID;
 import fr.revoicechat.core.notification.service.message.MessageNotifier;
 import fr.revoicechat.core.repository.page.PageResult;
 import fr.revoicechat.core.representation.MessageRepresentation;
+import fr.revoicechat.core.representation.NewPrivateMessageRoom;
 import fr.revoicechat.core.representation.RoomRepresentation;
 import fr.revoicechat.core.service.message.MessagePageResult;
 import fr.revoicechat.core.service.message.MessageService;
@@ -32,6 +33,11 @@ public class PrivateMessageControllerImpl implements PrivateMessageController {
   @Override
   public List<RoomRepresentation> findAll() {
     return Mapper.mapAll(privateMessageService.findAll());
+  }
+
+  @Override
+  public RoomRepresentation create(final NewPrivateMessageRoom newRoom) {
+    return Mapper.map(privateMessageService.create(newRoom));
   }
 
   @Override
