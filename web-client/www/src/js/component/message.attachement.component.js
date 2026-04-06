@@ -18,7 +18,7 @@ class AttachementMessageComponent extends HTMLElement {
         if (!typeComponentRetriever) {
           typeComponentRetriever = this.#TYPES["OTHER"]
         }
-        this.innerHTML = `${typeComponentRetriever(id, name)}`
+        this.appendChild(typeComponentRetriever(id, name))
     }
 
 
@@ -42,30 +42,50 @@ class AttachementMessageComponent extends HTMLElement {
     #picture(id, name) {
         const src = MediaServer.attachments(id);
         const thumbnail = MediaServer.attachmentsThumbnail(id);
-        return `<a class='media' href="${src}" target="_blank">
-                  <img class='media' 
-                       src="${thumbnail}" 
-                       loading="lazy" 
-                       alt="${name}"
-                </a>`
+        const img = document.createElement('img');
+        img.src = thumbnail;
+        img.alt = name;
+        img.loading = 'lazy';
+        img.classList.add('media')
+        img.onclick = () => openFancyBox(src, name)
+        return img
     }
 
     #video(id, name) {
-        const src = MediaServer.attachments(id);
-        return `<video class='media' preload="metadata" controls><source src="${src}"></video>`
+        const source = document.createElement('source');
+        source.src = MediaServer.attachments(id);
+        const video = document.createElement('video');
+        video.classList.add('media')
+        video.preload = 'metadata'
+        video.controls = true
+        video.appendChild(source);
+        return video
     }
 
     #audio(id, name) {
-        const src = MediaServer.attachments(id);
-        return `<audio class='media' preload="metadata" controls><source src="${src}"></audio>`
+        const source = document.createElement('source');
+        source.src = MediaServer.attachments(id);
+        const audio = document.createElement('audio');
+        audio.classList.add('media')
+        audio.preload = 'metadata'
+        audio.controls = true
+        audio.appendChild(source);
+        return audio
     }
 
     #link(id, name, svgType) {
-        const handler = globalThis.isTauri ? `onclick="__TAURI__.opener.openUrl('${src}');"` : '';
-        return `<a class='media file-type-link' href="${src}" ${handler}>
-                    ${svgType}
-                    <div>${name}</div>
-                </a>`
+        const src = MediaServer.attachments(id)
+        const div = document.createElement('div');
+        div.innerText = name;
+        const a = document.createElement('a');
+        a.classList.add('media', 'file-type-link')
+        a.href = src
+        if (globalThis.isTauri) {
+            a.onclick = () => __TAURI__.opener.openUrl(src);
+        }
+        a.innerHTML = svgType
+        a.appendChild(div);
+        return a
     }
 
     #SVG_ICON = `

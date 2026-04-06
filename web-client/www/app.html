@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
 
-    <link href="src/css/main.css" rel="stylesheet" />
-    <link href="src/css/mobile.css" rel="stylesheet" />
-    <link href="src/css/emoji.css" rel="stylesheet" />
-    <link href="src/css/themes.css" rel="stylesheet" />
-    <link rel="shortcut icon" type="image/png" href="src/img/favicon.png" />
+    <link href="./src/css/main.css" rel="stylesheet" />
+    <link href="./src/css/mobile.css" rel="stylesheet" />
+    <link href="./src/css/emoji.css" rel="stylesheet" />
+    <link href="./src/css/themes.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/png" href="./src/img/favicon.png" />
     <title>ReVoiceChat - App</title>
 </head>
 
@@ -21,7 +21,7 @@
         <div class="sidebar instances-list">
             <div class="header">
                 <button id="private-open">
-                    <img src="src/img/favicon.png" alt="DM" data-i18n-title="private.title" />
+                    <img src="./src/img/favicon.png" alt="DM" data-i18n-title="private.title" />
                 </button>
             </div>
 
@@ -51,7 +51,7 @@
                     <button class="mobile-btn" id="privateToggleSidebar"><revoice-icon-menu-burger></revoice-icon-menu-burger></button>
                     <div style="display: flex; column-gap: 0.5rem">
                         <span id="private-room-icon"></span>
-                        <h3 class="room-name" id="private-room-name"></h3>
+                        <h3 class="room-name" id="private-room-name">_</h3>
                     </div>
                     <button class="mobile-btn" id="privateToggleUsers"><revoice-icon-users></revoice-icon-users></button>
                 </div>
@@ -150,7 +150,7 @@
                     <button class="mobile-btn" id="toggleSidebar"><revoice-icon-menu-burger></revoice-icon-menu-burger></button>
                     <div style="display: flex; column-gap: 0.5rem">
                         <span id="room-icon"></span>
-                        <h3 class="room-name" id="room-name"></h3>
+                        <h3 class="room-name" id="room-name">_</h3>
                     </div>
                     <button class="mobile-btn" id="toggleUsers"><revoice-icon-users></revoice-icon-users></button>
                 </div>
@@ -604,12 +604,12 @@
     </div>
 
     <!-- Libraries -->
-    <script src="src/js/lib/twemoji.min.js"></script>
-    <script src="src/js/lib/marked.min.js"></script>
-    <script src="src/js/lib/highlight.min.js"></script>
+    <script src="./src/js/lib/twemoji.min.js"></script>
+    <script src="./src/js/lib/marked.min.js"></script>
+    <script src="./src/js/lib/highlight.min.js"></script>
 
     <!-- App -->
-    <script src="src/js/app/revoicechat.js" type="module"></script>
+    <script src="./src/js/app/revoicechat.js" type="module"></script>
 </body>
 
 </html>

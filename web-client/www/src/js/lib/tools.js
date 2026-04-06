@@ -1,3 +1,5 @@
+import FancyBox from "../component/fancy.box.component.js";
+
 const tauriActive = globalThis.isTauri;
 let tauriFetch = null;
 
@@ -231,6 +233,15 @@ function getUserLanguage() {
   return lang.split('-')[0];
 }
 
+function openFancyBox(src) {
+    console.log(src)
+    FancyBox.toggle({
+        src: src,
+        alt: '',
+        caption: '',
+    })
+}
+
 export {
     initTools,
     tauriActive,
@@ -244,5 +255,9 @@ export {
     humanFileSize,
     statusToColor,
     apiFetch,
-    getUserLanguage
+    getUserLanguage,
+    openFancyBox
 };
+
+globalThis.openFancyBox = openFancyBox;
+
