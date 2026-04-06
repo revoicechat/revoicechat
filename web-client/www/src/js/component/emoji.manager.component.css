@@ -43,25 +43,6 @@ button {
     flex-wrap: wrap;
 }
 
-.preview-container {
-    display: none;
-    width: 6rem;
-    height: 6rem;
-    background-color: var(--qua-bg-color);
-    border-radius: 0.25rem;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    flex-shrink: 0;
-    border: 2px solid var(--pri-bd-color);
-}
-
-.preview-container img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
 .btn-primary {
     background-color: var(--pri-button-bg-color);
     color: var(--pri-button-text-color);
@@ -153,9 +134,8 @@ button {
 }
 
 .emoji-preview img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+    width: 3rem;
+    height: 3rem;
 }
 
 .emoji-info {

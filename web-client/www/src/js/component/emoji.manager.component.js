@@ -74,7 +74,7 @@ class EmojiManager extends HTMLElement {
         reader.onload = (e) => {
             const src = e.target.result
             if (typeof src === 'string') {
-                preview.innerHTML = `<img src="${src}" alt="Preview">`;
+                preview.innerHTML = this.#previewEmote(src, 'Preview');
             } else {
                 console.warn('Unexpected non-string FileReader result', src);
             }
@@ -230,7 +230,7 @@ class EmojiManager extends HTMLElement {
                                 <input type="file" id="editEmojiFile" accept="image/*">
                             </div>
                         </div>
-                        <div class="preview-container" id="editPreview"></div>
+                        <div class="preview-container" style="display: flex" id="editPreview"></div>
                     </div>
                 </form>`,
             didOpen: () => {
@@ -242,7 +242,7 @@ class EmojiManager extends HTMLElement {
                 editEmojiFile.value = '';
 
                 const editPreview = document.querySelector('#editPreview');
-                editPreview.innerHTML = `<img src="${MediaServer.emote(id)}" alt="${emoji.name}">`;
+                editPreview.innerHTML = this.#previewEmote(MediaServer.emote(id), emoji.name);
                 editPreview.style.display = 'flex';
 
                 editEmojiFile.addEventListener('change', (e) => {
@@ -279,6 +279,21 @@ class EmojiManager extends HTMLElement {
     closeModal() {
         this.shadowRoot.getElementById('editModal').classList.remove('active');
         this.currentEditId = null;
+    }
+
+    #previewEmote(src, alt) {
+        return `<div class="emoji-preview-size-container stickers-emoji">
+                    <span>${i18n.translateOne('emote.preview.stickers')} (80px)</span>
+                    <img src="${src}" alt="${alt}" class="emoji"/>
+                </div>
+                <div class="emoji-preview-size-container only-emoji">
+                    <span>${i18n.translateOne('emote.preview.large')} (32px)</span>
+                    <img src="${src}" alt="${alt}" class="emoji"/>
+                </div>
+                <div class="emoji-preview-size-container">
+                    <span>${i18n.translateOne('emote.preview.normal')} (16px)</span>
+                    <img src="${src}" alt="${alt}" class="emoji"/>
+                </div>`
     }
 
     saveEdit(result) {
