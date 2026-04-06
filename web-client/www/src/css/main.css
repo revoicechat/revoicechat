@@ -1542,7 +1542,7 @@ summary::marker {
 }
 
 .emoji-preview-size-container {
-    height: 6rem;
+    height: 7rem;
     display: flex;
     flex-direction: column;
     align-items: center;

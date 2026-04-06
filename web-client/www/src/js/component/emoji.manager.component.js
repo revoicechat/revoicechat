@@ -283,15 +283,15 @@ class EmojiManager extends HTMLElement {
 
     #previewEmote(src, alt) {
         return `<div class="emoji-preview-size-container stickers-emoji">
-                    <span>${i18n.translateOne('emote.preview.stickers')}</span>
+                    <span>${i18n.translateOne('emote.preview.stickers')} (80px)</span>
                     <img src="${src}" alt="${alt}" class="emoji"/>
                 </div>
                 <div class="emoji-preview-size-container only-emoji">
-                    <span>${i18n.translateOne('emote.preview.large')}</span>
+                    <span>${i18n.translateOne('emote.preview.large')} (32px)</span>
                     <img src="${src}" alt="${alt}" class="emoji"/>
                 </div>
                 <div class="emoji-preview-size-container">
-                    <span>${i18n.translateOne('emote.preview.normal')}</span>
+                    <span>${i18n.translateOne('emote.preview.normal')} (16px)</span>
                     <img src="${src}" alt="${alt}" class="emoji"/>
                 </div>`
     }
