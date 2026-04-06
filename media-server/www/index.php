@@ -8,6 +8,13 @@ const SUPPORTED_IMAGETYPE = [IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG];
 $body = json_decode(file_get_contents('php://input'), true, 512, JSON_OBJECT_AS_ARRAY);
 
 switch ($_SERVER["REQUEST_METHOD"]) {
+    case 'HEAD':
+        if (isset($_GET['ping'])){
+            http_response_code(200);
+            break;
+        }
+        break;
+
     case 'GET':
         if (isset($_GET['ping'])){
             http_response_code(200);
