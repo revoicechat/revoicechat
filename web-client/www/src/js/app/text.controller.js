@@ -303,6 +303,7 @@ export default class TextController {
                     if (isAtBottom && this.#elements.cacheContainer.scrollTop < this.#elements.cacheContainer.scrollHeight) {
                         this.#elements.cacheContainer.scrollTop = this.#elements.cacheContainer.scrollHeight;
                     }
+                    this.#notify(data);
                     break;
                 }
                 case "MODIFY": {
@@ -320,27 +321,27 @@ export default class TextController {
                 }
             }
         }
-        if (data.action === "ADD" && this.#room.id !== data.message.roomId) {
-            const mention = this.#hasMention(data.message) ? 1 : 0
-            const roomToNotify = document.getElementById(`room-extension-dot-${data.message.roomId}`);
-            if (roomToNotify) {
-                roomToNotify.classList.remove('hidden');
-                roomToNotify.setAttribute('mentions', '' + (roomToNotify.mentionsAttribute + mention))
-            }
+        room.scrollTop = room.scrollHeight;
+    }
 
-            if (!this.#privateRoom) {
-                const serverToNotify = document.getElementById(`server-notification-dot-${data.message.serverId}`);
-                serverToNotify.classList.remove('hidden');
-                serverToNotify.setAttribute('mentions', '' + (serverToNotify.mentionsAttribute + mention));
-            }
-            else {
-                const privateNotification = document.getElementById('private-message-notification-dot');
-                privateNotification.classList.remove('hidden');
-                privateNotification.setAttribute('mentions', '' + (privateNotification.mentionsAttribute + mention));
-            }
+    #notify(data) {
+        const mention = this.#hasMention(data.message) ? 1 : 0
+        const roomToNotify = document.getElementById(`room-extension-dot-${data.message.roomId}`);
+        if (roomToNotify) {
+            roomToNotify.classList.remove('hidden');
+            roomToNotify.setAttribute('mentions', '' + (roomToNotify.mentionsAttribute + mention))
         }
 
-        room.scrollTop = room.scrollHeight;
+        if (!this.#privateRoom) {
+            const serverToNotify = document.getElementById(`server-notification-dot-${data.message.serverId}`);
+            serverToNotify.classList.remove('hidden');
+            serverToNotify.setAttribute('mentions', '' + (serverToNotify.mentionsAttribute + mention));
+        }
+        else {
+            const privateNotification = document.getElementById('private-message-notification-dot');
+            privateNotification.classList.remove('hidden');
+            privateNotification.setAttribute('mentions', '' + (privateNotification.mentionsAttribute + mention));
+        }
     }
 
     #addAttachment() {

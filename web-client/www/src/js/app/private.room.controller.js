@@ -50,8 +50,6 @@ export default class PrivateRoomController extends RoomController {
         let name = "";
         let profilePicture = null;
 
-        console.log(room)
-
         const usersNoSelf = [...room.users].filter((user) => {
             return user.id != this.user.id;
         })
