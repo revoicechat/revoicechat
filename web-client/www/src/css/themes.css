@@ -239,7 +239,7 @@ body {
 }
 
 .sidebar.private-messages .user-profile.active,
-.instances .element.active {
+.server-block .element.active {
     background-color: var(--pri-active-color);
 }
 

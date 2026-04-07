@@ -25,6 +25,7 @@ export default class Router {
 
         document.getElementById('route-private').classList.add('hidden');
         document.getElementById('route-public').classList.add('hidden');
+        document.getElementById('private-open').classList.remove('active');
 
         switch (destination) {
             case Router.USER_SETTINGS:
@@ -41,6 +42,7 @@ export default class Router {
                 Router.#pushState(Router.PRIVATE);
                 document.getElementById('route-private').classList.remove('hidden');
                 document.getElementById('route-app').classList.remove('hidden');
+                document.getElementById('private-open').classList.add('active');
                 break;
 
             case Router.ADMIN:
