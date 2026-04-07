@@ -11,6 +11,8 @@ import MediaServer from "../app/media/media.server.js";
 class AttachementMessageComponent extends HTMLElement {
 
     connectedCallback() {
+        if (this.hasAttribute("_initialized")) return;
+        this.setAttribute("_initialized", "true");
         const id = this.getAttribute("id")
         const name = this.getAttribute("name")
         const type = this.getAttribute("type")
@@ -20,7 +22,6 @@ class AttachementMessageComponent extends HTMLElement {
         }
         this.appendChild(typeComponentRetriever(id, name))
     }
-
 
     #TYPES = {
         "PICTURE": (id, name) => this.#picture(id, name),
