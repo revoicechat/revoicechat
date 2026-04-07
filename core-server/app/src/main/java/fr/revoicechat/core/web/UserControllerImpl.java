@@ -71,7 +71,7 @@ public class UserControllerImpl implements UserController {
   }
 
   @Override
-  @RolesAllowed(ROLE_ADMIN)
+  @RolesAllowed(ROLE_USER)
   public List<UserRepresentation> fetchAll() {
     return Mapper.mapAll(userService.fetchAll());
   }
