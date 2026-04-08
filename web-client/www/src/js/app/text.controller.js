@@ -57,6 +57,7 @@ export default class TextController {
             this.#elements.textReplyMessage = document.getElementById("private-text-reply-message");
             this.#elements.textInput = document.getElementById("private-text-input");
             this.#elements.textAttachment = document.getElementById("private-text-attachment");
+            this.#elements.attachmentPreview = document.getElementById("private-attachment-preview");
             this.#elements.textAttachmentDiv = document.getElementById("private-text-attachment-div");
             this.#elements.attachmentsAdd = document.getElementById("private-attachment-button-add");
             this.#elements.emojiPicker = document.getElementById("private-emoji-picker-button");
@@ -75,6 +76,7 @@ export default class TextController {
             this.#elements.textReplyMessage = document.getElementById("text-reply-message");
             this.#elements.textInput = document.getElementById("text-input");
             this.#elements.textAttachment = document.getElementById("text-attachment");
+            this.#elements.attachmentPreview = document.getElementById("text-attachment-preview");
             this.#elements.textAttachmentDiv = document.getElementById("text-attachment-div");
             this.#elements.attachmentsAdd = document.getElementById("attachment-button-add");
             this.#elements.emojiPicker = document.getElementById("emoji-picker-button");
@@ -89,6 +91,7 @@ export default class TextController {
                 return await CoreServer.fetch(`/room/${roomId}/message?lastMessage=${firstMessageId}`, 'GET');
             }
         }
+        this.#elements.attachmentPreview.style.display = "none";
         this.#observeReply();
     }
 
@@ -104,6 +107,9 @@ export default class TextController {
                 element.scrollTop = this.#elements.cacheContainer.scrollTop;
             }
             this.#loadMore(element);
+        });
+        this.#elements.textAttachment.addEventListener('change', (e) => {
+            this.handleFilePreview(e.target.files[0]);
         });
     }
 
@@ -354,6 +360,27 @@ export default class TextController {
         this.#elements.textAttachment.value = "";
         this.#elements.textAttachmentDiv.classList.add('hidden');
         this.#elements.textInput.focus()
+        this.handleFilePreview(null);
+    }
+
+    handleFilePreview(file) {
+        this.#elements.attachmentPreview.style.display = "none";
+        this.#elements.attachmentPreview.src = "";
+        console.log(file);
+        if (!file) return;
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const src = e.target.result
+            if (typeof src === 'string') {
+                this.#elements.attachmentPreview.style.display = "flex";
+                this.#elements.attachmentPreview.style.height = "6rem";
+                this.#elements.attachmentPreview.src = src;
+            } else {
+                console.warn('Unexpected non-string FileReader result', src);
+            }
+        };
+        reader.readAsDataURL(file);
     }
 
     #pasteHandler(event) {
@@ -392,6 +419,7 @@ export default class TextController {
         // Prevent default paste if files were detected
         if (hasFile) {
             this.#elements.textAttachmentDiv.classList.remove('hidden');
+            this.handleFilePreview(this.#elements.textAttachment.files[0]);
             event.preventDefault();
         }
     }

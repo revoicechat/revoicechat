@@ -71,7 +71,10 @@
                             </div>
                             <!-- NO VERTICAL SPACE NEEDED HERE -->
                             <div class="text-control-file hidden" id="private-text-attachment-div">
-                                <input type="file" id="private-text-attachment" multiple>
+                                <div style="width: -webkit-fill-available;">
+                                    <img alt="PREVIEW" id="private-attachment-preview"/>
+                                    <input type="file" id="private-text-attachment" multiple>
+                                </div>
                                 <button class="emoji-btn" id="private-attachment-button-remove"><revoice-icon-trash></revoice-icon-trash></button>
                             </div>
                             <div class="text-control-text">
@@ -171,7 +174,10 @@
                             </div>
                             <!-- NO VERTICAL SPACE NEEDED HERE -->
                             <div class="text-control-file hidden" id="text-attachment-div">
-                                <input type="file" id="text-attachment" multiple>
+                                <div style="width: -webkit-fill-available;">
+                                    <img alt="PREVIEW" id="text-attachment-preview"/>
+                                    <input type="file" id="text-attachment" multiple>
+                                </div>
                                 <button class="emoji-btn" id="attachment-button-remove"><revoice-icon-trash></revoice-icon-trash></button>
                             </div>
                             <div class="text-control-text">
