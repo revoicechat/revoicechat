@@ -1,5 +1,7 @@
 package fr.revoicechat.security.service;
 
+import static fr.revoicechat.security.utils.RevoiceChatRoles.ROLE_RECOVERY;
+
 import java.util.UUID;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -19,6 +21,8 @@ import jakarta.ws.rs.WebApplicationException;
 public class JwtService implements SecurityTokenService {
   private static final Logger LOG = LoggerFactory.getLogger(JwtService.class);
 
+  private static final long DAY_TIME = 1000L * 3600 * 24;
+
   private final JWTParser jwtParser;
   private final TokenBlacklistService tokenBlacklistService;
 
@@ -32,13 +36,25 @@ public class JwtService implements SecurityTokenService {
     this.tokenBlacklistService = tokenBlacklistService;
   }
 
+  @Override
   public String generate(final AuthenticatedUser user) {
     LOG.info("generate jwt token for user {}", user.getId());
     return Jwt.issuer(jwtIssuer)
               .subject(user.getLogin())
               .preferredUserName(user.getId().toString())
               .groups(user.getRoles())
-              .expiresAt(System.currentTimeMillis() + 1000L * 3600 * 24 * jwtValidDay)
+              .expiresAt(System.currentTimeMillis() + DAY_TIME * jwtValidDay)
+              .sign();
+  }
+
+  @Override
+  public String generateAfterRecoveryCode(final AuthenticatedUser user) {
+    LOG.info("generate jwt token for user {} after recovery code", user.getId());
+    return Jwt.issuer(jwtIssuer)
+              .subject(user.getLogin())
+              .preferredUserName(user.getId().toString())
+              .groups(ROLE_RECOVERY)
+              .expiresAt(System.currentTimeMillis() + 1000L * 3600 * 24)
               .sign();
   }
 

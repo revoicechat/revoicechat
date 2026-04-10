@@ -39,7 +39,7 @@ class TestUserServiceNoNeedInvitation {
     NewUserSignup signer = new NewUserSignup("user", "test", "user@revoicechat.fr", null);
     var resultRepresentation = userService.create(signer);
     assertThat(resultRepresentation).isNotNull();
-    assertUser(resultRepresentation);
+    assertUser(resultRepresentation.user());
   }
 
   @Test
@@ -48,19 +48,19 @@ class TestUserServiceNoNeedInvitation {
     NewUserSignup signer = new NewUserSignup("user", "test", "user@revoicechat.fr", UUID.randomUUID());
     var resultRepresentation = userService.create(signer);
     assertThat(resultRepresentation).isNotNull();
-    assertUser(resultRepresentation);
+    assertUser(resultRepresentation.user());
   }
 
   @Test
   @Transactional
   void testWithInvitationLink() {
     var adminRep = userService.create(new NewUserSignup("master", "psw", "master@revoicechat.fr", UUID.randomUUID()));
-    var admin = entityManager.find(User.class, adminRep.getId());
+    var admin = entityManager.find(User.class, adminRep.user().getId());
     var invitation = generateInvitationLink(admin);
     NewUserSignup signer = new NewUserSignup("user", "test", "user@revoicechat.fr", invitation.getId());
     var resultRepresentation = userService.create(signer);
     assertThat(resultRepresentation).isNotNull();
-    assertUser(resultRepresentation);
+    assertUser(resultRepresentation.user());
     invitation = entityManager.find(InvitationLink.class, invitation.getId());
     assertThat(invitation.getStatus()).isEqualTo(InvitationLinkStatus.USED);
     assertThat(invitation.getApplier()).isNotNull();

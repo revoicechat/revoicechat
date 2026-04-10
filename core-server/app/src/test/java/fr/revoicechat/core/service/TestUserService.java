@@ -31,7 +31,7 @@ class TestUserService {
     NewUserSignup signer = new NewUserSignup("master", "psw", "master@revoicechat.fr", null);
     var resultRepresentation = userService.create(signer);
     assertThat(resultRepresentation).isNotNull();
-    var result = entityManager.find(User.class, resultRepresentation.getId());
+    var result = entityManager.find(User.class, resultRepresentation.user().getId());
     assertThat(result).isNotNull();
     assertThat(result.getCreatedDate()).isNotNull();
     assertThat(result.getLogin()).isEqualTo("master");

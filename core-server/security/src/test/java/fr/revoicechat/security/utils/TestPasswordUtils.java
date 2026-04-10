@@ -11,12 +11,12 @@ class TestPasswordUtils {
 
   @Test
   void testEncode() {
-    assertThat(PasswordUtils.encodePassword("psw")).isNotEqualTo("psw");
+    assertThat(PasswordUtils.encode("psw")).isNotEqualTo("psw");
   }
 
   @Test
   void testMatch() {
-    var encoded = PasswordUtils.encodePassword("psw");
+    var encoded = PasswordUtils.encode("psw");
     assertThat(PasswordUtils.matches("psw", encoded)).isTrue();
     assertThat(PasswordUtils.matches("pSw", encoded)).isFalse();
     assertThat(PasswordUtils.matches("notSame", encoded)).isFalse();

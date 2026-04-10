@@ -59,13 +59,13 @@ class TestUserServiceNeedInvitation {
   @Transactional
   void testWithInvitationLink() {
     var adminRep = userService.create(new NewUserSignup("master", "psw", "master@revoicechat.fr", UUID.randomUUID()));
-    var admin = entityManager.find(User.class, adminRep.getId());
+    var admin = entityManager.find(User.class, adminRep.user().getId());
     var invitation = generateInvitationLink(admin, CREATED, APPLICATION_JOIN);
     NewUserSignup signer = new NewUserSignup("user", "test", "user@revoicechat.fr", invitation.getId());
     var resultRepresentation = userService.create(signer);
     assertThat(resultRepresentation).isNotNull();
-    assertUser(resultRepresentation);
-    var user = entityManager.find(User.class, resultRepresentation.getId());
+    assertUser(resultRepresentation.user());
+    var user = entityManager.find(User.class, resultRepresentation.user().getId());
     entityManager.flush();
     entityManager.clear();
     var reloadedInvitation = entityManager.find(InvitationLink.class, invitation.getId());
@@ -77,12 +77,12 @@ class TestUserServiceNeedInvitation {
   @Transactional
   void testWithPermanentInvitationLink() {
     var adminRep = userService.create(new NewUserSignup("master", "psw", "master@revoicechat.fr", UUID.randomUUID()));
-    var admin = entityManager.find(User.class, adminRep.getId());
+    var admin = entityManager.find(User.class, adminRep.user().getId());
     var invitation = generateInvitationLink(admin, PERMANENT, APPLICATION_JOIN);
     NewUserSignup signer = new NewUserSignup("user", "test", "user@revoicechat.fr", invitation.getId());
     var resultRepresentation = userService.create(signer);
     assertThat(resultRepresentation).isNotNull();
-    assertUser(resultRepresentation);
+    assertUser(resultRepresentation.user());
     entityManager.flush();
     entityManager.clear();
     var reloadedInvitation = entityManager.find(InvitationLink.class, invitation.getId());
@@ -95,7 +95,7 @@ class TestUserServiceNeedInvitation {
   @Transactional
   void testWithInvalidStatusInvitationLink(InvitationLinkStatus status) {
     var adminRep = userService.create(new NewUserSignup("master", "psw", "master@revoicechat.fr", UUID.randomUUID()));
-    var admin = entityManager.find(User.class, adminRep.getId());
+    var admin = entityManager.find(User.class, adminRep.user().getId());
     var invitation = generateInvitationLink(admin, status, APPLICATION_JOIN);
     NewUserSignup signer = new NewUserSignup("user", "test", "user@revoicechat.fr", invitation.getId());
     assertThatThrownBy(() -> userService.create(signer)).isInstanceOf(BadRequestException.class).hasMessage(USER_WITH_NO_VALID_INVITATION.translate());
@@ -106,7 +106,7 @@ class TestUserServiceNeedInvitation {
   @Transactional
   void testWithInvalidTypeInvitationLink(InvitationType type) {
     var adminRep = userService.create(new NewUserSignup("master", "psw", "master@revoicechat.fr", UUID.randomUUID()));
-    var admin = entityManager.find(User.class, adminRep.getId());
+    var admin = entityManager.find(User.class, adminRep.user().getId());
     var invitation = generateInvitationLink(admin, CREATED, type);
     NewUserSignup signer = new NewUserSignup("user", "test", "user@revoicechat.fr", invitation.getId());
     assertThatThrownBy(() -> userService.create(signer)).isInstanceOf(BadRequestException.class).hasMessage(USER_WITH_NO_VALID_INVITATION.translate());

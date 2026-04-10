@@ -3,9 +3,9 @@ package fr.revoicechat.security.utils;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class PasswordUtils {
-    private PasswordUtils() {/*not instantiable*/}
+    private PasswordUtils() {/*utility*/}
 
-    public static String encodePassword(String rawPassword) {
+    public static String encode(String rawPassword) {
         return BCrypt.hashpw(rawPassword, BCrypt.gensalt());
     }
 
