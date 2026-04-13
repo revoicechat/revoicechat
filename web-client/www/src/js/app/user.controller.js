@@ -12,6 +12,8 @@ export default class UserController {
     /** @type {string} */
     id;
     /** @type {string} */
+    login;
+    /** @type {string} */
     displayName;
     /** @type {string} */
     #type;
@@ -29,6 +31,7 @@ export default class UserController {
 
         if (result !== null) {
             this.id = result.id;
+            this.login = result.login;
             this.displayName = result.displayName;
             this.#type = result.type;
             this.sanctions = await CoreServer.fetch(`/sanctions?userId=${this.id}&active=true`);

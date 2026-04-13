@@ -6,7 +6,7 @@ import {i18n} from "../lib/i18n.js";
 import MediaServer from "./media/media.server.js";
 import CoreServer from "./core/core.server.js";
 import Modal from "../component/modal.component.js";
-import {getUserLanguage} from "../lib/tools.js";
+import {copyToClipboard, getUserLanguage} from "../lib/tools.js";
 
 export default class UserSettingsController {
     #user;
@@ -173,6 +173,7 @@ export default class UserSettingsController {
 
     #overviewEventHandler() {
         document.getElementById('overview-save').addEventListener('click', () => this.#overviewSave());
+        document.getElementById('regenerate-recover-codes').addEventListener('click', () => this.#regenerateRecoverCodes());
         document.getElementById('setting-user-picture').addEventListener('click', () => this.#overviewSelectPicture());
         document.getElementById('overlay-setting-user-picture').addEventListener('click', () => this.#overviewSelectPicture());
     }
@@ -183,6 +184,56 @@ export default class UserSettingsController {
         await this.#overviewChangeData();
         await this.#overviewChangePicture();
         spinner.success()
+    }
+
+    async #regenerateRecoverCodes() {
+        let password = ''
+        Modal.toggle({
+            title: i18n.translateOne("user.password.enter"),
+            showCancelButton: true,
+            html: `
+            <form class='popup' id="regenerate-recovery-code-form">
+              <input type="password" name="password" id="regenerate-recovery-code-password">
+            </form>`,
+            didOpen: async () => {
+                const select = document.getElementById('regenerate-recovery-code-password');
+                select.oninput = () => { password = select.value };
+                i18n.translatePage(document.getElementById("modal-serverId"))
+            }
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const recovered = await CoreServer.fetch(`/auth/recovery-codes`, 'POST', {
+                    username: this.#user.login,
+                    password: password
+                });
+                if (!recovered) {
+                    await Modal.toggleError('')
+                } if (recovered.error) {
+                    await Modal.toggleError(recovered.error)
+                } else {
+                    await Modal.toggle({
+                        icon: "success",
+                        html: `<div data-i18n="login.register.success.recover.codes">your recover codes</div>
+                               <div style="background-color: var(--pri-bg-color); padding: 1rem; margin: 1rem;">
+                                  <div class="icon" id="recover-codes-clip" style="position: absolute; cursor: pointer;">
+                                      <revoice-icon-clipboard></revoice-icon-clipboard>
+                                  </div>
+                                  <code id="recover-codes"></code>
+                               </div>`,
+                        width:'30rem',
+                        didOpen: async () => {
+                            const codes = document.getElementById('recover-codes');
+                            codes.innerText = recovered.join('\n')
+                            const clipButton = document.getElementById('recover-codes-clip');
+                            clipButton.onclick = () => {
+                                copyToClipboard(recovered.join('\n'))
+                            }
+                        },
+                        allowOutsideClick: false,
+                    })
+                }
+            }
+        });
     }
 
     async #overviewChangeData() {
