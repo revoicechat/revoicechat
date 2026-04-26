@@ -12,6 +12,9 @@ import fr.revoicechat.core.technicaldata.message.NewMessage;
 import fr.revoicechat.core.web.api.MessageController;
 import fr.revoicechat.opengraph.OpenGraphSchema;
 import fr.revoicechat.web.mapper.Mapper;
+import io.quarkus.cache.CacheInvalidate;
+import io.quarkus.cache.CacheKey;
+import io.quarkus.cache.CacheResult;
 import jakarta.annotation.security.RolesAllowed;
 
 @RolesAllowed(ROLE_USER)
@@ -31,19 +34,22 @@ public class MessageControllerImpl implements MessageController {
   }
 
   @Override
-  public OpenGraphSchema getOpenGraph(final UUID id) {
+  @CacheResult(cacheName = "open-graph-cache")
+  public OpenGraphSchema getOpenGraph(@CacheKey final UUID id) {
     return Mapper.map(new OpenGraphSchemaHolder(messageService.getMessage(id)));
   }
 
   @Override
-  public MessageRepresentation update(UUID id, NewMessage newMessage) {
+  @CacheInvalidate(cacheName = "open-graph-cache")
+  public MessageRepresentation update(@CacheKey UUID id, NewMessage newMessage) {
     var message = messageService.update(id, newMessage);
     messageNotifier.update(message);
     return Mapper.map(message);
   }
 
   @Override
-  public UUID delete(UUID id) {
+  @CacheInvalidate(cacheName = "open-graph-cache")
+  public UUID delete(@CacheKey UUID id) {
     var message = messageService.delete(id);
     messageNotifier.delete(message);
     return message.getId();
