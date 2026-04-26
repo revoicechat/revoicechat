@@ -3,6 +3,7 @@ package fr.revoicechat.core.notification.service;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import fr.revoicechat.core.model.room.Room;
 import fr.revoicechat.core.notification.service.user.RoomUserFinder;
 import fr.revoicechat.notification.model.NotificationRegistrable;
 import fr.revoicechat.risk.service.user.UserServerFinder;
@@ -20,6 +21,10 @@ public final class NotificationUserRetriever {
 
   public static Stream<NotificationRegistrable> findUserForRoom(UUID roomId) {
     return getRoomUserFinder().find(roomId);
+  }
+
+  public static Stream<NotificationRegistrable> findUserForRoom(Room room) {
+    return getRoomUserFinder().find(room);
   }
 
   private static UserServerFinder getUserServerFinder() {

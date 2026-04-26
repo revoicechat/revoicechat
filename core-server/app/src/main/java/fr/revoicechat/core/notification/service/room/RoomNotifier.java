@@ -6,7 +6,9 @@ import static fr.revoicechat.notification.data.NotificationActionType.*;
 import fr.revoicechat.core.model.room.Room;
 import fr.revoicechat.core.notification.RoomNotification;
 import fr.revoicechat.core.representation.DeletedRoomRepresentation;
+import fr.revoicechat.core.representation.RoomRepresentation;
 import fr.revoicechat.notification.Notification;
+import fr.revoicechat.notification.data.NotificationActionType;
 import fr.revoicechat.web.mapper.Mapper;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
@@ -16,18 +18,18 @@ import jakarta.transaction.Transactional;
 public class RoomNotifier {
 
   public void add(Room room) {
-    notifyUpdate(new RoomNotification(Mapper.mapLight(room), ADD));
+    notifyUpdate(Mapper.mapLight(room), ADD, room);
   }
 
   public void update(Room room) {
-    notifyUpdate(new RoomNotification(Mapper.mapLight(room), MODIFY));
+    notifyUpdate(Mapper.mapLight(room), MODIFY, room);
   }
 
   public void delete(Room room) {
-    notifyUpdate(new RoomNotification(new DeletedRoomRepresentation(room.getId()), REMOVE));
+    notifyUpdate(new DeletedRoomRepresentation(room.getId()), REMOVE, room);
   }
 
-  private void notifyUpdate(final RoomNotification roomRepresentation) {
-    Notification.of(roomRepresentation).sendTo(findUserForRoom(roomRepresentation.room().id()));
+  private void notifyUpdate(RoomRepresentation representation, NotificationActionType type, Room room) {
+    Notification.of(new RoomNotification(representation, type)).sendTo(findUserForRoom(room));
   }
 }

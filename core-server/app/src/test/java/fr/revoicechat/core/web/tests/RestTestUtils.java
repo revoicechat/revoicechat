@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import fr.revoicechat.core.model.ServerType;
 import fr.revoicechat.core.model.UserType;
+import fr.revoicechat.core.representation.NewUserRepresentation;
 import fr.revoicechat.core.technicaldata.login.UserPassword;
 import fr.revoicechat.core.technicaldata.server.NewServer;
 import fr.revoicechat.core.representation.ServerRepresentation;
@@ -46,7 +47,8 @@ public class RestTestUtils {
                       .body(signup)
                       .when().put("/auth/signup")
                       .then().statusCode(200)
-                      .extract().body().as(UserRepresentation.class);
+                      .extract().body().as(NewUserRepresentation.class)
+                      .user();
   }
 
   public static void updateToAdmin(String admin, UserRepresentation userToUpdate) {

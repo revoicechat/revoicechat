@@ -35,12 +35,20 @@ public class RoomUserFinderImpl implements RoomUserFinder, VoiceRoomUserFinder {
   @Override
   public Stream<NotificationRegistrable> find(UUID room) {
     Room r = entityManager.find(Room.class, room);
-    if (r instanceof PrivateMessageRoom privateMessageRoom) {
+    if (r == null) {
+      throw new IllegalArgumentException("Invalid room id " + room);
+    }
+    return find(r);
+  }
+
+  @Override
+  public Stream<NotificationRegistrable> find(final Room room) {
+    if (room instanceof PrivateMessageRoom privateMessageRoom) {
       return findByPrivateMessageRoom(privateMessageRoom);
-    } else if (r instanceof ServerRoom serverRoom) {
+    } else if (room instanceof ServerRoom serverRoom) {
       return findByServerRoom(serverRoom.getId());
     }
-    throw new IllegalArgumentException("Invalid room id " + room);
+    return Stream.empty();
   }
 
   private Stream<NotificationRegistrable> findByPrivateMessageRoom(final PrivateMessageRoom room) {

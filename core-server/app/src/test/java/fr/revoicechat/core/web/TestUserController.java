@@ -2,28 +2,28 @@ package fr.revoicechat.core.web;
 
 import static fr.revoicechat.core.nls.UserErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.Is.is;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.UUID;
-import jakarta.ws.rs.core.MediaType;
 
 import org.junit.jupiter.api.Test;
 
 import fr.revoicechat.core.junit.CleanDatabase;
-import fr.revoicechat.notification.model.ActiveStatus;
 import fr.revoicechat.core.quarkus.profile.BasicIntegrationTestProfile;
+import fr.revoicechat.core.representation.UserRepresentation;
 import fr.revoicechat.core.technicaldata.user.AdminUpdatableUserData;
 import fr.revoicechat.core.technicaldata.user.UpdatableUserData;
 import fr.revoicechat.core.technicaldata.user.UpdatableUserData.PasswordUpdated;
-import fr.revoicechat.core.representation.UserRepresentation;
 import fr.revoicechat.core.web.tests.RestTestUtils;
+import fr.revoicechat.notification.model.ActiveStatus;
+import fr.revoicechat.web.mapper.error.ErrorResponse;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.RestAssured;
+import jakarta.ws.rs.core.MediaType;
 
 @QuarkusTest
 @TestProfile(BasicIntegrationTestProfile.class)
@@ -93,11 +93,13 @@ class TestUserController {
     RestTestUtils.signup("nyphew", "psw");
     var token = RestTestUtils.login("nyphew", "psw");
     UpdatableUserData userData = new UpdatableUserData(null, new PasswordUpdated("wrongPsw", "new_psw", "new_psw"), null);
-    RestAssured.given()
-               .contentType(MediaType.APPLICATION_JSON)
-               .header("Authorization", "Bearer " + token)
-               .when().body(userData).patch("/user/me")
-               .then().statusCode(400).body(is(USER_PASSWORD_WRONG.translate()));
+    var response = RestAssured.given()
+                              .contentType(MediaType.APPLICATION_JSON)
+                              .header("Authorization", "Bearer " + token)
+                              .when().body(userData).patch("/user/me")
+                              .then().statusCode(400)
+                              .extract().body().as(ErrorResponse.class);
+    assertThat(response).isEqualTo(new ErrorResponse(USER_PASSWORD_WRONG.translate()));
   }
 
   @Test
@@ -105,11 +107,13 @@ class TestUserController {
     RestTestUtils.signup("nyphew", "psw");
     var token = RestTestUtils.login("nyphew", "psw");
     UpdatableUserData userData = new UpdatableUserData(null, new PasswordUpdated("psw", "new_psw", "wrong_new_psw"), null);
-    RestAssured.given()
-               .contentType(MediaType.APPLICATION_JSON)
-               .header("Authorization", "Bearer " + token)
-               .when().body(userData).patch("/user/me")
-               .then().statusCode(400).body(is(USER_PASSWORD_WRONG_CONFIRMATION.translate()));
+    var response = RestAssured.given()
+                              .contentType(MediaType.APPLICATION_JSON)
+                              .header("Authorization", "Bearer " + token)
+                              .when().body(userData).patch("/user/me")
+                              .then().statusCode(400)
+                              .extract().body().as(ErrorResponse.class);
+    assertThat(response).isEqualTo(new ErrorResponse(USER_PASSWORD_WRONG_CONFIRMATION.translate()));
   }
 
   @Test

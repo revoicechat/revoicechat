@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import fr.revoicechat.core.junit.CleanDatabase;
 import fr.revoicechat.core.quarkus.profile.BasicIntegrationTestProfile;
+import fr.revoicechat.core.representation.NewUserRepresentation;
 import fr.revoicechat.core.technicaldata.login.UserPassword;
 import fr.revoicechat.core.technicaldata.user.NewUserSignup;
 import fr.revoicechat.core.representation.UserRepresentation;
@@ -35,8 +36,11 @@ class TestAuthController {
     var response = signup();
     assertThat(response).isNotNull();
     assertThat(response.getStatusCode()).isEqualTo(Status.OK.getStatusCode());
-    var user = response.as(UserRepresentation.class);
-    assertThat(user).isNotNull();
+    var newUser = response.as(NewUserRepresentation.class);
+    assertThat(newUser).isNotNull();
+    assertThat(newUser.user()).isNotNull();
+    assertThat(newUser.recoverCodes()).hasSize(10);
+    var user = newUser.user();
     assertThat(user.id()).isNotNull();
     assertThat(user.displayName()).isEqualTo("testUser");
     assertThat(user.login()).isEqualTo("testUser");
@@ -47,13 +51,13 @@ class TestAuthController {
   @Test
   void testLogin() throws ParseException {
     var sign = signup();
-    var user = sign.as(UserRepresentation.class);
+    var user = sign.as(NewUserRepresentation.class);
     var response = login("testUser", "psw");
     assertThat(response.getStatusCode()).isEqualTo(Status.OK.getStatusCode());
     var token = response.asString();
     assertThat(token).isNotNull();
     var jwt = jwtParser.parse(token);
-    assertThat(jwt.getName()).isEqualTo(user.id().toString());
+    assertThat(jwt.getName()).isEqualTo(user.user().id().toString());
     assertThat(jwt.getSubject()).isEqualTo("testUser");
   }
 

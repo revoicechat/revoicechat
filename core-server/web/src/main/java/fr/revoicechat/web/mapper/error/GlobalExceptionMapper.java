@@ -70,6 +70,4 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
     var type = determineResponseType(headers);
     return Response.status(status).type(type.type()).entity(type.genericErrorFile(title, message)).build();
   }
-
-  private record ErrorResponse(String message) {}
 }

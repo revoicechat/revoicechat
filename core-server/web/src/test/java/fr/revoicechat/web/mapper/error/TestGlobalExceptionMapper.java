@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
 import jakarta.ws.rs.NotAllowedException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.MediaType;
@@ -43,7 +44,7 @@ class TestGlobalExceptionMapper {
     var response = mapper.toResponse(ex);
     assertThat(response).isNotNull();
     assertThat(response.getStatus()).isEqualTo(Status.BAD_REQUEST.getStatusCode());
-    assertThat(response.getEntity()).isEqualTo(CommonMessageTestEnum.TEST_ENUM.translate());
+    assertThat(response.getEntity()).isEqualTo(new ErrorResponse(CommonMessageTestEnum.TEST_ENUM.translate()));
   }
 
   @Test
@@ -54,7 +55,7 @@ class TestGlobalExceptionMapper {
     var response = mapper.toResponse(ex);
     assertThat(response).isNotNull();
     assertThat(response.getStatus()).isEqualTo(Status.NOT_FOUND.getStatusCode());
-    assertThat(response.getEntity()).isEqualTo(NOT_FOUND.translate(Object.class.getSimpleName(), id));
+    assertThat(response.getEntity()).isEqualTo(new ErrorResponse(NOT_FOUND.translate(Object.class.getSimpleName(), id)));
   }
 
   @Test
