@@ -262,3 +262,7 @@ export class PageResult<T> {
     totalElements: number;
     totalPages: number;
 }
+
+export class ErrorResponse {
+    message: string;
+}

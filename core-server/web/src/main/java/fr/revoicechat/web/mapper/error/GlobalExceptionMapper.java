@@ -8,6 +8,7 @@ import jakarta.ws.rs.NotAllowedException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -59,11 +60,16 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
   }
 
   private Response toResponse(Status status, String message) {
-    return Response.status(status).entity(message).build();
+    return Response.status(status)
+                   .type(MediaType.APPLICATION_JSON_TYPE)
+                   .entity(new ErrorResponse(message))
+                   .build();
   }
 
   private Response toResponse(Status status, LocalizedMessage title, LocalizedMessage message) {
     var type = determineResponseType(headers);
     return Response.status(status).type(type.type()).entity(type.genericErrorFile(title, message)).build();
   }
+
+  private record ErrorResponse(String message) {}
 }
