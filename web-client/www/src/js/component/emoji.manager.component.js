@@ -131,13 +131,17 @@ class EmojiManager extends HTMLElement {
             .filter(k => k.length > 0);
 
         try {
-            /** @type {EmoteRepresentation} */
-            const emojiData = await CoreServer.fetch(`/emote/${this.path}`, 'PUT', {
+            const data = await CoreServer.fetch(`/emote/${this.path}`, 'PUT', {
                 fileName: file.name,
                 content: nameInput.value.trim(),
                 keywords: keywords
+            });
+            if (!data.id) {
+                await Modal.toggleError((/** @type {ErrorResponse} */ data).message)
+                return
             }
-            );
+            /** @type {EmoteRepresentation} */
+            const emojiData = data;
             const formData = new FormData();
             formData.append('file', file);
 
