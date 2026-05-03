@@ -8,6 +8,7 @@ import java.util.UUID;
 import fr.revoicechat.notification.model.ActiveStatus;
 import fr.revoicechat.notification.model.NotificationRegistrable;
 import fr.revoicechat.security.model.AuthenticatedUser;
+import fr.revoicechat.security.model.UserType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -33,7 +34,7 @@ public class User implements NotificationRegistrable, AuthenticatedUser {
   private ActiveStatus status = ActiveStatus.ONLINE;
   private OffsetDateTime createdDate;
   @Enumerated(EnumType.STRING)
-  private fr.revoicechat.security.model.UserType type = fr.revoicechat.security.model.UserType.USER;
+  private UserType type = UserType.USER;
   /**
    * The settings do not currently drive the backend behaviour, but only the frontend behaviour.
    * It's stored as a string so the system does not parse the value into an object.
