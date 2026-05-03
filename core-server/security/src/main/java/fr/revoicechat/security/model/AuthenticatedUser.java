@@ -7,5 +7,6 @@ public interface AuthenticatedUser {
   UUID getId();
   String getDisplayName();
   String getLogin();
+  String getPassword();
   Set<String> getRoles();
 }

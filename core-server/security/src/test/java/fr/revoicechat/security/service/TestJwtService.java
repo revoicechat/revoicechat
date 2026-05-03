@@ -50,5 +50,7 @@ class TestJwtService {
       String getDisplayName,
       String getLogin,
       Set<String> getRoles
-  ) implements AuthenticatedUser {}
+  ) implements AuthenticatedUser {
+    @Override public String getPassword() {return "";}
+  }
 }

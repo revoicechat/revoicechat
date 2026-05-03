@@ -51,25 +51,10 @@ class TestQueryParamJwtAuthMechanism {
   }
 
   private static class AuthenticatedUserMock implements AuthenticatedUser {
-
-    @Override
-    public UUID getId() {
-      return UUID.fromString(ID_USER);
-    }
-
-    @Override
-    public String getDisplayName() {
-      return "user";
-    }
-
-    @Override
-    public String getLogin() {
-      return "user";
-    }
-
-    @Override
-    public Set<String> getRoles() {
-      return Set.of("USER");
-    }
+    @Override public UUID getId() {return UUID.fromString(ID_USER);}
+    @Override public String getDisplayName() {return "user";}
+    @Override public String getLogin() {return "user";}
+    @Override public String getPassword() {return "";}
+    @Override public Set<String> getRoles() {return Set.of("USER");}
   }
 }

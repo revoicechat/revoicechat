@@ -19,6 +19,7 @@ public class AuthenticatedUserEntityFinderMock implements AuthenticatedUserEntit
   record AuthenticatedUserMock(UUID getId) implements AuthenticatedUser {
     @Override public String getDisplayName() {return "";}
     @Override public String getLogin() {return "";}
+    @Override public String getPassword() {return "";}
     @Override public Set<String> getRoles() {return Set.of();}
   }
 }

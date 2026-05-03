@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import fr.revoicechat.security.model.AuthenticatedUser;
+import fr.revoicechat.security.model.DefaultAuthenticatedUser;
 import fr.revoicechat.security.model.UserRecoverCode;
 import fr.revoicechat.security.repository.UserRecoverCodeRepository;
 import io.quarkus.test.junit.QuarkusTest;
@@ -23,7 +24,8 @@ class TestRecoverCodesService {
   @Test
   void test() {
     // Given
-    var user = new AuthenticatedUserMock(UUID.randomUUID());
+    var user = new DefaultAuthenticatedUser();
+    user.setId(UUID.randomUUID());
     // When
     var codes = recoverCodesService.generate(user);
     // Then
@@ -38,7 +40,8 @@ class TestRecoverCodesService {
   @Test
   void testRegenerate() {
     // Given
-    var user = new AuthenticatedUserMock(UUID.randomUUID());
+    var user = new DefaultAuthenticatedUser();
+    user.setId(UUID.randomUUID());
     recoverCodesService.generate(user);
     recoverCodesService.generate(user);
     // When
@@ -52,23 +55,5 @@ class TestRecoverCodesService {
     var revokedCodes = allCodes.stream().filter(code -> code.getStatus().equals(REVOKED)).toList();
     assertThat(activeCodes).hasSize(10);
     assertThat(revokedCodes).hasSize(20);
-  }
-
-  public record AuthenticatedUserMock(UUID getId) implements AuthenticatedUser {
-
-    @Override
-    public String getDisplayName() {
-      return "";
-    }
-
-    @Override
-    public String getLogin() {
-      return "";
-    }
-
-    @Override
-    public Set<String> getRoles() {
-      return Set.of();
-    }
   }
 }

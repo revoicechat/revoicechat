@@ -1,4 +1,4 @@
-package fr.revoicechat.core.config;
+package fr.revoicechat.security.config;
 
 import io.smallrye.config.ConfigMapping;
 

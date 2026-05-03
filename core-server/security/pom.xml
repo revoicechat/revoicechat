@@ -39,6 +39,10 @@
       <groupId>fr.revoicechat</groupId>
       <artifactId>revoicechat-openapi</artifactId>
     </dependency>
+    <dependency>
+      <groupId>fr.revoicechat</groupId>
+      <artifactId>revoicechat-web-utils</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

@@ -1,3 +1,3 @@
-package fr.revoicechat.core.technicaldata.login;
+package fr.revoicechat.security.representation;
 
 public record UserRecoveryCode(String username, String code) {}

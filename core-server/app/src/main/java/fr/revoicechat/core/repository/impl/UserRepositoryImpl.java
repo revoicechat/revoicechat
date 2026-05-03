@@ -1,6 +1,5 @@
 package fr.revoicechat.core.repository.impl;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -14,20 +13,6 @@ import jakarta.persistence.PersistenceContext;
 public class UserRepositoryImpl implements UserRepository {
   @PersistenceContext
   private EntityManager entityManager;
-
-  @Override
-  public User findByLogin(String login) {
-    List<User> users = entityManager.createQuery("""
-                                        select u
-                                        from User u
-                                        where u.login = :login""", User.class)
-                                    .setParameter("login", login)
-                                    .getResultList();
-    if (users.isEmpty()) {
-      return null;
-    }
-    return users.getFirst();
-  }
 
   @Override
   public Stream<User> findByServers(UUID serverID) {

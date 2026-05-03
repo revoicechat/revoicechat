@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import fr.revoicechat.core.model.ServerType;
 import fr.revoicechat.security.model.UserType;
 import fr.revoicechat.core.representation.NewUserRepresentation;
-import fr.revoicechat.core.technicaldata.login.UserPassword;
+import fr.revoicechat.security.representation.UserPassword;
 import fr.revoicechat.core.technicaldata.server.NewServer;
 import fr.revoicechat.core.representation.ServerRepresentation;
 import fr.revoicechat.core.technicaldata.user.AdminUpdatableUserData;
