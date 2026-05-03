@@ -1,8 +1,7 @@
-package fr.revoicechat.core.service.user;
+package fr.revoicechat.security.service.password;
 
-import static fr.revoicechat.core.nls.UserErrorCode.USER_PASSWORD_INVALID;
-
-import fr.revoicechat.core.config.UserPasswordConfig;
+import fr.revoicechat.security.config.UserPasswordConfig;
+import fr.revoicechat.security.nls.UserErrorCode;
 import fr.revoicechat.web.error.BadRequestException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -19,10 +18,10 @@ public class PasswordValidation {
 
   public void validate(String password) {
     if (password == null || password.length() < userPasswordConfig.minLength()) {
-      throw new BadRequestException(USER_PASSWORD_INVALID);
+      throw new BadRequestException(UserErrorCode.USER_PASSWORD_INVALID);
     }
     if (!passwordStatistics(password).isValid(userPasswordConfig)) {
-      throw new BadRequestException(USER_PASSWORD_INVALID);
+      throw new BadRequestException(UserErrorCode.USER_PASSWORD_INVALID);
     }
   }
 

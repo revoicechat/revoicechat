@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import fr.revoicechat.core.config.UserPasswordConfig;
+import fr.revoicechat.security.config.UserPasswordConfig;
+import fr.revoicechat.security.service.password.PasswordValidation;
 import fr.revoicechat.web.error.BadRequestException;
 import io.quarkus.test.junit.QuarkusTest;
 

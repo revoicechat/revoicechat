@@ -15,17 +15,17 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import fr.revoicechat.core.model.InvitationLink;
 import fr.revoicechat.core.model.User;
-import fr.revoicechat.security.model.UserType;
 import fr.revoicechat.core.repository.UserRepository;
 import fr.revoicechat.core.service.invitation.InvitationLinkUsage;
 import fr.revoicechat.core.technicaldata.user.AdminUpdatableUserData;
-import fr.revoicechat.core.technicaldata.user.NewPassword;
 import fr.revoicechat.core.technicaldata.user.NewUser;
 import fr.revoicechat.core.technicaldata.user.NewUserSignup;
 import fr.revoicechat.core.technicaldata.user.UpdatableUserData;
 import fr.revoicechat.core.technicaldata.user.UpdatableUserData.PasswordUpdated;
 import fr.revoicechat.risk.service.user.AuthenticatedUserEntityFinder;
+import fr.revoicechat.security.model.UserType;
 import fr.revoicechat.security.service.RecoverCodesService;
+import fr.revoicechat.security.service.password.PasswordValidation;
 import fr.revoicechat.security.utils.PasswordUtils;
 import fr.revoicechat.web.error.BadRequestException;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -93,10 +93,6 @@ public class UserService implements AuthenticatedUserEntityFinder {
     return new NewUser(user, recoverCodesService.generate(user));
   }
 
-  public User findByLogin(final String username) {
-    return userRepository.findByLogin(username);
-  }
-
   private static boolean isValideInvitation(final InvitationLink invitationLink) {
     return invitationLink != null
            && APPLICATION_JOIN.equals(invitationLink.getType())
@@ -154,18 +150,5 @@ public class UserService implements AuthenticatedUserEntityFinder {
     } else {
       throw new BadRequestException(USER_PASSWORD_WRONG_CONFIRMATION);
     }
-  }
-
-  @Transactional
-  public void forceSetPassword(final NewPassword password) {
-    if (Objects.equals(password.password(), password.confirmPassword())) {
-      passwordValidation.validate(password.password());
-      User user = userRetriever.currentUser();
-      user.setPassword(PasswordUtils.encode(password.password()));
-      entityManager.persist(user);
-    } else {
-      throw new BadRequestException(USER_PASSWORD_WRONG_CONFIRMATION);
-    }
-
   }
 }

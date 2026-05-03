@@ -1,3 +1,3 @@
-package fr.revoicechat.core.technicaldata.user;
+package fr.revoicechat.security.representation;
 
 public record NewPassword(String password, String confirmPassword) {}

@@ -21,6 +21,7 @@ import fr.revoicechat.notification.model.NotificationRegistrable;
 import fr.revoicechat.notification.model.NotificationRegistrableUser;
 import fr.revoicechat.notification.service.NotificationService;
 import fr.revoicechat.security.model.AuthenticatedUser;
+import fr.revoicechat.security.model.DefaultAuthenticatedUser;
 import fr.revoicechat.security.service.SecurityTokenService;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -45,7 +46,9 @@ class TestNotificationController {
   @Test
   void test() throws Exception {
     mockUserCreator.createUser();
-    var token = securityTokenService.generate(new AuthenticatedUserMock());
+    var user = new DefaultAuthenticatedUser();
+    user.setId(UUID.fromString(ID_USER));
+    var token = securityTokenService.generate(user);
     List<String> events = new ArrayList<>();
     try (Client client = ClientBuilder.newBuilder()
                                       .register((ClientRequestFilter) requestContext -> requestContext.getHeaders().add("Authorization", "Bearer " + token))
@@ -90,29 +93,6 @@ class TestNotificationController {
       user.setId(UUID.fromString(ID_USER));
       user.setStatus(ActiveStatus.ONLINE);
       entityManager.persist(user);
-    }
-  }
-
-  private static class AuthenticatedUserMock implements AuthenticatedUser {
-
-    @Override
-    public UUID getId() {
-      return UUID.fromString(ID_USER);
-    }
-
-    @Override
-    public String getDisplayName() {
-      return "user";
-    }
-
-    @Override
-    public String getLogin() {
-      return "user";
-    }
-
-    @Override
-    public Set<String> getRoles() {
-      return Set.of("USER");
     }
   }
 }

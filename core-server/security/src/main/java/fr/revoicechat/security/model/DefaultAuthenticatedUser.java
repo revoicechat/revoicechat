@@ -17,6 +17,7 @@ public class DefaultAuthenticatedUser implements AuthenticatedUser {
 
   private String login;
   private String displayName;
+  private String password;
   @Enumerated(EnumType.STRING)
   private UserType type = UserType.USER;
 
@@ -47,16 +48,25 @@ public class DefaultAuthenticatedUser implements AuthenticatedUser {
     this.displayName = displayName;
   }
 
+  @Override
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(final String password) {
+    this.password = password;
+  }
+
   public UserType getType() {
     return type;
+  }
+
+  public void setType(final UserType type) {
+    this.type = type;
   }
 
   @Override
   public Set<String> getRoles() {
     return getType().getRoles();
-  }
-
-  public void setType(final UserType type) {
-    this.type = type;
   }
 }
