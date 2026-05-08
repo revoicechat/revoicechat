@@ -23,6 +23,7 @@ public class HMACBasedOneTimePasswordGenerator {
     return String.format("%0" + DIGITS + "d", otp);
   }
 
+  @SuppressWarnings("java:S4790") // Used algorithm in TOTP
   private byte[] hmacSha1(final byte[] secret, final byte[] counterBytes) throws NoSuchAlgorithmException, InvalidKeyException {
     Mac mac = Mac.getInstance(ALGORITHM);
     mac.init(new SecretKeySpec(secret, ALGORITHM));
