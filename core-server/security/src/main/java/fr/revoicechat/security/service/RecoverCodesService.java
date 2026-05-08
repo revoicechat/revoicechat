@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
-import fr.revoicechat.security.model.AuthenticatedUser;
 import fr.revoicechat.security.model.UserRecoverCode;
 import fr.revoicechat.security.repository.UserRecoverCodeRepository;
 import fr.revoicechat.security.utils.PasswordUtils;
@@ -37,19 +37,19 @@ public class RecoverCodesService {
   }
 
   @Transactional
-  public Set<String> generate(AuthenticatedUser user) {
-    var oldCodes = userRecoverCodeRepository.findByUser(user.getId());
+  public Set<String> generate(UUID userId) {
+    var oldCodes = userRecoverCodeRepository.findByUser(userId);
     revokeOldCodes(oldCodes);
     List<String> existingCodes = new ArrayList<>();
     oldCodes.stream().map(UserRecoverCode::getCode).forEach(existingCodes::add);
     return IntStream.range(0, 10)
-                    .mapToObj(_ -> generate(user, existingCodes))
+                    .mapToObj(_ -> generate(userId, existingCodes))
                     .collect(toSet());
   }
 
   @Transactional
-  public boolean consume(AuthenticatedUser user, String code) {
-    var validCode = userRecoverCodeRepository.findByUser(user.getId())
+  public boolean consume(UUID userId, String code) {
+    var validCode = userRecoverCodeRepository.findByUser(userId)
                                          .stream()
                                          .filter(recoverCode -> recoverCode.getStatus() == ACTIVE)
                                          .filter(recoverCode -> PasswordUtils.matches(code, recoverCode.getCode()))
@@ -74,7 +74,7 @@ public class RecoverCodesService {
          });
   }
 
-  private String generate(final AuthenticatedUser user, final List<String> existingCodes) {
+  private String generate(UUID userId, final List<String> existingCodes) {
     String plaintext;
     do {
       plaintext = generatePlaintext();
@@ -83,7 +83,7 @@ public class RecoverCodesService {
     String hashed = PasswordUtils.encode(plaintext);
 
     var entity = new UserRecoverCode();
-    entity.setUserId(user.getId());
+    entity.setUserId(userId);
     entity.setCode(hashed);
     entity.setStatus(ACTIVE);
     entity.setCreatedAt(LocalDateTime.now());

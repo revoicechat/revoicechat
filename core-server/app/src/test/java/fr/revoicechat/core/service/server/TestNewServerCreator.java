@@ -10,12 +10,12 @@ import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import fr.revoicechat.core.model.room.ServerRoom;
-import fr.revoicechat.core.model.room.RoomType;
 import fr.revoicechat.core.model.Server;
-import fr.revoicechat.core.model.User;
+import fr.revoicechat.core.model.room.RoomType;
+import fr.revoicechat.core.model.room.ServerRoom;
 import fr.revoicechat.core.service.user.UserRetriever;
 import fr.revoicechat.core.stub.EntityManagerMock;
+import fr.revoicechat.security.model.AuthenticatedUser;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
@@ -28,7 +28,7 @@ class TestNewServerCreator {
     try (var em = new MockEntityManager()) {
       Server server = new Server();
       // When
-      new NewServerCreator(em, new UserRetriever(new UserHolderMock(new User()), em), _ -> {}).create(server);
+      new NewServerCreator(em, new UserRetriever(new UserHolderMock(new AuthenticatedUser()), em), _ -> {}).create(server);
       // Then
       softly.assertThat(server.getId()).isNotNull();
       assertThat(em.saved).hasSize(5);

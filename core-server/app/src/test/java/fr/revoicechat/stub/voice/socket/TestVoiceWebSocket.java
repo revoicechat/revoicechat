@@ -12,14 +12,14 @@ import org.junit.jupiter.api.Test;
 
 import fr.revoicechat.core.junit.CleanDatabase;
 import fr.revoicechat.core.model.room.RoomType;
-import fr.revoicechat.core.model.User;
-import fr.revoicechat.security.model.UserType;
 import fr.revoicechat.core.quarkus.profile.BasicIntegrationTestProfile;
-import fr.revoicechat.core.technicaldata.room.NewRoom;
-import fr.revoicechat.core.representation.ServerRoomRepresentation;
 import fr.revoicechat.core.representation.ServerRepresentation;
+import fr.revoicechat.core.representation.ServerRoomRepresentation;
+import fr.revoicechat.core.technicaldata.room.NewRoom;
 import fr.revoicechat.core.web.tests.RestTestUtils;
 import fr.revoicechat.live.voice.socket.VoiceWebSocket;
+import fr.revoicechat.security.model.AuthenticatedUser;
+import fr.revoicechat.security.model.UserType;
 import fr.revoicechat.security.service.SecurityTokenService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
@@ -186,7 +186,7 @@ class TestVoiceWebSocket {
   }
 
   private String fakeUser() {
-    User user = new User();
+    AuthenticatedUser user = new AuthenticatedUser();
     user.setId(UUID.randomUUID());
     user.setLogin("test-user");
     user.setDisplayName("test-user");

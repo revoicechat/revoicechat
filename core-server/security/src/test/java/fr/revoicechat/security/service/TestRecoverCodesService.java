@@ -3,13 +3,10 @@ package fr.revoicechat.security.service;
 import static fr.revoicechat.security.model.RecoverCodeStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Set;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
-import fr.revoicechat.security.model.AuthenticatedUser;
-import fr.revoicechat.security.model.DefaultAuthenticatedUser;
 import fr.revoicechat.security.model.UserRecoverCode;
 import fr.revoicechat.security.repository.UserRecoverCodeRepository;
 import io.quarkus.test.junit.QuarkusTest;
@@ -24,13 +21,12 @@ class TestRecoverCodesService {
   @Test
   void test() {
     // Given
-    var user = new DefaultAuthenticatedUser();
-    user.setId(UUID.randomUUID());
+    var id = UUID.randomUUID();
     // When
-    var codes = recoverCodesService.generate(user);
+    var codes = recoverCodesService.generate(id);
     // Then
     assertThat(codes).hasSize(10);
-    var allCodes = userRecoverCodeRepository.findByUser(user.getId());
+    var allCodes = userRecoverCodeRepository.findByUser(id);
     assertThat(allCodes).hasSize(10);
     assertThat(codes).allMatch(code -> allCodes.stream()
                                                .map(UserRecoverCode::getCode)
@@ -40,14 +36,13 @@ class TestRecoverCodesService {
   @Test
   void testRegenerate() {
     // Given
-    var user = new DefaultAuthenticatedUser();
-    user.setId(UUID.randomUUID());
-    recoverCodesService.generate(user);
-    recoverCodesService.generate(user);
+    var id = UUID.randomUUID();
+    recoverCodesService.generate(id);
+    recoverCodesService.generate(id);
     // When
-    var codes = recoverCodesService.generate(user);
+    var codes = recoverCodesService.generate(id);
     // Then
-    var allCodes = userRecoverCodeRepository.findByUser(user.getId());
+    var allCodes = userRecoverCodeRepository.findByUser(id);
     assertThat(allCodes).hasSize(30);
     assertThat(codes).hasSize(10)
                      .allMatch(code -> allCodes.stream().map(UserRecoverCode::getCode).noneMatch(code::equals));

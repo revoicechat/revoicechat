@@ -1,11 +1,11 @@
 package fr.revoicechat.security;
 
-import java.util.Set;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
 import fr.revoicechat.security.model.AuthenticatedUser;
+import fr.revoicechat.security.model.UserType;
 import fr.revoicechat.security.service.SecurityTokenService;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
@@ -41,7 +41,7 @@ class TestQueryParamJwtAuthMechanism {
 
   @Test
   void test() {
-    var validJwt = jwtService.generate(new AuthenticatedUserMock());
+    var validJwt = jwtService.generate(newAuthenticatedUser());
     RestAssured.given()
                .accept(MediaType.APPLICATION_JSON)
                .contentType(MediaType.APPLICATION_JSON)
@@ -50,11 +50,13 @@ class TestQueryParamJwtAuthMechanism {
                .statusCode(200);
   }
 
-  private static class AuthenticatedUserMock implements AuthenticatedUser {
-    @Override public UUID getId() {return UUID.fromString(ID_USER);}
-    @Override public String getDisplayName() {return "user";}
-    @Override public String getLogin() {return "user";}
-    @Override public String getPassword() {return "";}
-    @Override public Set<String> getRoles() {return Set.of("USER");}
+  private AuthenticatedUser newAuthenticatedUser() {
+    var user = new AuthenticatedUser();
+    user.setId(UUID.fromString(ID_USER));
+    user.setDisplayName("user");
+    user.setLogin("user");
+    user.setPassword("");
+    user.setType(UserType.USER);
+    return user;
   }
 }

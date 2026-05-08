@@ -6,7 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import fr.revoicechat.security.UserHolder;
-import fr.revoicechat.security.model.DefaultAuthenticatedUser;
+import fr.revoicechat.security.model.AuthenticatedUser;
 import fr.revoicechat.security.model.UserType;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -24,7 +24,7 @@ class TestUserHolder {
   @Test
   @Transactional
   void testWithToken() {
-    DefaultAuthenticatedUser user = new DefaultAuthenticatedUser();
+    AuthenticatedUser user = new AuthenticatedUser();
     user.setId(UUID.randomUUID());
     user.setLogin("test-user");
     user.setDisplayName("test-user");
@@ -37,7 +37,7 @@ class TestUserHolder {
   @Test
   @Transactional
   void testWithTokenAndNoUserInDb() {
-    DefaultAuthenticatedUser user = new DefaultAuthenticatedUser();
+    AuthenticatedUser user = new AuthenticatedUser();
     user.setId(UUID.randomUUID());
     user.setLogin("test-user");
     user.setDisplayName("test-user");

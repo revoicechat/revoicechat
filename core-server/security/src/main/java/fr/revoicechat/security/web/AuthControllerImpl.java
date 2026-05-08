@@ -48,7 +48,7 @@ public class AuthControllerImpl implements AuthController {
   @PermitAll
   public Response loginUsingRecoveryCode(final UserRecoveryCode request) {
     var user = userService.findByLogin(request.username());
-    if (user != null && recoverCodesService.consume(user, request.code())) {
+    if (user != null && recoverCodesService.consume(user.getId(), request.code())) {
       return Response.ok(securityTokenService.generateAfterRecoveryCode(user)).build();
     } else {
       return Response.status(Status.UNAUTHORIZED).entity("Invalid credentials").build();
@@ -70,7 +70,7 @@ public class AuthControllerImpl implements AuthController {
   @Override
   @RolesAllowed(ROLE_USER)
   public Response regenerateRecoveryCodes(final UserPassword request) {
-    return runWithConnexion(request, recoverCodesService::generate);
+    return runWithConnexion(request, user -> recoverCodesService.generate(user.getId()));
   }
 
   @Override

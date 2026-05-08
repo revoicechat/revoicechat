@@ -22,7 +22,6 @@ import fr.revoicechat.core.technicaldata.user.NewUser;
 import fr.revoicechat.core.technicaldata.user.NewUserSignup;
 import fr.revoicechat.core.technicaldata.user.UpdatableUserData;
 import fr.revoicechat.core.technicaldata.user.UpdatableUserData.PasswordUpdated;
-import fr.revoicechat.risk.service.user.AuthenticatedUserEntityFinder;
 import fr.revoicechat.security.model.UserType;
 import fr.revoicechat.security.service.RecoverCodesService;
 import fr.revoicechat.security.service.password.PasswordValidation;
@@ -34,7 +33,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
-public class UserService implements AuthenticatedUserEntityFinder {
+public class UserService {
 
   private final EntityManager entityManager;
   private final UserRepository userRepository;
@@ -90,7 +89,7 @@ public class UserService implements AuthenticatedUserEntityFinder {
     user.setPassword(PasswordUtils.encode(signer.password()));
     entityManager.persist(user);
     invitationLinkUsage.use(invitationLink, user);
-    return new NewUser(user, recoverCodesService.generate(user));
+    return new NewUser(user, recoverCodesService.generate(user.getId()));
   }
 
   private static boolean isValideInvitation(final InvitationLink invitationLink) {
@@ -117,8 +116,6 @@ public class UserService implements AuthenticatedUserEntityFinder {
     return user;
   }
 
-  @Override
-  @SuppressWarnings("unchecked")
   public User getUser(final UUID id) {
     return Optional.ofNullable(getUserOrNull(id)).orElseThrow(() -> new NotFoundException("User not found"));
   }
