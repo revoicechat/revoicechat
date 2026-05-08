@@ -17,6 +17,8 @@ public class AuthenticatedUser {
   private String login;
   private String displayName;
   private String password;
+  private String base32Secret;
+
   @Enumerated(EnumType.STRING)
   private UserType type = UserType.USER;
 
@@ -50,6 +52,14 @@ public class AuthenticatedUser {
 
   public void setPassword(final String password) {
     this.password = password;
+  }
+
+  public String getBase32Secret() {
+    return base32Secret;
+  }
+
+  public void setBase32Secret(final String base32Secret) {
+    this.base32Secret = base32Secret;
   }
 
   public UserType getType() {

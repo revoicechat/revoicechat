@@ -13,6 +13,7 @@ import fr.revoicechat.security.representation.UserRecoveryCode;
 import fr.revoicechat.security.service.AuthenticatedUserService;
 import fr.revoicechat.security.service.RecoverCodesService;
 import fr.revoicechat.security.service.SecurityTokenService;
+import fr.revoicechat.security.service.TOTPGenerator;
 import fr.revoicechat.security.utils.PasswordUtils;
 import fr.revoicechat.security.web.api.AuthController;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -27,21 +28,24 @@ public class AuthControllerImpl implements AuthController {
   private final SecurityIdentity securityIdentity;
   private final SecurityTokenService securityTokenService;
   private final RecoverCodesService recoverCodesService;
+  private final TOTPGenerator totpGenerator;
 
   public AuthControllerImpl(AuthenticatedUserService userService,
                             SecurityIdentity securityIdentity,
                             SecurityTokenService securityTokenService,
-                            RecoverCodesService recoverCodesService) {
+                            RecoverCodesService recoverCodesService,
+                            TOTPGenerator totpGenerator) {
     this.userService = userService;
     this.securityIdentity = securityIdentity;
     this.securityTokenService = securityTokenService;
     this.recoverCodesService = recoverCodesService;
+    this.totpGenerator = totpGenerator;
   }
 
   @Override
   @PermitAll
   public Response login(UserPassword request) {
-    return runWithConnexion(request, securityTokenService::generate);
+    return runWithConnexion(request, user -> Response.ok(securityTokenService.generate(user)).build());
   }
 
   @Override
@@ -70,7 +74,15 @@ public class AuthControllerImpl implements AuthController {
   @Override
   @RolesAllowed(ROLE_USER)
   public Response regenerateRecoveryCodes(final UserPassword request) {
-    return runWithConnexion(request, user -> recoverCodesService.generate(user.getId()));
+    return runWithConnexion(request, user -> Response.ok(recoverCodesService.generate(user.getId())).build());
+  }
+
+  @Override
+  @RolesAllowed(ROLE_USER)
+  public Response regenerateTOTPSecret(final UserPassword request) {
+    return runWithConnexion(request, user -> Response.ok(totpGenerator.generate(user))
+                                                     .header("Content-Disposition", "inline; filename=\"totp.png\"")
+                                                     .build());
   }
 
   @Override
@@ -84,10 +96,10 @@ public class AuthControllerImpl implements AuthController {
     }
   }
 
-  public Response runWithConnexion(UserPassword request, Function<AuthenticatedUser, Object> generator) {
+  public Response runWithConnexion(UserPassword request, Function<AuthenticatedUser, Response> generator) {
     var user = userService.findByLogin(request.username());
     if (user != null && PasswordUtils.matches(request.password(), user.getPassword())) {
-      return Response.ok(generator.apply(user)).build();
+      return generator.apply(user);
     } else {
       return Response.status(Status.UNAUTHORIZED).entity("Invalid credentials").build();
     }

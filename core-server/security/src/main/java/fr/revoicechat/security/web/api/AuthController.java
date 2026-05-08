@@ -1,5 +1,7 @@
 package fr.revoicechat.security.web.api;
 
+import static fr.revoicechat.security.utils.RevoiceChatRoles.ROLE_USER;
+
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -10,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import fr.revoicechat.security.representation.NewPassword;
 import fr.revoicechat.security.representation.UserPassword;
 import fr.revoicechat.security.representation.UserRecoveryCode;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -69,6 +72,16 @@ public interface AuthController {
   @Path("/recovery-codes")
   @Produces(MediaType.APPLICATION_JSON)
   Response regenerateRecoveryCodes(UserPassword request);
+
+  @RequestBody(
+      description = "Regenerate user TOTP secret",
+      content = @Content(schema = @Schema(implementation = UserPassword.class))
+  )
+  @APIResponse(responseCode = "200", description = "Authentication successful, TOTP secret regenerated")
+  @APIResponse(responseCode = "401", description = "Authentication failed due to invalid credentials")
+  @POST
+  @Path("/totp-secret")
+  Response regenerateTOTPSecret(UserPassword request);
 
   @Operation(
       summary = "User logout",
