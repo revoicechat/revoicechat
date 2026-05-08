@@ -1,0 +1,1 @@
+alter table RVC_USER add column BASE_32_SECRET varchar(255);

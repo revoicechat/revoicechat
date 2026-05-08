@@ -3,6 +3,7 @@ package fr.revoicechat.security.model;
 import java.util.Set;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -17,6 +18,7 @@ public class AuthenticatedUser {
   private String login;
   private String displayName;
   private String password;
+  @Column(name = "BASE_32_SECRET")
   private String base32Secret;
 
   @Enumerated(EnumType.STRING)
