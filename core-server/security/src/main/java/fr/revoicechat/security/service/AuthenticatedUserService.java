@@ -33,6 +33,7 @@ public class AuthenticatedUserService {
     this.passwordValidation = passwordValidation;
   }
 
+  @Transactional
   public AuthenticatedUser findByLogin(String login) {
     return userRepository.findByLogin(login);
   }

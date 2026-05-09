@@ -34,6 +34,19 @@ class TestRecoverCodesService {
   }
 
   @Test
+  void testEntity() {
+    // Given
+    var id = UUID.randomUUID();
+    // When
+    recoverCodesService.generate(id);
+    // Then
+    var allCodes = userRecoverCodeRepository.findByUser(id);
+    assertThat(allCodes).hasSize(10)
+                        .allMatch(code -> code.getUserId().equals(id))
+                        .allMatch(code -> code.getCreatedAt() != null);
+  }
+
+  @Test
   void testRegenerate() {
     // Given
     var id = UUID.randomUUID();

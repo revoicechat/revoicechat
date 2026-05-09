@@ -15,7 +15,7 @@ import jakarta.ws.rs.ext.Provider;
 @Priority(Priorities.AUTHORIZATION)
 public class TokenBlacklistFilter implements ContainerRequestFilter {
 
-    @SuppressWarnings("java:S6813") // inject annotation must be used in request filter
+    @SuppressWarnings("java:S6813") // Inject annotation must be used in request filter
     @Inject
     TokenBlacklistService blacklistService;
 

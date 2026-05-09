@@ -2,6 +2,7 @@ package fr.revoicechat.security.model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -10,7 +11,9 @@ import jakarta.persistence.Table;
 @Table(name = "RVC_BLACKLISTED_TOKEN")
 public class BlacklistedToken {
 
-  @Id private String token;
+  @Id
+  @Column(columnDefinition = "TEXT")
+  private String token;
   private LocalDateTime expiresAt;
 
   public String getToken() {

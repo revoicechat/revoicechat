@@ -26,18 +26,14 @@ public class UserRecoverCodeId implements Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof UserRecoverCodeId that)) {
-      return false;
-    }
-    return Objects.equals(userId, that.userId) &&
-           Objects.equals(code, that.code);
+    if (this == o) return true;
+    if (!(o instanceof UserRecoverCodeId that)) return false;
+    return Objects.equals(getUserId(), that.getUserId()) &&
+           Objects.equals(getCode(), that.getCode());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(userId, code);
+    return Objects.hash(getUserId(), getCode());
   }
 }

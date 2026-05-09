@@ -1,7 +1,5 @@
 package fr.revoicechat.security.web.api;
 
-import static fr.revoicechat.security.utils.RevoiceChatRoles.ROLE_USER;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -12,7 +10,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import fr.revoicechat.security.representation.NewPassword;
 import fr.revoicechat.security.representation.UserPassword;
 import fr.revoicechat.security.representation.UserRecoveryCode;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -21,7 +18,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/auth")
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Authentication", description = "Handle user authentication, registration, and session management")
 public interface AuthController {

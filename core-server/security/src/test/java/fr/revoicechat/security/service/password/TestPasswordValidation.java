@@ -1,4 +1,4 @@
-package fr.revoicechat.core.service.user;
+package fr.revoicechat.security.service.password;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -7,13 +7,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import fr.revoicechat.security.config.UserPasswordConfig;
-import fr.revoicechat.security.service.password.PasswordValidation;
 import fr.revoicechat.web.error.BadRequestException;
 import io.quarkus.test.junit.QuarkusTest;
 
-/**
- * Tests associés à {@link PasswordValidation}.
- */
 @QuarkusTest
 class TestPasswordValidation {
 
@@ -27,9 +23,10 @@ class TestPasswordValidation {
       "P@ss0rd",
       "12345678",
       "AAAAAAAA",
+      "Azerty123456",
   })
   void testInvalid(String password) {
-    var config = new UserPasswordConfigMock(8, 1, 1, 1, 1);
+    var config = new UserPasswordConfigMock();
     var service = new PasswordValidation(config);
     assertThatThrownBy(() -> service.validate(password))
         .isInstanceOf(BadRequestException.class)
@@ -38,7 +35,7 @@ class TestPasswordValidation {
 
   @Test
   void testNull() {
-    var config = new UserPasswordConfigMock(8, 1, 1, 1, 1);
+    var config = new UserPasswordConfigMock();
     var service = new PasswordValidation(config);
     assertThatThrownBy(() -> service.validate(null))
         .isInstanceOf(BadRequestException.class)
@@ -48,14 +45,16 @@ class TestPasswordValidation {
   @ParameterizedTest
   @ValueSource(strings = { "P@ss0rds" })
   void testValid(String password) {
-    var config = new UserPasswordConfigMock(8, 1, 1, 1, 1);
+    var config = new UserPasswordConfigMock();
     var service = new PasswordValidation(config);
     assertThatCode(() -> service.validate(password)).doesNotThrowAnyException();
   }
 
-  record UserPasswordConfigMock(int minLength,
-                                int minUppercase,
-                                int minLowercase,
-                                int minNumber,
-                                int minSpecialChar) implements UserPasswordConfig {}
+  static class UserPasswordConfigMock implements UserPasswordConfig {
+    @Override public int minLength() {return 8;}
+    @Override public int minUppercase() {return 1;}
+    @Override public int minLowercase() {return 1;}
+    @Override public int minNumber() {return 1;}
+    @Override public int minSpecialChar() {return 1;}
+  }
 }
