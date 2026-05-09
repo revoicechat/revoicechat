@@ -2,12 +2,10 @@ package fr.revoicechat.core.model;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 import fr.revoicechat.notification.model.ActiveStatus;
 import fr.revoicechat.notification.model.NotificationRegistrable;
-import fr.revoicechat.security.model.AuthenticatedUser;
 import fr.revoicechat.security.model.UserType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +16,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "RVC_USER")
-public class User implements NotificationRegistrable, AuthenticatedUser {
+public class User implements NotificationRegistrable {
   @Id
   private UUID id;
 
@@ -63,7 +61,6 @@ public class User implements NotificationRegistrable, AuthenticatedUser {
     this.email = email;
   }
 
-  @Override
   public String getLogin() {
     return login;
   }
@@ -72,7 +69,6 @@ public class User implements NotificationRegistrable, AuthenticatedUser {
     this.login = login;
   }
 
-  @Override
   public String getDisplayName() {
     return displayName;
   }
@@ -106,11 +102,11 @@ public class User implements NotificationRegistrable, AuthenticatedUser {
     this.status = status;
   }
 
-  public fr.revoicechat.security.model.UserType getType() {
+  public UserType getType() {
     return type;
   }
 
-  public void setType(final fr.revoicechat.security.model.UserType type) {
+  public void setType(final UserType type) {
     this.type = type;
   }
 
@@ -120,11 +116,6 @@ public class User implements NotificationRegistrable, AuthenticatedUser {
 
   public void setSettings(final String settings) {
     this.settings = settings;
-  }
-
-  @Override
-  public Set<String> getRoles() {
-    return getType().getRoles();
   }
 
   @Override

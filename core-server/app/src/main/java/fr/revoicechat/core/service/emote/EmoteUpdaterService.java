@@ -11,10 +11,10 @@ import fr.revoicechat.core.nls.EmoteErrorCode;
 import fr.revoicechat.core.risk.EmoteRiskType;
 import fr.revoicechat.core.service.emote.risk.EmoteRiskSupplier;
 import fr.revoicechat.core.service.media.MediaDataService;
-import fr.revoicechat.core.service.user.UserRetriever;
 import fr.revoicechat.core.technicaldata.emote.NewEmote;
 import fr.revoicechat.core.technicaldata.media.NewMediaData;
 import fr.revoicechat.risk.type.RiskType;
+import fr.revoicechat.security.UserHolder;
 import fr.revoicechat.security.model.AuthenticatedUser;
 import fr.revoicechat.web.error.BadRequestException;
 import io.quarkus.security.UnauthorizedException;
@@ -29,19 +29,19 @@ public class EmoteUpdaterService {
 
   private final MediaDataService mediaDataService;
   private final EntityManager entityManager;
-  private final UserRetriever userRetriever;
+  private final UserHolder userHolder;
   private final EmoteRetrieverService emoteRetrieverService;
   private final Instance<EmoteRiskSupplier> emoteRiskSuppliers;
 
   @Inject
   public EmoteUpdaterService(MediaDataService mediaDataService,
                              EntityManager entityManager,
-                             UserRetriever userRetriever,
+                             UserHolder userHolder,
                              EmoteRetrieverService emoteRetrieverService,
                              Instance<EmoteRiskSupplier> emoteRiskSuppliers) {
     this.mediaDataService = mediaDataService;
     this.entityManager = entityManager;
-    this.userRetriever = userRetriever;
+    this.userHolder = userHolder;
     this.emoteRetrieverService = emoteRetrieverService;
     this.emoteRiskSuppliers = emoteRiskSuppliers;
   }
@@ -64,7 +64,7 @@ public class EmoteUpdaterService {
 
   @Transactional
   public Emote update(final UUID id, final NewEmote newEmote) {
-    var user = userRetriever.currentUser();
+    var user = userHolder.currentUser();
     var emote = emoteRetrieverService.getEntity(id);
     if (hasRisk(emote, user, EmoteRiskType.UPDATE_EMOTE)) {
       emote.setContent(newEmote.content());
@@ -78,7 +78,7 @@ public class EmoteUpdaterService {
 
   @Transactional
   public Emote delete(final UUID id) {
-    var user = userRetriever.currentUser();
+    var user = userHolder.currentUser();
     var emote = emoteRetrieverService.getEntity(id);
     if (hasRisk(emote, user, EmoteRiskType.REMOVE_EMOTE)) {
       entityManager.remove(emote);

@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import fr.revoicechat.security.UserHolder;
 import fr.revoicechat.security.model.AuthenticatedUser;
-import fr.revoicechat.security.model.DefaultAuthenticatedUser;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
@@ -34,6 +33,11 @@ public class UserHolderImpl implements UserHolder {
   }
 
   @Override
+  public AuthenticatedUser currentUser() {
+    return getUser(getId());
+  }
+
+  @Override
   public AuthenticatedUser get(final String jwtToken) {
     try {
       return getUser(peekId(jwtToken));
@@ -50,7 +54,7 @@ public class UserHolderImpl implements UserHolder {
   }
 
   private AuthenticatedUser getUser(UUID id) {
-    var user = entityManager.find(DefaultAuthenticatedUser.class, id);
+    var user = entityManager.find(AuthenticatedUser.class, id);
     if (user == null) {
       throw new NotFoundException(USER_NOT_FOUND.translate());
     }

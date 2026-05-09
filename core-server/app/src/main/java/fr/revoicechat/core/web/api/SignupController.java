@@ -15,10 +15,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-@Path("/auth")
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Authentication", description = "Handle user authentication, registration, and session management")
-public interface AuthController {
+public interface SignupController {
 
   @Operation(
       summary = "Register new user",

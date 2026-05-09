@@ -18,7 +18,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/auth")
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Authentication", description = "Handle user authentication, registration, and session management")
 public interface AuthController {
@@ -69,6 +68,16 @@ public interface AuthController {
   @Path("/recovery-codes")
   @Produces(MediaType.APPLICATION_JSON)
   Response regenerateRecoveryCodes(UserPassword request);
+
+  @RequestBody(
+      description = "Regenerate user TOTP secret",
+      content = @Content(schema = @Schema(implementation = UserPassword.class))
+  )
+  @APIResponse(responseCode = "200", description = "Authentication successful, TOTP secret regenerated")
+  @APIResponse(responseCode = "401", description = "Authentication failed due to invalid credentials")
+  @POST
+  @Path("/totp-secret")
+  Response regenerateTOTPSecret(UserPassword request);
 
   @Operation(
       summary = "User logout",

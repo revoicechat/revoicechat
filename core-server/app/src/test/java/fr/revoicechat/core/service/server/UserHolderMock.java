@@ -13,6 +13,11 @@ public record UserHolderMock(AuthenticatedUser u) implements UserHolder {
   }
 
   @Override
+  public AuthenticatedUser currentUser() {
+    return u;
+  }
+
+  @Override
   public AuthenticatedUser get(final String jwtToken) {
     return u;
   }

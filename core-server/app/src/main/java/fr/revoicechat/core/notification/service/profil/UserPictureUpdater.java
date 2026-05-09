@@ -7,19 +7,19 @@ import java.util.UUID;
 import fr.revoicechat.core.model.User;
 import fr.revoicechat.core.notification.ProfilPictureUpdate;
 import fr.revoicechat.core.repository.UserRepository;
-import fr.revoicechat.core.service.user.UserRetriever;
 import fr.revoicechat.notification.Notification;
+import fr.revoicechat.security.UserHolder;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 
 @ApplicationScoped
 public final class UserPictureUpdater implements PictureUpdater<User> {
-  private final UserRetriever userRetriever;
+  private final UserHolder userHolder;
   private final UserRepository userRepository;
   private final EntityManager entityManager;
 
-  public UserPictureUpdater(UserRetriever userRetriever, EntityManager entityManager, UserRepository userRepository) {
-    this.userRetriever = userRetriever;
+  public UserPictureUpdater(UserHolder userHolder, EntityManager entityManager, UserRepository userRepository) {
+    this.userHolder = userHolder;
     this.entityManager = entityManager;
     this.userRepository = userRepository;
   }
@@ -31,7 +31,7 @@ public final class UserPictureUpdater implements PictureUpdater<User> {
 
   @Override
   public void emmit(final User user) {
-    var currentUser = userRetriever.currentUser();
+    var currentUser = userHolder.currentUser();
     if (currentUser.getId().equals(user.getId()) || currentUser.getRoles().contains(ROLE_ADMIN)) {
       Notification.of(new ProfilPictureUpdate(user.getId()))
                   .sendTo(userRepository.everyone());

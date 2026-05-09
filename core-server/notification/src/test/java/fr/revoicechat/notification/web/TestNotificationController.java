@@ -7,7 +7,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
@@ -21,7 +20,6 @@ import fr.revoicechat.notification.model.NotificationRegistrable;
 import fr.revoicechat.notification.model.NotificationRegistrableUser;
 import fr.revoicechat.notification.service.NotificationService;
 import fr.revoicechat.security.model.AuthenticatedUser;
-import fr.revoicechat.security.model.DefaultAuthenticatedUser;
 import fr.revoicechat.security.service.SecurityTokenService;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -46,7 +44,7 @@ class TestNotificationController {
   @Test
   void test() throws Exception {
     mockUserCreator.createUser();
-    var user = new DefaultAuthenticatedUser();
+    var user = new AuthenticatedUser();
     user.setId(UUID.fromString(ID_USER));
     var token = securityTokenService.generate(user);
     List<String> events = new ArrayList<>();

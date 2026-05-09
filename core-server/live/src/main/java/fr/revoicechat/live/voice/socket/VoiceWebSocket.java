@@ -1,6 +1,8 @@
 package fr.revoicechat.live.voice.socket;
 
 import java.util.UUID;
+
+import fr.revoicechat.security.model.AuthenticatedUser;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.websocket.CloseReason.CloseCodes;
@@ -25,7 +27,6 @@ import fr.revoicechat.live.voice.service.VoiceRoomUserFinder;
 import fr.revoicechat.notification.Notification;
 import fr.revoicechat.notification.data.UserNotificationRepresentation;
 import fr.revoicechat.security.UserHolder;
-import fr.revoicechat.security.model.AuthenticatedUser;
 
 /**
  * WebSocket endpoint for voice chat room functionality.

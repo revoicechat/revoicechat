@@ -35,6 +35,9 @@
     <org.reflection.version>0.10.2</org.reflection.version>
     <org.jsoup.version>1.22.2</org.jsoup.version>
     <org.assertj.version>3.27.7</org.assertj.version>
+    <org.jbcrypt.version>0.4</org.jbcrypt.version>
+    <google.zxing.version>3.5.3</google.zxing.version>
+    <jqno.equalsverifier.version>3.16.1</jqno.equalsverifier.version>
     <quarkus.test.coverage.enabled>true</quarkus.test.coverage.enabled>
     <sonar.coverage.jacoco.xmlReportPaths>../target/coverage/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
@@ -174,6 +177,13 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-scheduler</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>nl.jqno.equalsverifier</groupId>
+      <artifactId>equalsverifier</artifactId>
+      <version>${jqno.equalsverifier.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

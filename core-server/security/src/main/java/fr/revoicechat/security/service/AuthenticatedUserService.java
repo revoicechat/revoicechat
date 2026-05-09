@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import fr.revoicechat.security.UserHolder;
 import fr.revoicechat.security.model.AuthenticatedUser;
-import fr.revoicechat.security.model.DefaultAuthenticatedUser;
 import fr.revoicechat.security.repository.AuthenticatedUserRepository;
 import fr.revoicechat.security.representation.NewPassword;
 import fr.revoicechat.security.service.password.PasswordValidation;
@@ -34,6 +33,7 @@ public class AuthenticatedUserService {
     this.passwordValidation = passwordValidation;
   }
 
+  @Transactional
   public AuthenticatedUser findByLogin(String login) {
     return userRepository.findByLogin(login);
   }
@@ -42,7 +42,7 @@ public class AuthenticatedUserService {
   public void forceSetPassword(final NewPassword password) {
     if (Objects.equals(password.password(), password.confirmPassword())) {
       passwordValidation.validate(password.password());
-      var user = entityManager.find(DefaultAuthenticatedUser.class, userHolder.getId());
+      var user = entityManager.find(AuthenticatedUser.class, userHolder.getId());
       user.setPassword(PasswordUtils.encode(password.password()));
       entityManager.persist(user);
     } else {
