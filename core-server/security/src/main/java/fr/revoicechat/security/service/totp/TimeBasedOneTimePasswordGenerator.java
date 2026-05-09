@@ -7,6 +7,8 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.Random;
 
+import org.apache.commons.codec.binary.Base32;
+
 import fr.revoicechat.security.error.AuthConfigException;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -16,6 +18,7 @@ public class TimeBasedOneTimePasswordGenerator {
   private static final int PERIOD = 30;
 
   private final Random random = new SecureRandom();
+  private final Base32 base32 = new Base32();
   private final HMACBasedOneTimePasswordGenerator hmacBasedOneTimePasswordGenerator;
 
   public TimeBasedOneTimePasswordGenerator(HMACBasedOneTimePasswordGenerator hmacBasedOneTimePasswordGenerator) {
@@ -48,7 +51,7 @@ public class TimeBasedOneTimePasswordGenerator {
 
   /** Base 32 encoding is required by authenticator apps (Google Auth, Authy…) */
   public String toBase32(byte[] secret) {
-    return Base64.getEncoder().encodeToString(secret);
+    return base32.encodeToString(secret);
   }
 
   private String generateHOTP(final byte[] secret, final long counter) {

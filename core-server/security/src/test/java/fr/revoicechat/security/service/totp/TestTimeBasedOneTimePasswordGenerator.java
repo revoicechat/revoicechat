@@ -58,6 +58,6 @@ class TestTimeBasedOneTimePasswordGenerator {
   @Test
   void testToBase32() {
     byte[] secret = "1234567890azertyuiop".getBytes();
-    assertThat(timeBasedOneTimePasswordGenerator.toBase32(secret)).isEqualTo("MTIzNDU2Nzg5MGF6ZXJ0eXVpb3A=");
+    assertThat(timeBasedOneTimePasswordGenerator.toBase32(secret)).isEqualTo("GEZDGNBVGY3TQOJQMF5GK4TUPF2WS33Q");
   }
 }

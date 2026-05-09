@@ -38,6 +38,7 @@
     <org.jbcrypt.version>0.4</org.jbcrypt.version>
     <google.zxing.version>3.5.3</google.zxing.version>
     <jqno.equalsverifier.version>3.16.1</jqno.equalsverifier.version>
+    <common.codec.version>1.17.1</common.codec.version>
     <quarkus.test.coverage.enabled>true</quarkus.test.coverage.enabled>
     <sonar.coverage.jacoco.xmlReportPaths>../target/coverage/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
   </properties>

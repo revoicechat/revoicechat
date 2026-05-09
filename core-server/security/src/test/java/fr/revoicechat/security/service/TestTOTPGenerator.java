@@ -46,7 +46,7 @@ class TestTOTPGenerator {
     var result = entityManager.find(AuthenticatedUser.class, user.getId());
     assertThat(result.getBase32Secret()).isNotNull();
     assertThat(decodeQRCode(qrCode).getText())
-        .isEqualTo(OTP_AUTH_URL.formatted(user.getId(), user.getBase32Secret()));
+        .isEqualTo(OTP_AUTH_URL.formatted(user.getLogin(), user.getBase32Secret()));
   }
 
   private AuthenticatedUser newAuthenticatedUser() {

@@ -32,6 +32,6 @@ public class TOTPGenerator {
     var base32Secret = generator.toBase32(generator.generateSecret());
     user.setBase32Secret(base32Secret);
     entityManager.persist(user);
-    return qrCodeGenerator.generate(OTP_AUTH_URL.formatted(user.getId(), base32Secret));
+    return qrCodeGenerator.generate(OTP_AUTH_URL.formatted(user.getLogin(), base32Secret));
   }
 }
