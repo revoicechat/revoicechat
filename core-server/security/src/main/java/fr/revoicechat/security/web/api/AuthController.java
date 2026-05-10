@@ -1,5 +1,7 @@
 package fr.revoicechat.security.web.api;
 
+import static fr.revoicechat.security.utils.RevoiceChatRoles.ROLE_USER;
+
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -11,9 +13,12 @@ import fr.revoicechat.security.representation.NewPassword;
 import fr.revoicechat.security.representation.UserPassword;
 import fr.revoicechat.security.representation.UserRecoveryCode;
 import fr.revoicechat.security.representation.UserTotpCode;
+
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -97,6 +102,16 @@ public interface AuthController {
   @POST
   @Path("/totp-secret")
   Response regenerateTOTPSecret(UserPassword request);
+
+  @RequestBody(
+      description = "Validate TOTP secret workflow",
+      content = @Content(schema = @Schema(implementation = UserPassword.class))
+  )
+  @APIResponse(responseCode = "200", description = "Authentication successful, TOTP secret regenerated")
+  @APIResponse(responseCode = "401", description = "Authentication failed due to invalid credentials")
+  @PUT
+  @Path("/totp-secret")
+  void validateTOTPSecret(String secret);
 
   @Operation(
       summary = "User logout",

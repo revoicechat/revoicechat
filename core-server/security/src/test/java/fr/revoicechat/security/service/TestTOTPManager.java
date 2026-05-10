@@ -44,11 +44,12 @@ class TestTOTPManager {
     // When
     var qrCode = generator.generate(user.getId());
     // Then
-    assertThat(qrCode).isNotEmpty();
+    assertThat(qrCode).isNotNull();
     var result = entityManager.find(AuthenticatedUser.class, user.getId());
     assertThat(result.getTotpSecret()).isNotNull();
     assertThat(result.getTotpStatus()).isEqualTo(TotpStatus.ACTIVATION_PENDING);
-    assertThat(decodeQRCode(qrCode).getText())
+    assertThat(decodeQRCode(qrCode.pgn()).getText())
+        .isEqualTo(qrCode.url())
         .isEqualTo(OTP_AUTH_URL.formatted(user.getLogin(), user.getTotpSecret()));
   }
 
