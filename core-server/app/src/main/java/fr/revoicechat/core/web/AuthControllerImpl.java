@@ -128,6 +128,12 @@ public class AuthControllerImpl implements AuthController, SignupController {
   }
 
   @Override
+  @RolesAllowed(ROLE_USER)
+  public void validateTOTPSecret(String secret) {
+    totpManager.validate(secret);
+  }
+
+  @Override
   @PermitAll
   public Response logout() {
     if (securityIdentity.getPrincipal() instanceof JsonWebToken jsonWebToken) {
