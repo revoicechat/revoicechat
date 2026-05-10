@@ -1585,6 +1585,13 @@ summary::marker {
     column-gap: 2rem;
 }
 
+.flow-button-config {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
 .setting-user-picture:hover {
     cursor: pointer;
 }
