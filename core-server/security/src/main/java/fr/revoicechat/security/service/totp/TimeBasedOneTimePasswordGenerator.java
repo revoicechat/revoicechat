@@ -4,7 +4,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.Random;
 
 import org.apache.commons.codec.binary.Base32;
@@ -52,6 +51,11 @@ public class TimeBasedOneTimePasswordGenerator {
   /** Base 32 encoding is required by authenticator apps (Google Auth, Authy…) */
   public String toBase32(byte[] secret) {
     return base32.encodeToString(secret);
+  }
+
+  /** Base 32 encoding is required by authenticator apps (Google Auth, Authy…) */
+  public byte[] toBase32(String secret) {
+    return base32.decode(secret);
   }
 
   private String generateHOTP(final byte[] secret, final long counter) {

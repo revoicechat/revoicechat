@@ -22,7 +22,7 @@ class TestJwtService {
   @Test
   void testUser1() throws ParseException {
     var user = newAuthenticatedUser("Rex Woof", "rex_woof", UserType.ADMIN);
-    var token = jwtService.generate(user);
+    var token = jwtService.generate(user, UserType.ADMIN.getRoles());
     var result = jwtParser.parse(token);
     assertThat(result).isNotNull();
     assertThat(result.getGroups()).containsExactlyInAnyOrder("ADMIN", "USER");
@@ -34,7 +34,7 @@ class TestJwtService {
   @Test
   void testUser2() throws ParseException {
     var user = newAuthenticatedUser("Nyphew", "nyphew", UserType.USER);
-    var token = jwtService.generate(user);
+    var token = jwtService.generate(user, UserType.USER.getRoles());
     var result = jwtParser.parse(token);
     assertThat(result).isNotNull();
     assertThat(result.getGroups()).containsExactlyInAnyOrder("USER");

@@ -10,6 +10,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import fr.revoicechat.security.representation.NewPassword;
 import fr.revoicechat.security.representation.UserPassword;
 import fr.revoicechat.security.representation.UserRecoveryCode;
+import fr.revoicechat.security.representation.UserTotpCode;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -37,6 +38,15 @@ public interface AuthController {
   @Produces(MediaType.TEXT_PLAIN)
   Response login(UserPassword request);
 
+  @Operation(summary = "User login using TOTP")
+  @RequestBody(description = "User TOTP", content = @Content(schema = @Schema(implementation = UserTotpCode.class)))
+  @APIResponse(responseCode = "200", description = "Authentication successful, JWT token returned")
+  @APIResponse(responseCode = "401", description = "Authentication failed due to invalid credentials")
+  @POST
+  @Path("/login/totp")
+  @Produces(MediaType.TEXT_PLAIN)
+  Response loginTotp(UserTotpCode request);
+
   @Operation(
       summary = "User login",
       description = "Authenticate a user with their username and recovery code. Returns a JWT token that must be included in the Authorization header for subsequent authenticated requests."
@@ -51,6 +61,15 @@ public interface AuthController {
   @Path("/login/recovery-codes")
   @Produces(MediaType.TEXT_PLAIN)
   Response loginUsingRecoveryCode(UserRecoveryCode request);
+
+  @Operation(summary = "User login recovery using TOTP")
+  @RequestBody(description = "User TOTP", content = @Content(schema = @Schema(implementation = UserTotpCode.class)))
+  @APIResponse(responseCode = "200", description = "Authentication successful, JWT token returned")
+  @APIResponse(responseCode = "401", description = "Authentication failed due to invalid credentials")
+  @POST
+  @Path("/login/recovery-codes/totp")
+  @Produces(MediaType.TEXT_PLAIN)
+  Response loginTotpUsingRecoveryCode(UserTotpCode request);
 
   @APIResponse(responseCode = "200", description = "Authentication successful, JWT token returned")
   @APIResponse(responseCode = "401", description = "Authentication failed due to invalid credentials")

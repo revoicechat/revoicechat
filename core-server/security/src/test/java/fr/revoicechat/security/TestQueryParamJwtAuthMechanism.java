@@ -41,7 +41,7 @@ class TestQueryParamJwtAuthMechanism {
 
   @Test
   void test() {
-    var validJwt = jwtService.generate(newAuthenticatedUser());
+    var validJwt = jwtService.generate(newAuthenticatedUser(), UserType.USER.getRoles());
     RestAssured.given()
                .accept(MediaType.APPLICATION_JSON)
                .contentType(MediaType.APPLICATION_JSON)

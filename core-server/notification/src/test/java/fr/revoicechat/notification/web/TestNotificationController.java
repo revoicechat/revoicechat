@@ -20,6 +20,7 @@ import fr.revoicechat.notification.model.NotificationRegistrable;
 import fr.revoicechat.notification.model.NotificationRegistrableUser;
 import fr.revoicechat.notification.service.NotificationService;
 import fr.revoicechat.security.model.AuthenticatedUser;
+import fr.revoicechat.security.model.UserType;
 import fr.revoicechat.security.service.SecurityTokenService;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -46,7 +47,7 @@ class TestNotificationController {
     mockUserCreator.createUser();
     var user = new AuthenticatedUser();
     user.setId(UUID.fromString(ID_USER));
-    var token = securityTokenService.generate(user);
+    var token = securityTokenService.generate(user, UserType.USER.getRoles());
     List<String> events = new ArrayList<>();
     try (Client client = ClientBuilder.newBuilder()
                                       .register((ClientRequestFilter) requestContext -> requestContext.getHeaders().add("Authorization", "Bearer " + token))

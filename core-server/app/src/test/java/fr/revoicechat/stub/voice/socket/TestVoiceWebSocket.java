@@ -191,7 +191,7 @@ class TestVoiceWebSocket {
     user.setLogin("test-user");
     user.setDisplayName("test-user");
     user.setType(UserType.USER);
-    return jwtService.generate(user);
+    return jwtService.generate(user, UserType.USER.getRoles());
   }
 
   @Test

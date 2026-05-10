@@ -5,5 +5,7 @@ public final class RevoiceChatRoles {
 
   public static final String ROLE_USER = "USER";
   public static final String ROLE_ADMIN = "ADMIN";
+  public static final String ROLE_TOTP_LOGIN = "TOTP_LOGIN";
   public static final String ROLE_RECOVERY = "RECOVERY";
+  public static final String ROLE_TOTP_RECOVERY = "TOTP_RECOVERY";
 }

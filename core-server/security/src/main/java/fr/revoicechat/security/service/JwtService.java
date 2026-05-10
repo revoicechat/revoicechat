@@ -1,7 +1,6 @@
 package fr.revoicechat.security.service;
 
-import static fr.revoicechat.security.utils.RevoiceChatRoles.ROLE_RECOVERY;
-
+import java.util.Set;
 import java.util.UUID;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -38,23 +37,23 @@ public class JwtService implements SecurityTokenService {
   }
 
   @Override
-  public String generate(final AuthenticatedUser user) {
+  public String generate(final AuthenticatedUser user, Set<String> groups) {
     LOG.info("generate jwt token for user {}", user.getId());
     return Jwt.issuer(jwtIssuer)
               .subject(user.getLogin())
               .preferredUserName(user.getId().toString())
-              .groups(user.getRoles())
+              .groups(groups)
               .expiresAt(System.currentTimeMillis() + DAY_TIME * jwtValidDay)
               .sign();
   }
 
   @Override
-  public String generateAfterRecoveryCode(final AuthenticatedUser user) {
-    LOG.info("generate jwt token for user {} after recovery code", user.getId());
+  public String generateTemporaryToken(final AuthenticatedUser user, Set<String> groups) {
+    LOG.info("generate temporary jwt token for user {} : {}", user.getId(), groups);
     return Jwt.issuer(jwtIssuer)
               .subject(user.getLogin())
               .preferredUserName(user.getId().toString())
-              .groups(ROLE_RECOVERY)
+              .groups(groups)
               .expiresAt(System.currentTimeMillis() + HOUR_TIME * 2)
               .sign();
   }
