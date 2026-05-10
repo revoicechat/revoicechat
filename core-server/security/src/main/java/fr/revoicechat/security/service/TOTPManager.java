@@ -54,7 +54,7 @@ public class TOTPManager {
   @Transactional
   public void validate(final String secret) {
     var user = getUser(userHolder.getId());
-    if (verify(user, secret)) {
+    if (verify(user, sanitize(secret))) {
       user.setTotpStatus(TotpStatus.ACTIVE);
       entityManager.persist(user);
     } else {
@@ -64,5 +64,9 @@ public class TOTPManager {
 
   private AuthenticatedUser getUser(final UUID id) {
     return entityManager.find(AuthenticatedUser.class, id);
+  }
+
+  private String sanitize(final String secret) {
+    return secret.replace("\"", "");
   }
 }
