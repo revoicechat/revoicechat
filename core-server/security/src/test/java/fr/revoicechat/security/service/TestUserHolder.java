@@ -30,7 +30,7 @@ class TestUserHolder {
     user.setDisplayName("test-user");
     user.setType(UserType.USER);
     entityManager.persist(user);
-    var token = jwtService.generate(user);
+    var token = jwtService.generate(user, UserType.USER.getRoles());
     Assertions.assertThat(userHolder.get(token)).isNotNull();
   }
 
@@ -42,7 +42,7 @@ class TestUserHolder {
     user.setLogin("test-user");
     user.setDisplayName("test-user");
     user.setType(UserType.USER);
-    var token = jwtService.generate(user);
+    var token = jwtService.generate(user, UserType.USER.getRoles());
     Assertions.assertThat(userHolder.get(token)).isNull();
   }
 

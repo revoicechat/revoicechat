@@ -1,6 +1,6 @@
 package fr.revoicechat.security.service;
 
-import static fr.revoicechat.security.service.TOTPGenerator.OTP_AUTH_URL;
+import static fr.revoicechat.security.service.TOTPManager.OTP_AUTH_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
 
@@ -21,6 +21,7 @@ import com.google.zxing.Result;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.HybridBinarizer;
 import fr.revoicechat.security.model.AuthenticatedUser;
+import fr.revoicechat.security.model.TotpStatus;
 import fr.revoicechat.security.model.UserType;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -28,8 +29,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
 @QuarkusTest
-class TestTOTPGenerator {
-  @Inject TOTPGenerator generator;
+class TestTOTPManager {
+  @Inject TOTPManager generator;
   @Inject EntityManager entityManager;
 
   @Test
@@ -38,15 +39,17 @@ class TestTOTPGenerator {
     // Given
     var user = newAuthenticatedUser();
     entityManager.persist(user);
-    assumeThat(user.getBase32Secret()).isNull();
+    assumeThat(user.getTotpSecret()).isNull();
+    assertThat(user.getTotpStatus()).isEqualTo(TotpStatus.INACTIVE);
     // When
     var qrCode = generator.generate(user.getId());
     // Then
     assertThat(qrCode).isNotEmpty();
     var result = entityManager.find(AuthenticatedUser.class, user.getId());
-    assertThat(result.getBase32Secret()).isNotNull();
+    assertThat(result.getTotpSecret()).isNotNull();
+    assertThat(result.getTotpStatus()).isEqualTo(TotpStatus.ACTIVATION_PENDING);
     assertThat(decodeQRCode(qrCode).getText())
-        .isEqualTo(OTP_AUTH_URL.formatted(user.getId(), user.getBase32Secret()));
+        .isEqualTo(OTP_AUTH_URL.formatted(user.getLogin(), user.getTotpSecret()));
   }
 
   private AuthenticatedUser newAuthenticatedUser() {

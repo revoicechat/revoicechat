@@ -18,9 +18,11 @@ public class AuthenticatedUser {
   private String login;
   private String displayName;
   private String password;
-  @Column(name = "BASE_32_SECRET")
-  private String base32Secret;
-
+  @Column(name = "TOTP_SECRET")
+  private String totpSecret;
+  @Column(name = "TOTP_STATUS", nullable = false)
+  @Enumerated(EnumType.STRING)
+  private TotpStatus totpStatus = TotpStatus.INACTIVE;
   @Enumerated(EnumType.STRING)
   private UserType type = UserType.USER;
 
@@ -56,12 +58,20 @@ public class AuthenticatedUser {
     this.password = password;
   }
 
-  public String getBase32Secret() {
-    return base32Secret;
+  public String getTotpSecret() {
+    return totpSecret;
   }
 
-  public void setBase32Secret(final String base32Secret) {
-    this.base32Secret = base32Secret;
+  public void setTotpSecret(final String totpSecret) {
+    this.totpSecret = totpSecret;
+  }
+
+  public TotpStatus getTotpStatus() {
+    return totpStatus;
+  }
+
+  public void setTotpStatus(final TotpStatus totpStatus) {
+    this.totpStatus = totpStatus;
   }
 
   public UserType getType() {
