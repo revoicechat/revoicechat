@@ -20,7 +20,7 @@ public class AuthenticatedUser {
   private String password;
   @Column(name = "TOTP_SECRET")
   private String totpSecret;
-  @Column(name = "TOTP_STATUS", nullable = false)
+  @Column(name = "TOTP_STATUS", nullable = false, columnDefinition = "varchar(32) NOT NULL DEFAULT 'INACTIVE'")
   @Enumerated(EnumType.STRING)
   private TotpStatus totpStatus = TotpStatus.INACTIVE;
   @Enumerated(EnumType.STRING)

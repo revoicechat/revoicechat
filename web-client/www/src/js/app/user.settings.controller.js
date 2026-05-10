@@ -174,6 +174,7 @@ export default class UserSettingsController {
     #overviewEventHandler() {
         document.getElementById('overview-save').addEventListener('click', () => this.#overviewSave());
         document.getElementById('regenerate-recover-codes').addEventListener('click', () => this.#regenerateRecoverCodes());
+        document.getElementById('new-totp-workflow').addEventListener('click', () => this.#newTotpWorkflow());
         document.getElementById('setting-user-picture').addEventListener('click', () => this.#overviewSelectPicture());
         document.getElementById('overlay-setting-user-picture').addEventListener('click', () => this.#overviewSelectPicture());
     }
@@ -234,6 +235,67 @@ export default class UserSettingsController {
                 }
             }
         });
+    }
+
+    #newTotpWorkflow() {
+        let password = ''
+        Modal.toggle({
+            title: i18n.translateOne("user.password.enter"),
+            showCancelButton: true,
+            html: `
+            <form class='popup' id="new-totp-workflow-form">
+              <input type="password" name="password" id="new-totp-workflow-password">
+            </form>`,
+            didOpen: async () => {
+                const select = document.getElementById('new-totp-workflow-password');
+                select.oninput = () => { password = select.value };
+                i18n.translatePage(document.getElementById("modal-serverId"))
+            }
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const workflow = await CoreServer.simpleFetch(`/auth/totp-secret`, 'POST', {
+                    username: this.#user.login,
+                    password: password
+                });
+                const url = workflow.headers.get('x-totp-url')
+                if (workflow.ok) {
+                    const blob = await workflow.blob();
+                    const png = URL.createObjectURL(blob);
+                    await this.#toggleTOTPValidation(url, png)
+                } else {
+                    await Modal.toggleError('')
+                }
+            }
+        });
+    }
+
+    async #toggleTOTPValidation(url, png, error = false) {
+        let code = ''
+        await Modal.toggle({
+            icon: error ? "error" : "success",
+            showCancelButton: true,
+            html: `<div data-i18n="login.register.success.recover.codes">your recover codes</div>
+                   <div style="display: flex; flex-direction: column; background-color: var(--pri-bg-color); padding: 1rem; margin: 1rem;">
+                      <img src="${png}" alt="${url}"/>
+                      <code>${url}</code>
+                      <input style="color: black" type="text" name="password" id="totp-code">
+                   </div>`,
+            width: '30rem',
+            didOpen: async () => {
+                const select = document.getElementById('totp-code');
+                select.oninput = () => { code = select.value };
+            },
+            allowOutsideClick: false,
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const workflow = await CoreServer.simpleFetch(`/auth/totp-secret`, 'PUT', code);
+                if (workflow.ok) {
+                    await Modal.toggle({icon: "success", title: i18n.translateOne('login.register.success.recover.codes')})
+                } else {
+                    await this.#toggleTOTPValidation(url, png, true)
+                }
+            }
+        })
     }
 
     async #overviewChangeData() {

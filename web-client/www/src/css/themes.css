@@ -1,3 +1,9 @@
+* {
+    --ter-button-bg-color: var(--danger-button-bg-color);
+    --ter-button-hover-color: var(--danger-button-hover-color);
+    --ter-button-text-color: var(--danger-button-text-color);
+}
+
 *[data-theme="dark"] {
     /* Background */
     --pri-bg-color: #121214;
@@ -29,9 +35,12 @@
     --sec-button-bg-color: #00000000;
     --sec-button-hover-color: #2c2c30;
     --sec-button-text-color: var(--pri-text-color);
-    --ter-button-bg-color: #a22121;
-    --ter-button-hover-color: #731818;
-    --ter-button-text-color: var(--pri-text-color);
+    --danger-button-bg-color: #a22121;
+    --danger-button-hover-color: #731818;
+    --danger-button-text-color: var(--pri-text-color);
+    --warning-button-bg-color: #d35400;
+    --warning-button-hover-color: #e67e22;
+    --warning-button-text-color: var(--pri-text-color);
 
     --notification-color: #6fc281;
     --notification-mention-color: #b70e0e;
@@ -77,9 +86,12 @@
     --sec-button-bg-color: #00000000;
     --sec-button-hover-color: #2c2c30;
     --sec-button-text-color: var(--pri-text-color);
-    --ter-button-bg-color: #a22121;
-    --ter-button-hover-color: #731818;
-    --ter-button-text-color: var(--pri-text-color);
+    --danger-button-bg-color: #a22121;
+    --danger-button-hover-color: #731818;
+    --danger-button-text-color: var(--pri-text-color);
+    --warning-button-bg-color: #fb883c;
+    --warning-button-hover-color: #c26a30;
+    --warning-button-text-color: var(--pri-text-color);
 
     --notification-color: #6fc281;
     --notification-mention-color: #b70e0e;
@@ -120,9 +132,12 @@
     --sec-button-bg-color: #00000000;
     --sec-button-hover-color: var(--qua-bg-color);
     --sec-button-text-color: var(--pri-text-color);
-    --ter-button-bg-color: #a22121;
-    --ter-button-hover-color: #731818;
-    --ter-button-text-color: var(--pri-text-color);
+    --danger-button-bg-color: #a22121;
+    --danger-button-hover-color: #731818;
+    --danger-button-text-color: var(--pri-text-color);
+    --warning-button-bg-color: #fb883c;
+    --warning-button-hover-color: #c26a30;
+    --warning-button-text-color: var(--pri-text-color);
 
     --notification-color: #6fc281;
     --notification-mention-color: #b70e0e;
@@ -163,9 +178,12 @@
     --sec-button-bg-color: #b91c1c;
     --sec-button-hover-color: #ff999c;
     --sec-button-text-color: var(--pri-text-color);
-    --ter-button-bg-color: #a22121;
-    --ter-button-hover-color: #731818;
-    --ter-button-text-color: var(--pri-text-color);
+    --danger-button-bg-color: #a22121;
+    --danger-button-hover-color: #731818;
+    --danger-button-text-color: var(--pri-text-color);
+    --warning-button-bg-color: #fb883c;
+    --warning-button-hover-color: #c26a30;
+    --warning-button-text-color: var(--pri-text-color);
 
     --notification-color: #6fc281;
     --notification-mention-color: #b70e0e;
@@ -443,6 +461,15 @@ form.popup label {
 
 .config-right button:hover {
     background-color: var(--pri-button-hover-color);
+}
+
+.config-right .warning-button {
+    background-color: var(--warning-button-bg-color);
+    color: var(--warning-button-text-color);
+}
+
+.config-right .warning-button:hover {
+    background-color: var(--warning-button-hover-color);
 }
 
 .theme-select-button {

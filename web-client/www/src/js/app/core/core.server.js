@@ -24,6 +24,24 @@ export default class CoreServer {
         this.url = coreURL;
     }
 
+    static async simpleFetch(path, method = "GET", data = null) {
+        if (method === null) {
+            method = 'GET';
+        }
+        if (data) {
+            data = JSON.stringify(data);
+        }
+        return await apiFetch(`${CoreServer.instance.url}/api${path}`, {
+            method: method,
+            signal: AbortSignal.timeout(5000),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${CoreServer.#token}`
+            },
+            body: data
+        });
+    }
+
     /**
      * @param {string} path
      * @param {HTTPMethod} method
@@ -31,22 +49,8 @@ export default class CoreServer {
      * @return {Promise<null|any|boolean>}
      */
     static async fetch(path, method = "GET", data = null) {
-        if (method === null) {
-            method = 'GET';
-        }
-        if (data) {
-            data = JSON.stringify(data);
-        }
         try {
-            const response = await apiFetch(`${CoreServer.instance.url}/api${path}`, {
-                method: method,
-                signal: AbortSignal.timeout(5000),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${CoreServer.#token}`
-                },
-                body: data
-            });
+            const response = await CoreServer.simpleFetch(path, method, data);
 
             if (method !== "DELETE") {
                 const contentType = response.headers.get("content-type");
@@ -80,10 +84,10 @@ export default class CoreServer {
      */
     static sse(handleSSEMessage, handleSSEError) {
         return new Sse(
-            CoreServer.#token,
-            CoreServer.instance.url,
-            handleSSEMessage,
-            handleSSEError
+                CoreServer.#token,
+                CoreServer.instance.url,
+                handleSSEMessage,
+                handleSSEError
         )
     }
 }
