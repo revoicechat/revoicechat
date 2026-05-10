@@ -11,6 +11,7 @@ import fr.revoicechat.security.UserHolder;
 import fr.revoicechat.security.error.AuthConfigException;
 import fr.revoicechat.security.model.AuthenticatedUser;
 import fr.revoicechat.security.model.TotpStatus;
+import fr.revoicechat.security.representation.TotpQRCode;
 import fr.revoicechat.security.service.qrcode.QRCodeGenerator;
 import fr.revoicechat.security.service.totp.TimeBasedOneTimePasswordGenerator;
 
@@ -35,13 +36,14 @@ public class TOTPManager {
   }
 
   @Transactional
-  public byte[] generate(UUID id) {
+  public TotpQRCode generate(UUID id) {
     var user = getUser(id);
     var base32Secret = generator.toBase32(generator.generateSecret());
     user.setTotpSecret(base32Secret);
     user.setTotpStatus(TotpStatus.ACTIVATION_PENDING);
     entityManager.persist(user);
-    return qrCodeGenerator.generate(OTP_AUTH_URL.formatted(user.getLogin(), base32Secret));
+    var url = OTP_AUTH_URL.formatted(user.getLogin(), base32Secret);
+    return new TotpQRCode(url, qrCodeGenerator.generate(url));
   }
 
   @Transactional

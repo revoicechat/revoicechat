@@ -122,9 +122,13 @@ public class AuthControllerImpl implements AuthController, SignupController {
   @Override
   @RolesAllowed(ROLE_USER)
   public Response regenerateTOTPSecret(final UserPassword request) {
-    return runWithConnexion(request, user -> Response.ok(totpManager.generate(user.getId()))
-                                                     .header("Content-Disposition", "inline; filename=\"totp.png\"")
-                                                     .build());
+    return runWithConnexion(request, user -> {
+      var qrCode = totpManager.generate(user.getId());
+      return Response.ok(qrCode.pgn())
+              .header("Content-Disposition", "inline; filename=\"totp.png\"")
+              .header("X-totp-url", qrCode.url())
+              .build();
+    });
   }
 
   @Override
