@@ -176,13 +176,14 @@ async function login(loginData, host) {
         });
 
         if (response.ok) {
-            // Local storage
-            localStorage.setItem("lastHost", host);
-            localStorage.setItem("lastUsername", loginData.username);
             const jwtToken = await response.text();
-            setCookie('jwtToken', jwtToken, 1);
+            const totp = response.headers.get('X-Totp-Active');
             spinner.success()
-            document.location.href = `app.html`;
+            if (totp) {
+                await toggleTOTPValidation(host, loginData, jwtToken)
+            } else {
+                loginSuccess(host, loginData, jwtToken)
+            }
         } else {
             spinner.error()
             const message = await response.text();
@@ -202,6 +203,54 @@ async function login(loginData, host) {
             allowOutsideClick: false,
         })
     }
+}
+
+function loginSuccess(host, loginData, jwtToken) {
+    localStorage.setItem("lastHost", host);
+    localStorage.setItem("lastUsername", loginData.username);
+    setCookie('jwtToken', jwtToken, 1);
+    document.location.href = `app.html`;
+}
+
+async function toggleTOTPValidation(host, loginData, jwtToken, error = false) {
+    let code = ''
+    await Modal.toggle({
+        icon: error ? "error" : "success",
+        showCancelButton: true,
+        html: `<div data-i18n="login.register.totp.code">Enter your OpenID code</div>
+               <form class="popup" style="display: flex; flex-direction: column; background-color: var(--pri-bg-color); padding: 1rem; margin: 1rem;">
+                   <input type="text" name="password" id="totp-code">
+               </form>`,
+        width: '30rem',
+        didOpen: async () => {
+            const select = document.getElementById('totp-code');
+            select.oninput = () => { code = select.value };
+        },
+        allowOutsideClick: false,
+    }).then(async (result) => {
+        const totpData = {
+            username: loginData.username,
+            code: code
+        }
+        if (result.isConfirmed) {
+            const response = await apiFetch(`${host}/api/auth/login/totp`, {
+                cache: "no-store",
+                signal: AbortSignal.timeout(5000),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtToken}`
+                },
+                method: 'POST',
+                body: JSON.stringify(totpData),
+            });
+            if (response.ok) {
+                const authToken = await response.text()
+                loginSuccess(host, loginData, authToken)
+            } else {
+                await toggleTOTPValidation(host, loginData, jwtToken, true)
+            }
+        }
+    })
 }
 
 function lastHost() {

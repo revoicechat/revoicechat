@@ -283,6 +283,7 @@ export default class UserSettingsController {
                     username: this.#user.login,
                     password: password
                 });
+                console.log(workflow.headers.values())
                 const url = workflow.headers.get('x-totp-url')
                 if (workflow.ok) {
                     const blob = await workflow.blob();
@@ -301,11 +302,11 @@ export default class UserSettingsController {
             icon: error ? "error" : "success",
             showCancelButton: true,
             html: `<div data-i18n="login.register.success.recover.codes">your recover codes</div>
-                   <div style="display: flex; flex-direction: column; background-color: var(--pri-bg-color); padding: 1rem; margin: 1rem;">
+                   <form class="popup" style="display: flex; flex-direction: column; background-color: var(--pri-bg-color); padding: 1rem; margin: 1rem;">
                       <img src="${png}" alt="${url}"/>
-                      <code>${url}</code>
-                      <input style="color: black" type="text" name="password" id="totp-code">
-                   </div>`,
+                      <code style="overflow-wrap: break-word;">${url}</code>
+                      <input type="text" name="password" id="totp-code">
+                   </form>`,
             width: '30rem',
             didOpen: async () => {
                 const select = document.getElementById('totp-code');
