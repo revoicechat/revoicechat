@@ -72,6 +72,7 @@ export default class UserSettingsController {
 
         // UI
         this.#overviewLoad();
+        await this.#authSettingsOverviewLoad();
         this.#themeLoadPreviews();
         this.#messageSettingsLoad();
         this.#emoteLoad();
@@ -158,6 +159,7 @@ export default class UserSettingsController {
         this.#newProfilPictureFile = null
         document.getElementById("setting-user-uuid").innerText = this.#user.id;
         document.getElementById("settings-user-name").value = this.#user.displayName;
+        document.getElementById('settings-user-login').innerText = this.#user.login;
         document.getElementById("setting-user-picture").src = MediaServer.profiles(this.#user.id);
         document.getElementById("setting-user-picture").dataset.id = this.#user.id;
         document.getElementById("overview-picture-new").addEventListener("change", () => {
@@ -171,12 +173,36 @@ export default class UserSettingsController {
         });
     }
 
+    async #authSettingsOverviewLoad() {
+        /** @type {UserAuthSettings} */
+        const authSettings = await CoreServer.fetch(`/settings/me/auth`, 'GET');
+        const activeTotp = document.getElementById('user-totp-status-active');
+        const inactiveTotp = document.getElementById('user-totp-status-inactive');
+        activeTotp.classList.add('hidden')
+        inactiveTotp.classList.add('hidden')
+        if (authSettings.totpActive) {
+            activeTotp.classList.remove('hidden')
+        } else {
+            inactiveTotp.classList.remove('hidden')
+        }
+        const badge = document.getElementById('user-recovery-code-left')
+        badge.dataset.i18nValue = authSettings.remainingRecoveryCode.toString();
+        if (authSettings.remainingRecoveryCode <= 4) {
+            badge.classList.add('red')
+            badge.classList.remove('yellow')
+        } else {
+            badge.classList.remove('red')
+            badge.classList.add('yellow')
+        }
+    }
+
     #overviewEventHandler() {
         document.getElementById('overview-save').addEventListener('click', () => this.#overviewSave());
         document.getElementById('regenerate-recover-codes').addEventListener('click', () => this.#regenerateRecoverCodes());
-        document.getElementById('new-totp-workflow').addEventListener('click', () => this.#newTotpWorkflow());
+        document.getElementById('generate-totp-workflow').addEventListener('click', () => this.#newTotpWorkflow());
         document.getElementById('setting-user-picture').addEventListener('click', () => this.#overviewSelectPicture());
         document.getElementById('overlay-setting-user-picture').addEventListener('click', () => this.#overviewSelectPicture());
+        document.getElementById('setting-user-uuid-copy').addEventListener('click', () => this.#copyUserUUID());
     }
 
     async #overviewSave() {
@@ -243,11 +269,11 @@ export default class UserSettingsController {
             title: i18n.translateOne("user.password.enter"),
             showCancelButton: true,
             html: `
-            <form class='popup' id="new-totp-workflow-form">
-              <input type="password" name="password" id="new-totp-workflow-password">
+            <form class='popup' id="generate-totp-workflow-form">
+              <input type="password" name="password" id="generate-totp-workflow-password">
             </form>`,
             didOpen: async () => {
-                const select = document.getElementById('new-totp-workflow-password');
+                const select = document.getElementById('generate-totp-workflow-password');
                 select.oninput = () => { password = select.value };
                 i18n.translatePage(document.getElementById("modal-serverId"))
             }
@@ -290,6 +316,7 @@ export default class UserSettingsController {
             if (result.isConfirmed) {
                 const workflow = await CoreServer.simpleFetch(`/auth/totp-secret`, 'PUT', code);
                 if (workflow.ok) {
+                    await this.#authSettingsOverviewLoad();
                     await Modal.toggle({icon: "success", title: i18n.translateOne('login.register.success.recover.codes')})
                 } else {
                     await this.#toggleTOTPValidation(url, png, true)
@@ -333,6 +360,10 @@ export default class UserSettingsController {
 
     #overviewSelectPicture() {
         document.getElementById("overview-picture-new").click();
+    }
+
+    #copyUserUUID() {
+        copyToClipboard(this.#user.id);
     }
 
     #themeLoadPreviews() {

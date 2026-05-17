@@ -62,6 +62,7 @@ export default class UserController {
             document.getElementById("user-name").innerText = name;
             document.getElementById("user-picture").src = picture;
             // User settings
+            document.getElementById('settings-user-login').innerText = data.login;
             document.getElementById('settings-user-name').value = name;
             document.getElementById('settings-user-picture').src = picture;
         }
