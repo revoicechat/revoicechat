@@ -19,6 +19,11 @@ export class UserRepresentation {
     type: UserType;
 }
 
+export class UserAuthSettings {
+    totpActive: boolean;
+    remainingRecoveryCode: number;
+}
+
 /** for "USER_STATUS_UPDATE" notifications */
 export class UserStatusUpdate {
     userId: string;

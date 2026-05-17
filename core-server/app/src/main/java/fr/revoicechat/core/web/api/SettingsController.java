@@ -7,6 +7,7 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import fr.revoicechat.security.representation.AuthSettingRepresentation;
 import fr.revoicechat.openapi.api.LoggedApi;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -38,6 +39,17 @@ public interface SettingsController extends LoggedApi  {
   @GET
   @Path("/me")
   String me();
+
+  @Tag(name = "User")
+  @Operation(
+      summary = "Get my settings",
+      description = "Retrieve the personal settings and preferences for the currently authenticated user."
+  )
+  @APIResponse(responseCode = "200", description = "User auth settings retrieved successfully")
+  @Produces(MediaType.APPLICATION_JSON)
+  @GET
+  @Path("/me/auth")
+  AuthSettingRepresentation myAuthSetting();
 
   @Tag(name = "User")
   @Operation(

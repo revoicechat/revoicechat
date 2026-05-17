@@ -5,19 +5,25 @@ import static fr.revoicechat.security.utils.RevoiceChatRoles.ROLE_USER;
 import java.util.Map;
 import java.util.UUID;
 
+import fr.revoicechat.security.representation.AuthSettingRepresentation;
 import fr.revoicechat.core.service.settings.SettingsService;
 import fr.revoicechat.core.service.user.UserSettingsService;
 import fr.revoicechat.core.web.api.SettingsController;
+import fr.revoicechat.security.service.UserAuthSettingsService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 
 public class SettingsControllerImpl implements SettingsController {
 
   private final UserSettingsService userSettingsService;
+  private final UserAuthSettingsService userAuthSettingsService;
   private final SettingsService settingsService;
 
-  public SettingsControllerImpl(UserSettingsService userSettingsService, SettingsService settingsService) {
+  public SettingsControllerImpl(UserSettingsService userSettingsService,
+                                UserAuthSettingsService userAuthSettingsService,
+                                SettingsService settingsService) {
     this.userSettingsService = userSettingsService;
+    this.userAuthSettingsService = userAuthSettingsService;
     this.settingsService = settingsService;
   }
 
@@ -31,6 +37,12 @@ public class SettingsControllerImpl implements SettingsController {
   @RolesAllowed(ROLE_USER)
   public String me() {
     return userSettingsService.ofCurrentUser();
+  }
+
+  @Override
+  @RolesAllowed(ROLE_USER)
+  public AuthSettingRepresentation myAuthSetting() {
+    return userAuthSettingsService.ofCurrentUser();
   }
 
   @Override

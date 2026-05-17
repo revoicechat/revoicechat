@@ -5,6 +5,15 @@
 }
 
 *[data-theme="dark"] {
+    --green-background: #1b4614;
+    --green-text: #1b4614;
+    --yellow-background: #483a0f;
+    --yellow-text: #c7993d;
+    --red-background: #602a28;
+    --red-text: #ee8884;
+    --gray-background: #262624;
+    --gray-text: #929089;
+
     /* Background */
     --pri-bg-color: #121214;
     --sec-bg-color: #1a1a1e;
@@ -56,6 +65,14 @@
 }
 
 *[data-theme="darker"] {
+    --green-background: #1b4614;
+    --green-text: #1b4614;
+    --yellow-background: #483a0f;
+    --yellow-text: #c7993d;
+    --red-background: #602a28;
+    --red-text: #ee8884;
+    --gray-background: #262624;
+    --gray-text: #929089;
     /* Background color */
     --pri-bg-color: #000000;
     --sec-bg-color: #000000;
@@ -102,6 +119,14 @@
 }
 
 *[data-theme="light"] {
+    --green-background: #1b4614;
+    --green-text: #1b4614;
+    --yellow-background: #483a0f;
+    --yellow-text: #c7993d;
+    --red-background: #602a28;
+    --red-text: #ee8884;
+    --gray-background: #262624;
+    --gray-text: #929089;
     /* Background */
     --pri-bg-color: #f2f2f2;
     --sec-bg-color: #ffffff;
@@ -148,6 +173,14 @@
 }
 
 *[data-theme="femboy"] {
+    --green-background: #1b4614;
+    --green-text: #1b4614;
+    --yellow-background: #483a0f;
+    --yellow-text: #c7993d;
+    --red-background: #602a28;
+    --red-text: #ee8884;
+    --gray-background: #262624;
+    --gray-text: #929089;
     /* Background */
     --pri-bg-color: #c4d0e3;
     --sec-bg-color: #e6dde9;
@@ -437,8 +470,9 @@ form.popup select {
 
 .config label,
 form.popup label {
-    font-weight: 800;
+    font-weight: 600;
     color: var(--pri-text-color);
+    font-size: 0.95rem;
 }
 
 .voice-settings label {
@@ -461,6 +495,16 @@ form.popup label {
 
 .config-right button:hover {
     background-color: var(--pri-button-hover-color);
+}
+
+.config-right button.second {
+    border: var(--gray-text) 1px solid;
+    background-color: var(--sec-button-bg-color);
+    color: var(--sec-button-text-color);
+}
+
+.config-right button.second:hover {
+    background-color: var(--sec-button-hover-color);
 }
 
 .config-right .warning-button {

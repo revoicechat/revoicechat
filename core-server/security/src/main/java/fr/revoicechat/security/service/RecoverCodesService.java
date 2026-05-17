@@ -61,6 +61,14 @@ public class RecoverCodesService {
     return true;
   }
 
+  @Transactional
+  public long retrieveHowManyLeft(UUID userId) {
+    return userRecoverCodeRepository.findByUser(userId)
+                                    .stream()
+                                    .filter(recoverCode -> recoverCode.getStatus() == ACTIVE)
+                                    .count();
+  }
+
   private void consume(final UserRecoverCode code) {
     code.setStatus(CONSUMED);
     entityManager.persist(code);
