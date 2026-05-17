@@ -1,4 +1,4 @@
-import { SpinnerOnButton } from './component/button.spinner.component.js';
+import {SpinnerOnButton} from './component/button.spinner.component.js';
 import {
     apiFetch,
     copyToClipboard,
@@ -9,7 +9,7 @@ import {
     setCookie
 } from "./lib/tools.js";
 import './component/icon.component.js';
-import { i18n } from "./lib/i18n.js";
+import {i18n} from "./lib/i18n.js";
 import Modal from "./component/modal.component.js";
 
 let passwordRegex = null;
@@ -98,18 +98,20 @@ async function forgotPassword() {
             body: JSON.stringify(LOGIN),
         });
 
-        if (!response.ok) {
+        if (response.ok) {
+            const jwtToken = await response.text();
+            const totp = response.headers.get('X-Totp-Active');
+            spinner.success()
+            if (totp) {
+                await toggleTOTPValidation(host, LOGIN.username, jwtToken, 'auth/login/recovery-codes/totp', goToResetPassword)
+            } else {
+                goToResetPassword(host, LOGIN.username, jwtToken)
+            }
+        } else {
             spinner.error()
             const message = await response.text();
             await Modal.toggleError(i18n.translateOne("login.error"), message);
         }
-
-        // Local storage
-        localStorage.setItem("lastHost", host);
-        localStorage.setItem("lastUsername", LOGIN.username);
-        jwtTokenRecovery = await response.text();
-        spinner.success()
-        switchToResetPassword()
     } catch (error) {
         spinner.error()
         await Modal.toggle({
@@ -119,6 +121,13 @@ async function forgotPassword() {
             allowOutsideClick: false,
         })
     }
+}
+
+function goToResetPassword(host, username, jwtToken) {
+    localStorage.setItem("lastHost", host);
+    localStorage.setItem("lastUsername", username);
+    jwtTokenRecovery = jwtToken;
+    switchToResetPassword()
 }
 
 async function resetPassword() {
@@ -180,9 +189,9 @@ async function login(loginData, host) {
             const totp = response.headers.get('X-Totp-Active');
             spinner.success()
             if (totp) {
-                await toggleTOTPValidation(host, loginData, jwtToken)
+                await toggleTOTPValidation(host, loginData.username, jwtToken, 'auth/login/totp', loginSuccess)
             } else {
-                loginSuccess(host, loginData, jwtToken)
+                loginSuccess(host, loginData.username, jwtToken)
             }
         } else {
             spinner.error()
@@ -205,14 +214,22 @@ async function login(loginData, host) {
     }
 }
 
-function loginSuccess(host, loginData, jwtToken) {
+function loginSuccess(host, username, jwtToken) {
     localStorage.setItem("lastHost", host);
-    localStorage.setItem("lastUsername", loginData.username);
+    localStorage.setItem("lastUsername", username);
     setCookie('jwtToken', jwtToken, 1);
     document.location.href = `app.html`;
 }
 
-async function toggleTOTPValidation(host, loginData, jwtToken, error = false) {
+/**
+ * @param {string} host
+ * @param {string} username
+ * @param {string} jwtToken
+ * @param {string} url
+ * @param {(host:string, username:string, jwtToken:string) => void} totpSuccessCallback
+ * @param {boolean} error
+ */
+async function toggleTOTPValidation(host, username, jwtToken, url, totpSuccessCallback, error = false) {
     let code = ''
     await Modal.toggle({
         icon: error ? "error" : "success",
@@ -229,11 +246,11 @@ async function toggleTOTPValidation(host, loginData, jwtToken, error = false) {
         allowOutsideClick: false,
     }).then(async (result) => {
         const totpData = {
-            username: loginData.username,
+            username: username,
             code: code
         }
         if (result.isConfirmed) {
-            const response = await apiFetch(`${host}/api/auth/login/totp`, {
+            const response = await apiFetch(`${host}/api/${url}`, {
                 cache: "no-store",
                 signal: AbortSignal.timeout(5000),
                 headers: {
@@ -245,9 +262,9 @@ async function toggleTOTPValidation(host, loginData, jwtToken, error = false) {
             });
             if (response.ok) {
                 const authToken = await response.text()
-                loginSuccess(host, loginData, authToken)
+                totpSuccessCallback(host, username, authToken)
             } else {
-                await toggleTOTPValidation(host, loginData, jwtToken, true)
+                await toggleTOTPValidation(host, username, url, jwtToken, true)
             }
         }
     })

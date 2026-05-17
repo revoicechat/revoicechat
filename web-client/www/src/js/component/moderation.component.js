@@ -326,9 +326,9 @@ class ModerationPanel extends HTMLElement {
         username.textContent = this.#userName(sanction.targetedUser);
         nameLine.appendChild(username);
         nameLine.appendChild(this.#buildBadge(tc.icon, tc.label, tc.color));
-        if (sanction.revokedAt) nameLine.appendChild(this.#buildBadge('span', "Revoked", "#22c55e"));
-        if (!sanction.active && !sanction.revokedAt) nameLine.appendChild(this.#buildBadge('span', "moderation.satus.expired", "#71717a"));
-        if (request?.status === "CREATED") nameLine.appendChild(this.#buildBadge('span', "moderation.satus.appeal", "#fb883c"));
+        if (sanction.revokedAt) nameLine.appendChild(this.#buildBadge('span', "moderation.status.revoked", "#22c55e"));
+        if (!sanction.active && !sanction.revokedAt) nameLine.appendChild(this.#buildBadge('span', "moderation.status.expired", "#71717a"));
+        if (request?.status === "CREATED") nameLine.appendChild(this.#buildBadge('span', "moderation.status.appeal", "#fb883c"));
         meta.appendChild(nameLine);
 
         const sub = document.createElement("div");
