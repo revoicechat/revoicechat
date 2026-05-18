@@ -14,7 +14,9 @@ import fr.revoicechat.core.model.room.ServerRoom;
 import fr.revoicechat.core.representation.EmoteRepresentation;
 import fr.revoicechat.core.representation.MessageRepresentation;
 import fr.revoicechat.core.representation.MessageRepresentation.MessageAnsweredRepresentation;
+import fr.revoicechat.core.representation.message.MessageMention;
 import fr.revoicechat.core.service.emote.EmoteRetrieverService;
+import fr.revoicechat.core.service.message.MessageMentionsExtractor;
 import fr.revoicechat.notification.data.UserNotificationRepresentation;
 import fr.revoicechat.opengraph.OpenGraphExtractor;
 import fr.revoicechat.web.mapper.Mapper;
@@ -28,10 +30,12 @@ public class MessageMapper implements RepresentationMapper<Message, MessageRepre
 
   private final OpenGraphExtractor openGraphExtractor;
   private final EmoteRetrieverService emoteService;
+  private final MessageMentionsExtractor messageMentionsExtractor;
 
-  public MessageMapper(final OpenGraphExtractor openGraphExtractor, final EmoteRetrieverService emoteService) {
+  public MessageMapper(final OpenGraphExtractor openGraphExtractor, final EmoteRetrieverService emoteService, final MessageMentionsExtractor messageMentionsExtractor) {
     this.openGraphExtractor = openGraphExtractor;
     this.emoteService = emoteService;
+    this.messageMentionsExtractor = messageMentionsExtractor;
   }
 
   @Override
@@ -45,6 +49,7 @@ public class MessageMapper implements RepresentationMapper<Message, MessageRepre
 
   @Override
   public MessageRepresentation map(final Message message) {
+    var mentions = messageMentionsExtractor.extract(message);
     return new MessageRepresentation(
         message.getId(),
         message.getText(),
@@ -57,6 +62,8 @@ public class MessageMapper implements RepresentationMapper<Message, MessageRepre
         Mapper.mapAll(message.getMediaDatas()),
         getEmoteRepresentations(message),
         message.getReactions().reactions(),
+        mentions,
+        mentions.values().stream().anyMatch(MessageMention::currentUserMentioned),
         openGraphExtractor.hasPreview(message.getText())
     );
   }

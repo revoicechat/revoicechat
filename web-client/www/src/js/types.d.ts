@@ -4,6 +4,7 @@ export type RoomType = "TEXT" | "WEBRTC" | "VOICE"
 export type NotificationActionType = "ADD" | "MODIFY" | "REMOVE"
 export type InvitationLinkStatus = "CREATED" | "USED" | "REVOKED"
 export type InvitationType = "APPLICATION_JOIN" | "SERVER_JOIN"
+export type MentionType = "USER" | "ROLE"
 
 export class NewUserRepresentation {
     user: UserRepresentation;
@@ -87,6 +88,8 @@ export class MessageRepresentation {
     medias: MediaDataRepresentation[];
     emotes: EmoteRepresentation[];
     reactions: MessageReaction[];
+    mentions: Object;
+    currentUserMentioned: boolean;
     messageUrlPreview: boolean;
 }
 
@@ -99,6 +102,13 @@ export class RoomNotification {
 export class MessageReaction {
     emoji: string;
     users: string[];
+}
+
+export class MessageMention {
+    id: string
+    type: MentionType;
+    mentionName: string;
+    currentUserMentioned: boolean;
 }
 
 export class MessageAnsweredRepresentation {

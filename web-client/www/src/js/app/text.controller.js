@@ -542,6 +542,9 @@ export default class TextController {
         if (RVC.userSettings().messageSetting === "default") {
             this.#addPicture(messageData, MESSAGE);
         }
+        if (messageData.currentUserMentioned) {
+            MESSAGE.classList.add('mentioned');
+        }
         MESSAGE.appendChild(CONTAINER);
         return MESSAGE;
     }
@@ -663,6 +666,9 @@ export default class TextController {
             </script>
             <script type="application/json" slot="reactions">
                 ${JSON.stringify(messageData.reactions)}
+            </script>
+            <script type="application/json" slot="mentions">
+                ${JSON.stringify(messageData.mentions)}
             </script>
         `;
         return CONTENT;

@@ -4,8 +4,6 @@ import CoreServer from "../app/core/core.server.js";
 import {isUUID} from "../lib/string.utils.js";
 import {renderEmojis} from "./emoji.component.js";
 import Modal from "./modal.component.js";
-import {i18n} from "../lib/i18n.js";
-import {statusToColor} from "../lib/tools.js";
 
 class MessageComponent extends HTMLElement {
     /** @type string */
@@ -14,6 +12,8 @@ class MessageComponent extends HTMLElement {
     emotes
     /** @type MessageReaction[] */
     reactions
+    /** @type Object */
+    mentions
 
     constructor() {
         super();
@@ -21,6 +21,7 @@ class MessageComponent extends HTMLElement {
         this.markdown = '';
         this.emotes = []
         this.reactions = []
+        this.mentions = []
     }
 
     static get observedAttributes() {
@@ -54,6 +55,7 @@ class MessageComponent extends HTMLElement {
                         <slot name="content" style="display: none;"></slot>
                         <slot name="emotes" style="display: none;"></slot>
                         <slot name="reactions" style="display: none;"></slot>
+                        <slot name="mentions" style="display: none;"></slot>
                     </div>
                 `;
 
@@ -70,6 +72,9 @@ class MessageComponent extends HTMLElement {
             }
             if (e.target.name === 'reactions') {
                 this.#handleSlottedReaction();
+            }
+            if (e.target.name === 'mentions') {
+                this.#handleSlottedMention();
             }
         });
     }
@@ -124,6 +129,17 @@ class MessageComponent extends HTMLElement {
         }
     }
 
+    #handleSlottedMention() {
+        const mentionsSlot = this.shadowRoot.querySelector('slot[name="mentions"]');
+        const slottedElements = mentionsSlot.assignedElements();
+        for (const element of slottedElements) {
+            if (element.tagName === 'SCRIPT' && element.type === 'application/json') {
+                this.mentions = JSON.parse(element.textContent)
+                break;
+            }
+        }
+    }
+
     #hideSlots() {
         this.shadowRoot.querySelector('.container').className = 'container';
     }
@@ -148,6 +164,7 @@ class MessageComponent extends HTMLElement {
         this.#handleSlottedMedias();
         this.#handleSlottedEmotes();
         this.#handleSlottedReaction();
+        this.#handleSlottedMention();
 
         if (typeof marked === 'undefined') {
             contentDiv.innerHTML = '<p style="color: #ff6b6b;">marked.js library not loaded</p>';
@@ -168,7 +185,10 @@ class MessageComponent extends HTMLElement {
                         contentDiv.classList.add('only-emoji')
                     }
                 } else {
-                    contentDiv.innerHTML += this.#injectEmojis(marked.parse(this.#removeTags(this.markdown)));
+                    let htmlContent = marked.parse(this.#removeTags(this.markdown));
+                    htmlContent = this.#injectEmojis(htmlContent);
+                    htmlContent = this.#injectMentions(htmlContent);
+                    contentDiv.innerHTML += htmlContent;
                 }
             }
 
@@ -207,6 +227,26 @@ class MessageComponent extends HTMLElement {
             }
             return `:${emoji}:`
         });
+    }
+
+    #injectMentions(inputText) {
+        console.log(inputText);
+        Object.keys(this.mentions).forEach(key => {
+            const div = document.createElement("div");
+            div.innerText += key
+            const sanitizedValue = div.innerHTML
+            /** @type MessageMention */
+            const mention = this.mentions[key]
+            const currentUserMentioned = mention.currentUserMentioned ? "connectedUser" : ""
+            inputText = inputText.replace(
+                    sanitizedValue,
+                    `<span class="mention ${currentUserMentioned}" data-mention-id="${mention.id}">
+                        @${mention.mentionName}
+                     </span>`
+            );
+            console.log(inputText);
+        })
+        return inputText;
     }
 
     #setupMarked() {

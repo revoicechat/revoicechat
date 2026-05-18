@@ -2,9 +2,11 @@ package fr.revoicechat.core.representation;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import fr.revoicechat.core.model.MessageReactions.MessageReaction;
+import fr.revoicechat.core.representation.message.MessageMention;
 import fr.revoicechat.notification.data.UserNotificationRepresentation;
 
 public record MessageRepresentation(
@@ -19,11 +21,13 @@ public record MessageRepresentation(
     List<MediaDataRepresentation> medias,
     List<EmoteRepresentation> emotes,
     List<MessageReaction> reactions,
+    Map<String, MessageMention> mentions,
+    boolean currentUserMentioned,
     boolean messageUrlPreview
 ) {
 
   public MessageRepresentation(UUID id, UUID serverId, UUID roomId) {
-    this(id, null, serverId, roomId, null, null, null, null, null, null, null, false);
+    this(id, null, serverId, roomId, null, null, null, null, List.of(), List.of(), List.of(), Map.of(), false, false);
   }
 
   public record MessageAnsweredRepresentation(
