@@ -20,7 +20,6 @@ public record MessageRepresentation(
     OffsetDateTime createdDate,
     OffsetDateTime updatedDate,
     List<MediaDataRepresentation> medias,
-    List<EmoteRepresentation> emotes,
     List<MessageReaction> reactions,
     List<TextPattern> textPatterns,
     boolean currentUserMentioned,
@@ -28,7 +27,7 @@ public record MessageRepresentation(
 ) {
 
   public MessageRepresentation(UUID id, UUID serverId, UUID roomId) {
-    this(id, null, serverId, roomId, null, null, null, null, List.of(), List.of(), List.of(), List.of(), false, false);
+    this(id, null, serverId, roomId, null, null, null, null, List.of(), List.of(), List.of(), false, false);
   }
 
   public record MessageAnsweredRepresentation(
@@ -36,6 +35,6 @@ public record MessageRepresentation(
       String text,
       boolean hasMedias,
       UUID userId,
-      List<EmoteRepresentation> emotes
+      List<TextPattern> textPatterns
   ) {}
 }

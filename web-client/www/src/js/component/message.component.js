@@ -9,8 +9,6 @@ import {sanitizeHtml} from "../lib/tools.js";
 class MessageComponent extends HTMLElement {
     /** @type string */
     markdown
-    /** @type EmoteRepresentation[] */
-    emotes
     /** @type MessageReaction[] */
     reactions
     /** @type TextPattern[] */
@@ -20,7 +18,6 @@ class MessageComponent extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.markdown = '';
-        this.emotes = []
         this.reactions = []
         this.textPatterns = []
     }
@@ -54,7 +51,6 @@ class MessageComponent extends HTMLElement {
                         <div class="markdown-content" id="content"></div>
                         <slot name="medias" style="display: none;"></slot>
                         <slot name="content" style="display: none;"></slot>
-                        <slot name="emotes" style="display: none;"></slot>
                         <slot name="reactions" style="display: none;"></slot>
                         <slot name="textPatterns" style="display: none;"></slot>
                     </div>
@@ -67,9 +63,6 @@ class MessageComponent extends HTMLElement {
             }
             if (e.target.name === 'content') {
                 this.#handleSlottedContent();
-            }
-            if (e.target.name === 'emotes') {
-                this.#handleSlottedEmotes();
             }
             if (e.target.name === 'reactions') {
                 this.#handleSlottedReaction();
@@ -103,17 +96,6 @@ class MessageComponent extends HTMLElement {
                     this.#render();
                 }
 
-                break;
-            }
-        }
-    }
-
-    #handleSlottedEmotes() {
-        const emotesSlot = this.shadowRoot.querySelector('slot[name="emotes"]');
-        const slottedElements = emotesSlot.assignedElements();
-        for (const element of slottedElements) {
-            if (element.tagName === 'SCRIPT' && element.type === 'application/json') {
-                this.emotes = JSON.parse(element.textContent)
                 break;
             }
         }
@@ -163,7 +145,6 @@ class MessageComponent extends HTMLElement {
             this.#handleSlottedContent();
         }
         this.#handleSlottedMedias();
-        this.#handleSlottedEmotes();
         this.#handleSlottedReaction();
         this.#handleSlottedTextPatterns();
 
@@ -179,7 +160,7 @@ class MessageComponent extends HTMLElement {
 
             if (this.markdown) {
                 if (containsOnlyEmotes(this.markdown, this.#emotesNames())) {
-                    contentDiv.innerHTML = this.#injectEmojis(this.#removeTags(this.markdown))
+                    contentDiv.innerHTML = this.#injectTextPattern(this.#removeTags(this.markdown))
                     if (countEmotes(this.markdown, this.#emotesNames()) === 1) {
                         contentDiv.classList.add('stickers-emoji')
                     } else {
@@ -187,7 +168,6 @@ class MessageComponent extends HTMLElement {
                     }
                 } else {
                     let htmlContent = marked.parse(this.#removeTags(this.markdown));
-                    htmlContent = this.#injectEmojis(htmlContent);
                     htmlContent = this.#injectTextPattern(htmlContent);
                     contentDiv.innerHTML += htmlContent;
                 }
@@ -218,23 +198,13 @@ class MessageComponent extends HTMLElement {
         return div.textContent || "";
     }
 
-    #injectEmojis(inputText) {
-        return inputText.replaceAll(/:([A-Za-z0-9\-_]+):/g, (_, emoji) => {
-            if (this.emotes) {
-                const emote = Array.from(this.emotes).find(item => item.name === emoji);
-                if (emote) {
-                    return `<img class="emoji" src="${MediaServer.emote(emote.id)}" alt="${emoji}" title=":${emoji}:">`;
-                }
-            }
-            return `:${emoji}:`
-        });
-    }
-
     #injectTextPattern(inputText) {
         for (let textPattern of this.textPatterns) {
             const pattern = sanitizeHtml(textPattern.pattern)
             const replacedValue = this.#textPatternToHtml(textPattern)
-            inputText = inputText.replace(pattern, replacedValue)
+            if (replacedValue !== '') {
+                inputText = inputText.replace(pattern, replacedValue)
+            }
         }
         return inputText;
     }
@@ -247,8 +217,11 @@ class MessageComponent extends HTMLElement {
             return `<span class="mention ${currentUserMentioned}" data-mention-id="${mention.id}">
                         @${mention.mentionName}
                      </span>`
+        } else if (textPattern.type === "EMOTE") {
+            const emote = /** @type EmoteRepresentation */ textPattern.data
+            return `<img class="emoji" src="${MediaServer.emote(emote.id)}" alt="${emote.name}" title=":${emote.name}:">`
         }
-        return "";
+        return '';
     }
 
     #setupMarked() {
@@ -290,7 +263,9 @@ class MessageComponent extends HTMLElement {
 
     /** @return {string[]} */
     #emotesNames() {
-        return Array.from(this.emotes).map(item => item.name)
+        return Array.from(this.textPatterns)
+            .filter(item => item.type === "EMOTE")
+            .map(item => item.data.name)
     }
 
     #renderOpenGraph(contentDiv) {

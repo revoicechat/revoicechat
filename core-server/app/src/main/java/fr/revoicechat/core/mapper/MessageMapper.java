@@ -1,42 +1,34 @@
 package fr.revoicechat.core.mapper;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import jakarta.enterprise.context.ApplicationScoped;
 
 import fr.revoicechat.core.model.Message;
 import fr.revoicechat.core.model.Server;
 import fr.revoicechat.core.model.room.ServerRoom;
-import fr.revoicechat.core.representation.EmoteRepresentation;
 import fr.revoicechat.core.representation.MessageRepresentation;
 import fr.revoicechat.core.representation.MessageRepresentation.MessageAnsweredRepresentation;
 import fr.revoicechat.core.representation.message.MessageMention;
 import fr.revoicechat.core.representation.message.TextPattern;
-import fr.revoicechat.core.service.emote.EmoteRetrieverService;
 import fr.revoicechat.core.service.message.textextractor.MessageTextPatternExtractor;
 import fr.revoicechat.notification.data.UserNotificationRepresentation;
 import fr.revoicechat.opengraph.OpenGraphExtractor;
 import fr.revoicechat.web.mapper.Mapper;
 import fr.revoicechat.web.mapper.RepresentationMapper;
 import io.quarkus.arc.Unremovable;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @Unremovable
 @ApplicationScoped
 public class MessageMapper implements RepresentationMapper<Message, MessageRepresentation> {
 
   private final OpenGraphExtractor openGraphExtractor;
-  private final EmoteRetrieverService emoteService;
-  private final MessageTextPatternExtractor messageMentionsExtractor;
+  private final MessageTextPatternExtractor messageTextPatternExtractor;
 
-  public MessageMapper(final OpenGraphExtractor openGraphExtractor, final EmoteRetrieverService emoteService, final MessageTextPatternExtractor messageMentionsExtractor) {
+  public MessageMapper(OpenGraphExtractor openGraphExtractor, MessageTextPatternExtractor messageTextPatternExtractor) {
     this.openGraphExtractor = openGraphExtractor;
-    this.emoteService = emoteService;
-    this.messageMentionsExtractor = messageMentionsExtractor;
+    this.messageTextPatternExtractor = messageTextPatternExtractor;
   }
 
   @Override
@@ -50,7 +42,7 @@ public class MessageMapper implements RepresentationMapper<Message, MessageRepre
 
   @Override
   public MessageRepresentation map(final Message message) {
-    var mentions = messageMentionsExtractor.extract(message);
+    var textPatterns = messageTextPatternExtractor.extract(message);
     return new MessageRepresentation(
         message.getId(),
         message.getText(),
@@ -61,10 +53,9 @@ public class MessageMapper implements RepresentationMapper<Message, MessageRepre
         message.getCreatedDate(),
         message.getUpdatedDate(),
         Mapper.mapAll(message.getMediaDatas()),
-        getEmoteRepresentations(message),
         message.getReactions().reactions(),
-        mentions,
-        isCurrentUserMentioned(mentions),
+        textPatterns,
+        isCurrentUserMentioned(textPatterns),
         openGraphExtractor.hasPreview(message.getText())
     );
   }
@@ -73,43 +64,21 @@ public class MessageMapper implements RepresentationMapper<Message, MessageRepre
     if (repliedMessage == null) {
       return null;
     }
+    var textPatterns = messageTextPatternExtractor.extract(repliedMessage);
     return new MessageAnsweredRepresentation(
         repliedMessage.getId(),
         repliedMessage.getText(),
         !repliedMessage.getMediaDatas().isEmpty(),
         repliedMessage.getUser().getId(),
-        getEmoteRepresentations(repliedMessage)
+        textPatterns
     );
   }
 
-  private List<EmoteRepresentation> getEmoteRepresentations(final Message message) {
-    Set<String> name = new HashSet<>();
-    List<EmoteRepresentation> emotes = new ArrayList<>(
-        distinctEmotes(name, Mapper.mapAll(emoteService.getGlobal()))
-    );
-    if (message.getRoom() instanceof ServerRoom serverRoom) {
-      emotes.addAll(distinctEmotes(name, Mapper.mapAll(emoteService.getAll(serverRoom.getServer().getId()))));
-    }
-    emotes.addAll(distinctEmotes(name, Mapper.mapAll(emoteService.getAll(message.getUser().getId()))));
-    return emotes;
-  }
-
-  private Collection<EmoteRepresentation> distinctEmotes(final Set<String> name, final List<EmoteRepresentation> all) {
-    Collection<EmoteRepresentation> result = new ArrayList<>();
-    for (EmoteRepresentation representation : all) {
-      if (!name.contains(representation.name())) {
-        result.add(representation);
-        name.add(representation.name());
-      }
-    }
-    return result;
-  }
-
-  private boolean isCurrentUserMentioned(final List<TextPattern> mentions) {
-    return mentions.stream().map(TextPattern::data)
-                   .filter(MessageMention.class::isInstance)
-                   .map(MessageMention.class::cast)
-                   .anyMatch(MessageMention::currentUserMentioned);
+  private boolean isCurrentUserMentioned(final List<TextPattern> textPatterns) {
+    return textPatterns.stream().map(TextPattern::data)
+                       .filter(MessageMention.class::isInstance)
+                       .map(MessageMention.class::cast)
+                       .anyMatch(MessageMention::currentUserMentioned);
   }
 
   private UUID getServerId(final Message message) {

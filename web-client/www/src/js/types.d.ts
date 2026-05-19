@@ -5,7 +5,7 @@ export type NotificationActionType = "ADD" | "MODIFY" | "REMOVE"
 export type InvitationLinkStatus = "CREATED" | "USED" | "REVOKED"
 export type InvitationType = "APPLICATION_JOIN" | "SERVER_JOIN"
 export type MentionType = "USER" | "ROLE"
-export type PatternType = "USER_MENTION" | "ROLE_MENTION"
+export type PatternType = "USER_MENTION" | "ROLE_MENTION" | "EMOTE"
 
 export interface TextPatternData {}
 
@@ -113,9 +113,8 @@ export class MessageReaction {
     users: string[];
 }
 
-export class MessageMention implements TextPatternData{
+export class MessageMention implements TextPatternData {
     id: string
-    type: MentionType;
     mentionName: string;
     currentUserMentioned: boolean;
 }
@@ -249,7 +248,7 @@ export class MediaDataRepresentation {
     type: FileType;
 }
 
-export class EmoteRepresentation {
+export class EmoteRepresentation implements TextPatternData{
     id: string;
     name: string;
     keywords: string[];

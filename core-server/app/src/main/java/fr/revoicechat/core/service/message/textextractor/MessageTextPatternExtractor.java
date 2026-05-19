@@ -2,18 +2,18 @@ package fr.revoicechat.core.service.message.textextractor;
 
 import java.util.Collection;
 import java.util.List;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Instance;
 
 import fr.revoicechat.core.model.Message;
 import fr.revoicechat.core.representation.message.TextPattern;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Instance;
 
 @ApplicationScoped
 public class MessageTextPatternExtractor {
 
   private final Instance<TextPatternExtractor> extractors;
 
-  public MessageTextPatternExtractor(final Instance<TextPatternExtractor> extractors) {
+  MessageTextPatternExtractor(final Instance<TextPatternExtractor> extractors) {
     this.extractors = extractors;
   }
 
