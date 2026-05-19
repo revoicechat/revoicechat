@@ -192,3 +192,23 @@ svg {
 .message-reaction.self:hover {
     background-color: var(--pri-button-hover-color);
 }
+
+.mention {
+    background-color: var(--green-text);
+    padding: 0.25rem;
+    border-radius: 8px;
+    margin-right: 5px;
+}
+
+.mention:hover {
+    cursor: pointer;
+    background-color: var(--green-background);
+}
+
+.mention.connectedUser {
+    background-color: var(--yellow-text);
+}
+
+.mention.connectedUser:hover {
+    background-color: var(--yellow-background);
+}

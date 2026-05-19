@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import fr.revoicechat.core.model.Message;
 import fr.revoicechat.core.model.Server;
@@ -14,13 +15,15 @@ import fr.revoicechat.core.model.room.ServerRoom;
 import fr.revoicechat.core.representation.EmoteRepresentation;
 import fr.revoicechat.core.representation.MessageRepresentation;
 import fr.revoicechat.core.representation.MessageRepresentation.MessageAnsweredRepresentation;
+import fr.revoicechat.core.representation.message.MessageMention;
+import fr.revoicechat.core.representation.message.TextPattern;
 import fr.revoicechat.core.service.emote.EmoteRetrieverService;
+import fr.revoicechat.core.service.message.textextractor.MessageTextPatternExtractor;
 import fr.revoicechat.notification.data.UserNotificationRepresentation;
 import fr.revoicechat.opengraph.OpenGraphExtractor;
 import fr.revoicechat.web.mapper.Mapper;
 import fr.revoicechat.web.mapper.RepresentationMapper;
 import io.quarkus.arc.Unremovable;
-import jakarta.enterprise.context.ApplicationScoped;
 
 @Unremovable
 @ApplicationScoped
@@ -28,10 +31,12 @@ public class MessageMapper implements RepresentationMapper<Message, MessageRepre
 
   private final OpenGraphExtractor openGraphExtractor;
   private final EmoteRetrieverService emoteService;
+  private final MessageTextPatternExtractor messageMentionsExtractor;
 
-  public MessageMapper(final OpenGraphExtractor openGraphExtractor, final EmoteRetrieverService emoteService) {
+  public MessageMapper(final OpenGraphExtractor openGraphExtractor, final EmoteRetrieverService emoteService, final MessageTextPatternExtractor messageMentionsExtractor) {
     this.openGraphExtractor = openGraphExtractor;
     this.emoteService = emoteService;
+    this.messageMentionsExtractor = messageMentionsExtractor;
   }
 
   @Override
@@ -45,6 +50,7 @@ public class MessageMapper implements RepresentationMapper<Message, MessageRepre
 
   @Override
   public MessageRepresentation map(final Message message) {
+    var mentions = messageMentionsExtractor.extract(message);
     return new MessageRepresentation(
         message.getId(),
         message.getText(),
@@ -57,6 +63,8 @@ public class MessageMapper implements RepresentationMapper<Message, MessageRepre
         Mapper.mapAll(message.getMediaDatas()),
         getEmoteRepresentations(message),
         message.getReactions().reactions(),
+        mentions,
+        isCurrentUserMentioned(mentions),
         openGraphExtractor.hasPreview(message.getText())
     );
   }
@@ -95,6 +103,13 @@ public class MessageMapper implements RepresentationMapper<Message, MessageRepre
       }
     }
     return result;
+  }
+
+  private boolean isCurrentUserMentioned(final List<TextPattern> mentions) {
+    return mentions.stream().map(TextPattern::data)
+                   .filter(MessageMention.class::isInstance)
+                   .map(MessageMention.class::cast)
+                   .anyMatch(MessageMention::currentUserMentioned);
   }
 
   private UUID getServerId(final Message message) {

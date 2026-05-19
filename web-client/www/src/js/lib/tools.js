@@ -26,6 +26,11 @@ function initTools() {
  */
 const sanitizeString = (str) => str.substring(0, 2000).trim();
 
+const sanitizeHtml = (str) => {
+    const div = document.createElement("div");
+    div.innerText += str
+    return div.innerHTML
+};
 
 /**
  * Is the date today
@@ -246,6 +251,7 @@ export {
     initTools,
     tauriActive,
     sanitizeString,
+    sanitizeHtml,
     timestampToText,
     getQueryVariable,
     setCookie,

@@ -6,7 +6,7 @@
 
 *[data-theme="dark"] {
     --green-background: #1b4614;
-    --green-text: #1b4614;
+    --green-text: #22c55e;
     --yellow-background: #483a0f;
     --yellow-text: #c7993d;
     --red-background: #602a28;
@@ -66,7 +66,7 @@
 
 *[data-theme="darker"] {
     --green-background: #1b4614;
-    --green-text: #1b4614;
+    --green-text: #22c55e;
     --yellow-background: #483a0f;
     --yellow-text: #c7993d;
     --red-background: #602a28;
@@ -120,7 +120,7 @@
 
 *[data-theme="light"] {
     --green-background: #1b4614;
-    --green-text: #1b4614;
+    --green-text: #22c55e;
     --yellow-background: #483a0f;
     --yellow-text: #c7993d;
     --red-background: #602a28;
@@ -174,7 +174,7 @@
 
 *[data-theme="femboy"] {
     --green-background: #1b4614;
-    --green-text: #1b4614;
+    --green-text: #22c55e;
     --yellow-background: #483a0f;
     --yellow-text: #c7993d;
     --red-background: #602a28;
@@ -425,6 +425,15 @@ body {
 /* Message */
 .message-container:hover {
     background-color: var(--pri-hover-color);
+}
+
+.message-container.mentioned {
+    background-color: color-mix(in srgb, var(--yellow-background) 33%, transparent);
+    border-left: var(--yellow-text) 2px solid;
+}
+
+.message-container.mentioned:hover {
+    background-color: color-mix(in srgb, var(--yellow-background) 67%, transparent);
 }
 
 .message-timestamp {

@@ -4,6 +4,10 @@ export type RoomType = "TEXT" | "WEBRTC" | "VOICE"
 export type NotificationActionType = "ADD" | "MODIFY" | "REMOVE"
 export type InvitationLinkStatus = "CREATED" | "USED" | "REVOKED"
 export type InvitationType = "APPLICATION_JOIN" | "SERVER_JOIN"
+export type MentionType = "USER" | "ROLE"
+export type PatternType = "USER_MENTION" | "ROLE_MENTION"
+
+export interface TextPatternData {}
 
 export class NewUserRepresentation {
     user: UserRepresentation;
@@ -87,7 +91,15 @@ export class MessageRepresentation {
     medias: MediaDataRepresentation[];
     emotes: EmoteRepresentation[];
     reactions: MessageReaction[];
+    textPatterns: TextPattern[];
+    currentUserMentioned: boolean;
     messageUrlPreview: boolean;
+}
+
+export class TextPattern {
+    pattern: string;
+    type: PatternType;
+    data: TextPatternData
 }
 
 /** for "ROOM_UPDATE" notifications */
@@ -99,6 +111,13 @@ export class RoomNotification {
 export class MessageReaction {
     emoji: string;
     users: string[];
+}
+
+export class MessageMention implements TextPatternData{
+    id: string
+    type: MentionType;
+    mentionName: string;
+    currentUserMentioned: boolean;
 }
 
 export class MessageAnsweredRepresentation {

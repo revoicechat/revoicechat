@@ -78,7 +78,7 @@ public class RoomRepositoryImpl implements RoomRepository {
                                                     LIMIT 1),
                                                    COUNT(m.id),
                                                    SUM(CASE WHEN answer.user = :currentUser THEN 1 ELSE 0 END),
-                                                   SUM(CASE WHEN m.text LIKE CONCAT('%@', :username, '%') THEN 1 ELSE 0 END)
+                                                   SUM(CASE WHEN m.text LIKE CONCAT('%<@userId:', :userId, '>%') THEN 1 ELSE 0 END)
                                                FROM Message m
                                                LEFT JOIN m.answerTo answer
                                                LEFT JOIN RoomReadStatus rrs ON rrs.room = :room AND rrs.user = :currentUser
@@ -87,7 +87,7 @@ public class RoomRepositoryImpl implements RoomRepository {
                                                  AND m.user != :currentUser""")
                                 .setParameter("room", room)
                                 .setParameter("currentUser", currentUser)
-                                .setParameter("username", currentUser.getDisplayName())
+                                .setParameter("userId", currentUser.getId())
                                 .getSingleResult();
 
     return new RoomUnreadSummary(
