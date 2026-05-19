@@ -28,7 +28,7 @@ public record MessageRepresentation(
 ) {
 
   public MessageRepresentation(UUID id, UUID serverId, UUID roomId) {
-    this(id, null, serverId, roomId, null, null, null, null, List.of(), List.of(), List.of(), Map.of(), false, false);
+    this(id, null, serverId, roomId, null, null, null, null, List.of(), List.of(), List.of(), List.of(), false, false);
   }
 
   public record MessageAnsweredRepresentation(
