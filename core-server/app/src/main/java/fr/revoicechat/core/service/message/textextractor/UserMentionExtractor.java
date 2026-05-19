@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import jakarta.enterprise.context.ApplicationScoped;
 
 import fr.revoicechat.core.model.Message;
 import fr.revoicechat.core.model.User;
@@ -18,6 +17,7 @@ import fr.revoicechat.core.representation.message.TextPattern;
 import fr.revoicechat.core.service.user.UserRetriever;
 import fr.revoicechat.core.service.user.UserService;
 import io.quarkus.arc.Unremovable;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @Unremovable
 @ApplicationScoped

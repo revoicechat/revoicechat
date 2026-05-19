@@ -661,9 +661,6 @@ export default class TextController {
             <script type="text/markdown" slot="content">
                 ${messageData.text}
             </script>
-            <script type="application/json" slot="emotes">
-                ${JSON.stringify(messageData.emotes)}
-            </script>
             <script type="application/json" slot="reactions">
                 ${JSON.stringify(messageData.reactions)}
             </script>

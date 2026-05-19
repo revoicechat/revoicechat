@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.persistence.EntityManager;
 
 import fr.revoicechat.core.model.Message;
 import fr.revoicechat.core.representation.message.MessageMention;
@@ -18,6 +16,8 @@ import fr.revoicechat.risk.model.ServerRoles;
 import fr.revoicechat.risk.model.UserRoleMembership;
 import fr.revoicechat.security.UserHolder;
 import io.quarkus.arc.Unremovable;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.EntityManager;
 
 @Unremovable
 @ApplicationScoped
