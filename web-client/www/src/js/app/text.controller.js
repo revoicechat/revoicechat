@@ -667,8 +667,8 @@ export default class TextController {
             <script type="application/json" slot="reactions">
                 ${JSON.stringify(messageData.reactions)}
             </script>
-            <script type="application/json" slot="mentions">
-                ${JSON.stringify(messageData.mentions)}
+            <script type="application/json" slot="textPatterns">
+                ${JSON.stringify(messageData.textPatterns)}
             </script>
         `;
         return CONTENT;

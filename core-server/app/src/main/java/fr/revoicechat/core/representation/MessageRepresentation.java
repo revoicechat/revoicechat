@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import fr.revoicechat.core.model.MessageReactions.MessageReaction;
 import fr.revoicechat.core.representation.message.MessageMention;
+import fr.revoicechat.core.representation.message.TextPattern;
 import fr.revoicechat.notification.data.UserNotificationRepresentation;
 
 public record MessageRepresentation(
@@ -21,7 +22,7 @@ public record MessageRepresentation(
     List<MediaDataRepresentation> medias,
     List<EmoteRepresentation> emotes,
     List<MessageReaction> reactions,
-    Map<String, MessageMention> mentions,
+    List<TextPattern> textPatterns,
     boolean currentUserMentioned,
     boolean messageUrlPreview
 ) {
