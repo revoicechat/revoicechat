@@ -50,3 +50,4 @@ media-server/settings.ini
 
 node_modules
 **/package-lock.json
+**/test.html
