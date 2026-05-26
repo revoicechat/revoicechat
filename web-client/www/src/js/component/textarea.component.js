@@ -3,8 +3,8 @@ const code      = /`([^`]+)`/g;
 const bold      = /\*\*(.+?)\*\*/g;
 const italic    = /(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g;
 const emote     = /:(\w+):/g;
-const userAt    = /<@userId:(\w+)>/g;
-const roleAt    = /<@&roleId:(\w+)>/g;
+const userAt    = /<@userId:([0-9a-fA-F\-]{36})>/g;
+const roleAt    = /<@&roleId:([0-9a-fA-F\-]{36})>/g;
 
 const textPatterns = [
     {type: 'codeBlock', regexp: codeBlock, groups: ['lang', 'content'] },
@@ -17,6 +17,7 @@ const textPatterns = [
 ]
 
 class TextareaComponent extends HTMLElement {
+    #cursorPos = null;
 
     /** @type HTMLPreElement */
     textPreview;
@@ -27,18 +28,20 @@ class TextareaComponent extends HTMLElement {
         super();
         this.attachShadow({mode: 'open'});
         this.#initStyle();
+        this.#initTextInput();
         this.#initTextPreview();
-        this.#initTestInput();
         this.shadowRoot.appendChild(this.textInput);
         this.shadowRoot.appendChild(this.textPreview);
 
         this.textInput.addEventListener('input', () => this.#syncMessage());
         this.textInput.addEventListener('paste', () => this.#syncMessage());
-        // Cursor tracking
-        this.textInput.addEventListener('keyup',  () => this.#updateCursor());
-        this.textInput.addEventListener('mouseup',() => this.#updateCursor());
-        this.textInput.addEventListener('blur',   () => this.#removeCursor());
-        // Click on preview → move text area cursor
+        this.textInput.addEventListener('keyup',  () => this.#syncMessage());
+        this.textInput.addEventListener('mouseup',() => this.#syncMessage());
+        this.textInput.addEventListener('focus',   () => this.#syncMessage());
+        this.textInput.addEventListener('blur',   () => {
+            this.#cursorPos = null;
+            this.#removeCursor();
+        });
         this.textPreview.addEventListener('click', (e) => this.#handlePreviewClick(e));
     }
 
@@ -64,7 +67,7 @@ class TextareaComponent extends HTMLElement {
         this.#updatePlaceholder();
     }
 
-    #initTestInput() {
+    #initTextInput() {
         this.textInput = document.createElement('textarea');
         this.textInput.style.opacity = '1';
         this.textInput.style.position = 'absolute';
@@ -74,32 +77,52 @@ class TextareaComponent extends HTMLElement {
     }
 
     #syncMessage() {
+        this.#cursorPos = this.textInput.selectionStart;
+        this.#render();
+    }
+
+    #render() {
         this.textPreview.innerHTML = '';
-        const message = this.#splitMarkdown(this.textInput.value);
-        for (const part of message) {
-            let el;
-            switch (part.type) {
-                case 'text':      el = this.#textPart(part.content);                 break;
-                case 'codeBlock': el = this.#codeBlockPart(part.content, part.lang); break;
-                case 'code':      el = this.#codePart(part.content);                 break;
-                case 'bold':      el = this.#boldPart(part.content);                 break;
-                case 'italic':    el = this.#italicPart(part.content);               break;
-                case 'emote':     el = this.#emotePart(part.content);                break;
-                case 'userAt':    el = this.#userAtPart(part.content);               break;
-                case 'roleAt':    el = this.#roleAtPart(part.content);               break;
+        let raw = this.textInput.value;
+        if (this.#cursorPos === null || !this.textInput.matches(':focus')) {
+            const parts = this.#splitMarkdown(raw);
+            for (const part of parts) {
+                this.textPreview.appendChild(this.#renderPart(part));
             }
-            if (el) {
-                el._rawLength = part._rawLength;
-                this.textPreview.appendChild(el);
-            }
+            return;
         }
-        this.#updatePlaceholder();
-        this.#updateCursor();
+        const before = raw.slice(0, this.#cursorPos);
+        const after  = raw.slice(this.#cursorPos);
+
+        for (const part of this.#splitMarkdown(before)) {
+            this.textPreview.appendChild(this.#renderPart(part));
+        }
+
+        const caret = document.createElement('span');
+        caret.className = 'cursor-caret';
+        this.textPreview.appendChild(caret);
+
+        for (const part of this.#splitMarkdown(after)) {
+            this.textPreview.appendChild(this.#renderPart(part));
+        }
+    }
+
+    #renderPart(part) {
+        switch (part.type) {
+            case 'text':      return this.#textPart(part.content);
+            case 'codeBlock': return this.#codeBlockPart(part.content, part.lang);
+            case 'code':      return this.#codePart(part.content);
+            case 'bold':      return this.#boldPart(part.content);
+            case 'italic':    return this.#italicPart(part.content);
+            case 'emote':     return this.#emotePart(part.content);
+            case 'userAt':    return this.#userAtPart(part.content);
+            case 'roleAt':    return this.#roleAtPart(part.content);
+        }
     }
 
     #updatePlaceholder() {
         this.textPreview.classList.remove('placeholder')
-        if (!this.textPreview.innerHTML) {
+        if (!this.textInput.value) {
             this.textPreview.innerHTML = `Send a message`;
             this.textPreview.classList.add('placeholder')
         }
@@ -205,46 +228,34 @@ class TextareaComponent extends HTMLElement {
     }
 
     #handlePreviewClick(e) {
-        // Which top-level child of textPreview was clicked (or closest ancestor that is)?
-        const children = Array.from(this.textPreview.childNodes)
-            .filter(n => n.nodeType === Node.ELEMENT_NODE || n.nodeType === Node.TEXT_NODE);
-
-        // Count raw chars before the clicked element
         let rawOffset = 0;
+        const children = Array.from(this.textPreview.childNodes);
         for (const child of children) {
-            if (child === e.target || child.contains(e.target)) {
-                // We're inside this element — use caretRangeFromPoint to get sub-offset
-                // within this element's visible text
+            if (child.classList?.contains('cursor-caret')) continue;
+            if (child === e.target || child.contains?.(e.target)) {
+                // Drill inside this element to get sub-offset
                 let innerOffset = 0;
-                if (document.caretRangeFromPoint) {
-                    const range = document.caretRangeFromPoint(e.clientX, e.clientY);
-                    if (range) {
-                        // Walk text nodes inside this child to find offset
-                        innerOffset = this.#innerTextOffset(child, range.startContainer, range.startOffset);
-                    }
-                } else if (document.caretPositionFromPoint) {
-                    const pos = document.caretPositionFromPoint(e.clientX, e.clientY);
-                    if (pos) {
-                        innerOffset = this.#innerTextOffset(child, pos.offsetNode, pos.offset);
-                    }
+                const caret = document.caretRangeFromPoint?.(e.clientX, e.clientY)
+                    ?? document.caretPositionFromPoint?.(e.clientX, e.clientY);
+                if (caret) {
+                    const node   = caret.startContainer ?? caret.offsetNode;
+                    const offset = caret.startOffset    ?? caret.offset;
+                    innerOffset  = this.#innerTextOffset(child, node, offset);
                 }
-                // Clamp inner offset to this element's raw length
-                rawOffset += Math.min(innerOffset, child._rawLength ?? child.textContent.length);
+                rawOffset += Math.min(innerOffset, child._rawLength ?? 0);
                 break;
             }
-            rawOffset += child._rawLength ?? child.textContent.length;
+            rawOffset += child._rawLength ?? 0;
         }
 
         this.textInput.focus();
         this.textInput.setSelectionRange(rawOffset, rawOffset);
-        this.#updateCursor();
     }
 
-    // Walk text nodes inside `root` to count chars before `targetNode:offset`
     #innerTextOffset(root, targetNode, offset) {
+        if (root === targetNode) return offset;
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-        let count = 0;
-        let n;
+        let count = 0, n;
         while ((n = walker.nextNode())) {
             if (n === targetNode) {
                 return count + offset;
@@ -257,25 +268,35 @@ class TextareaComponent extends HTMLElement {
     #updateCursor() {
         this.#removeCursor();
         const pos = this.textInput.selectionStart;
-        if (pos === null) return;
+        if (pos === null || !this.textInput.matches(':focus')) return;
         let remaining = pos;
-        const children = Array.from(this.textPreview.childNodes)
-            .filter(n => n.nodeType === Node.ELEMENT_NODE);
-
-        for (const child of children) {
+        const children = Array.from(this.textPreview.childNodes);
+        for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+            if (child.classList?.contains('cursor-caret')) continue;
             const len = child._rawLength ?? child.textContent.length;
-            if (remaining <= len) {
+            const isLast = (i === children.length - 1);
+            // Enter this element if cursor is inside it, or it's the last one
+            if (remaining < len || (isLast && remaining <= len)) {
                 this.#insertCursorInElement(child, remaining);
                 return;
             }
             remaining -= len;
         }
-        // End of preview
         const caret = this.#makeCaret();
         this.textPreview.appendChild(caret);
     }
 
     #insertCursorInElement(el, charOffset) {
+        if (el.childNodes.length === 1 && el.childNodes[0].nodeType === Node.TEXT_NODE) {
+            const textNode = el.childNodes[0];
+            const range = document.createRange();
+            const offset = Math.min(charOffset, textNode.textContent.length);
+            range.setStart(textNode, offset);
+            range.collapse(true);
+            range.insertNode(this.#makeCaret());
+            return;
+        }
         const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
         let remaining = charOffset;
         let n;
