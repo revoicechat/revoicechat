@@ -10,7 +10,7 @@ export default class VoiceCall {
     static OPEN = 2;
     static DEFAULT_SETTINGS = {
         compressor: {
-             enabled: true
+            enabled: true
         },
         gate: {
             threshold: -40,
@@ -19,6 +19,9 @@ export default class VoiceCall {
             muted: false,
             deaf: false,
             volume: 1,
+        },
+        noiseSuppression: {
+            legacy: true,
         },
         users: {}
     }
@@ -283,14 +286,14 @@ export default class VoiceCall {
 
         /**
          * Audio routing 
-         * microphone -> filter (LP + HP) -> gain -> gate -> compressor (optional) -> collector -> buffer -> encoder -> send
+         * microphone -> filter (LP + HP : WideBand) -> gain -> gate -> compressor (optional) -> collector -> buffer -> encoder -> send
          */
 
         // Init Mic capture
         const micSource = this.#audioContext.createMediaStreamSource(await navigator.mediaDevices.getUserMedia({
             audio: {
                 echoCancellation: false,
-                noiseSuppression: false,
+                noiseSuppression: this.#settings.noiseSuppression.legacy,
                 autoGainControl: false
             }
         }));
@@ -298,12 +301,12 @@ export default class VoiceCall {
         // Create Filters around voice frequency
         const filterHigh = this.#audioContext.createBiquadFilter();
         filterHigh.type = 'highpass';
-        filterHigh.frequency.value = 80;
+        filterHigh.frequency.value = 50;
         filterHigh.Q.value = 0.7;
 
         const filterLow = this.#audioContext.createBiquadFilter();
         filterLow.type = 'lowpass';
-        filterLow.frequency.value = 5000;
+        filterLow.frequency.value = 7000;
         filterLow.Q.value = 0.7;
 
         // Connect microphone to filter

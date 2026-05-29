@@ -88,6 +88,7 @@ export default class UserSettingsController {
             this.voice.users = storedSettings.voice.users || this.voice.users;
             this.voice.compressor = storedSettings.voice.compressor || this.voice.compressor;
             this.voice.gate = storedSettings.voice.gate || this.voice.gate;
+            this.voice.noiseSuppression = storedSettings.voice.noiseSuppression || this.voice.noiseSuppression;
         }
     }
 
@@ -494,6 +495,18 @@ export default class UserSettingsController {
             buttonEnabled.classList.add("background-red");
             buttonEnabled.classList.remove("background-green");
         }
+
+        // Legacy noise removal
+        const buttonRNoiseEnabled = document.getElementById('rnoise-enabled')
+        if (this.voice.compressor.enabled) {
+            buttonRNoiseEnabled.innerText = "Enabled";
+            buttonRNoiseEnabled.classList.remove("background-red");
+            buttonRNoiseEnabled.classList.add("background-green");
+        } else {
+            buttonRNoiseEnabled.innerText = "Disabled";
+            buttonRNoiseEnabled.classList.add("background-red");
+            buttonRNoiseEnabled.classList.remove("background-green");
+        }
     }
 
     #audioInputUpdateUI(param, element) {
@@ -543,6 +556,12 @@ export default class UserSettingsController {
 
     #compressorEnabled() {
         this.voice.compressor.enabled = !this.voice.compressor.enabled;
+        this.save();
+        this.#audioInputLoad();
+    }
+
+    #rnoiseEnable() {
+        this.voice.noiseSuppression.legacy.enabled = !this.voice.noiseSuppression.legacy.enabled;
         this.save();
         this.#audioInputLoad();
     }
