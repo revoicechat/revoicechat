@@ -461,6 +461,7 @@ export default class UserSettingsController {
     #audioInputEventHandler() {
         document.getElementById('gate-default').addEventListener('click', () => this.#gateDefault());
         document.getElementById('compressor-enabled').addEventListener('click', () => this.#compressorEnabled());
+        document.getElementById('rnoise-enabled').addEventListener('click', () => this.#rnoiseEnabled());
 
         const parameters = [
             'input-volume',
@@ -498,7 +499,7 @@ export default class UserSettingsController {
 
         // Legacy noise removal
         const buttonRNoiseEnabled = document.getElementById('rnoise-enabled')
-        if (this.voice.compressor.enabled) {
+        if (this.voice.noiseSuppression.legacy) {
             buttonRNoiseEnabled.innerText = "Enabled";
             buttonRNoiseEnabled.classList.remove("background-red");
             buttonRNoiseEnabled.classList.add("background-green");
@@ -560,8 +561,8 @@ export default class UserSettingsController {
         this.#audioInputLoad();
     }
 
-    #rnoiseEnable() {
-        this.voice.noiseSuppression.legacy.enabled = !this.voice.noiseSuppression.legacy.enabled;
+    #rnoiseEnabled() {
+        this.voice.noiseSuppression.legacy = !this.voice.noiseSuppression.legacy;
         this.save();
         this.#audioInputLoad();
     }
