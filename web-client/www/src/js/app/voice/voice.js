@@ -1,6 +1,7 @@
 import Codec from "../utils/codec.js";
 import Listener from "./voice.listener.js";
 import { EncodedVoice, DecodedVoice } from "./voice.transport.js";
+import { VoiceCrypto } from "./voice.crypto.js";
 
 export default class VoiceCall {
     "use strict";
@@ -57,6 +58,7 @@ export default class VoiceCall {
     #gateState = false;
     #outputGain;
     #controller;
+    #voiceCrypto = null /** @type {VoiceCrypto} */;
 
     constructor(user) {
         if (!user) {
@@ -93,11 +95,15 @@ export default class VoiceCall {
         this.#socket = new WebSocket(`${voiceUrl}/${roomId}`, ["Bearer." + token]);
         this.#socket.binaryType = "arraybuffer";
 
+        // Create crypto
+        this.#voiceCrypto = new VoiceCrypto();
+        await this.#voiceCrypto.init();
+
         // Setup encoder and transmitter
         await this.#encodeAudio();
 
         // Setup receiver and decoder
-        this.#socket.onmessage = async (message) => { await this.#decodeAudio(new DecodedVoice(message.data)) }
+        this.#socket.onmessage = async (message) => { await this.#decodeAudio(new DecodedVoice(await this.#voiceCrypto.decrypt(message.data))) }
 
         // Setup main output gain
         this.#outputGain = this.#audioContext.createGain();
@@ -269,8 +275,10 @@ export default class VoiceCall {
         // Setup Encoder
         this.#encoder = new AudioEncoder({
             output: (chunk) => {
-                if (this.#socket.readyState === WebSocket.OPEN) {
-                    this.#socket.send(new EncodedVoice(Math.round(this.#audioTimestamp / 1000), this.#user.id, this.#gateState, EncodedVoice.user, chunk, false).data);
+                if (this.#socket.readyState === WebSocket.OPEN) { 
+                    this.#voiceCrypto.encrypt(
+                        new EncodedVoice(Math.round(this.#audioTimestamp / 1000), this.#user.id, this.#gateState, EncodedVoice.user, chunk, false).data
+                    ).then((res) => this.#socket.send(res));
                 }
             },
             error: (error) => { throw new Error(`Encoder setup failed:\n${error.name}\nCurrent codec :${this.#codec.codec}`) },
