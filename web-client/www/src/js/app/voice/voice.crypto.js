@@ -1,13 +1,11 @@
 export class VoiceCrypto {
     #key;
-    #iv;
 
     constructor(){
     }
 
     async init(){
         // TEST WITH FIXED KEY
-
         let importKey = 
         {
             "alg": "A256GCM",
@@ -21,16 +19,26 @@ export class VoiceCrypto {
         } 
 
         this.#key = await crypto.subtle.importKey('jwk', importKey, "AES-GCM", true, ["encrypt","decrypt"]);
-        this.#iv = new Uint8Array([127,144,120,208,195,35,175,245,173,95,45,220]);
     }
 
     async encrypt(data){
-        const iv = this.#iv;
-        return await crypto.subtle.encrypt({name:"AES-GCM", iv}, this.#key, data);
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const encryptData = await crypto.subtle.encrypt({name:"AES-GCM", iv}, this.#key, data);
+        const buffer = new ArrayBuffer(12 + encryptData.byteLength);
+        const view = new Uint8Array(buffer);
+
+        // Set IV
+        view.set(iv, 0);
+        
+        // Set payload
+        view.set(new Uint8Array(encryptData), 12);
+       
+        return buffer;
     }
 
     async decrypt(data){
-        const iv = this.#iv;
-        return await crypto.subtle.decrypt({name:"AES-GCM", iv}, this.#key, data);
+        const iv = new Uint8Array(data, 0, 12);
+        const payload = new Uint8Array(data, 12, data.byteLength - 12);
+        return await crypto.subtle.decrypt({name:"AES-GCM", iv}, this.#key, payload);
     }
 }
