@@ -23,21 +23,28 @@ const textPatterns = [
 
 class TextareaComponent extends HTMLElement {
     #cursorPos = null;
+    #mentionStart = null;
 
     /** @type HTMLPreElement */
     textPreview;
     /** @type HTMLTextAreaElement */
     textInput;
+    /** @type HTMLDivElement */
+    mentionList;
 
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
+        this.mentionList = document.createElement('div')
+        this.mentionList.classList.add('mention-list', 'hidden')
         this.#initStyle();
         this.#initTextInput();
         this.#initTextPreview();
+        this.shadowRoot.appendChild(this.mentionList);
         this.shadowRoot.appendChild(this.textInput);
         this.shadowRoot.appendChild(this.textPreview);
 
+        this.textInput.addEventListener('keydown', (e) => this.#handleKeyDown(e));
         this.textInput.addEventListener('input', () => this.#syncMessage());
         this.textInput.addEventListener('paste', () => this.#syncMessage());
         this.textInput.addEventListener('keyup',  () => this.#syncMessage());
@@ -46,8 +53,14 @@ class TextareaComponent extends HTMLElement {
         this.textInput.addEventListener('blur',   () => {
             this.#cursorPos = null;
             this.#removeCursor();
+            this.#hideMentionList();
         });
         this.textPreview.addEventListener('click', (e) => this.#handlePreviewClick(e));
+
+        // Prevent mousedown on the list from stealing focus (and blurring the
+        // textarea) before the click that actually picks a user/role fires.
+        this.mentionList.addEventListener('mousedown', (e) => e.preventDefault());
+        this.mentionList.addEventListener('click', (e) => this.#handleMentionListClick(e));
     }
 
     get value() {
@@ -78,17 +91,113 @@ class TextareaComponent extends HTMLElement {
 
     #initTextInput() {
         this.textInput = document.createElement('textarea');
-        this.textInput.style.opacity = '1';
-        this.textInput.style.position = 'absolute';
-        this.textInput.style.top = '-120px';
         this.textInput.id = 'text-input';
         this.textInput.rows = 1;
     }
 
     #syncMessage() {
         this.#cursorPos = this.textInput.selectionStart;
+        this.#clampCursor();
         this.#render();
         this.#updatePlaceholder(true)
+        this.#updateMentionList();
+    }
+
+    /**
+     * If the cursor ended up strictly inside a userAt/roleAt mention (e.g. after a
+     * click or a mouse-drag selection collapsing), snap it to whichever boundary
+     * of the mention (start or end) is closer, so the caret can never rest inside
+     * the tag itself.
+     */
+    #clampCursor() {
+        if (this.#cursorPos === null) return;
+        const value = this.textInput.value;
+        const mention = this.#findMentionAt(value, this.#cursorPos);
+        if (!mention) return;
+
+        const target = (this.#cursorPos - mention.start <= mention.end - this.#cursorPos)
+            ? mention.start
+            : mention.end;
+
+        this.#cursorPos = target;
+        if (this.textInput.selectionStart !== target || this.textInput.selectionEnd !== target) {
+            this.textInput.setSelectionRange(target, target);
+        }
+    }
+
+    /**
+     * Looks for an in-progress `@query` right before the cursor (must start at the
+     * beginning of the text or right after whitespace, and contain only word chars
+     * so a space kills the query). Shows/filters/hides the mention list accordingly.
+     */
+    #updateMentionList() {
+        if (this.#cursorPos === null || !this.textInput.matches(':focus')) {
+            this.#hideMentionList();
+            return;
+        }
+
+        const before = this.textInput.value.slice(0, this.#cursorPos);
+        const match = before.match(/(?:^|\s)@(\w*)$/);
+        if (!match) {
+            this.#hideMentionList();
+            return;
+        }
+
+        this.#mentionStart = this.#cursorPos - match[1].length - 1;
+        this.#renderMentionList(match[1]);
+    }
+
+    #renderMentionList(query) {
+        const q = query.toLowerCase();
+        const users = (RVC.room.currentUsers ?? [])
+            .filter(u => u.displayName.toLowerCase().includes(q))
+            .map(u => ({ type: 'userAt', id: u.id, label: u.displayName }));
+        const roles = (RVC.room.currentRoles ?? [])
+            .filter(r => r.name.toLowerCase().includes(q))
+            .map(r => ({ type: 'roleAt', id: r.id, label: r.name }));
+        const items = [...users, ...roles];
+
+        if (items.length === 0) {
+            this.#hideMentionList();
+            return;
+        }
+
+        this.mentionList.innerHTML = '';
+        for (const item of items) {
+            const entry = document.createElement('div');
+            entry.classList.add('mention-list-item');
+            entry.textContent = `@${item.label}`;
+            entry.dataset.type = item.type;
+            entry.dataset.id = item.id;
+            this.mentionList.appendChild(entry);
+        }
+        this.mentionList.classList.remove('hidden');
+    }
+
+    #hideMentionList() {
+        this.#mentionStart = null;
+        this.mentionList.classList.add('hidden');
+        this.mentionList.innerHTML = '';
+    }
+
+    #handleMentionListClick(e) {
+        const entry = e.target.closest('[data-id]');
+        if (!entry || this.#mentionStart === null) return;
+
+        const tag = entry.dataset.type === 'roleAt'
+            ? `<@&roleId:${entry.dataset.id}>`
+            : `<@userId:${entry.dataset.id}>`;
+
+        const value = this.textInput.value;
+        const queryEnd = this.#cursorPos ?? this.textInput.selectionStart;
+        const newValue = value.slice(0, this.#mentionStart) + tag + value.slice(queryEnd);
+        const newPos = this.#mentionStart + tag.length;
+
+        this.textInput.value = newValue;
+        this.textInput.focus();
+        this.textInput.setSelectionRange(newPos, newPos);
+        this.#hideMentionList();
+        this.#syncMessage();
     }
 
     #render() {
@@ -237,17 +346,133 @@ class TextareaComponent extends HTMLElement {
     }
 
     #userAtPart(content) {
+        const user = RVC.room.currentUsers.find(u => u.id === content);
         const div = document.createElement('span')
-        div.classList.add('mention')
-        div.innerText = `@${content} `;
+        if (user) {
+            div.classList.add('mention')
+            div.innerText = `@${user.displayName} `;
+        } else {
+            div.innerText = `<@userId:${content}>`;
+        }
         return div;
     }
 
     #roleAtPart(content) {
+        const role = RVC.room.currentRoles.find(r => r.id === content);
         const div = document.createElement('span')
-        div.classList.add('mention')
-        div.innerText = `@${content} `;
+        if (role) {
+            div.classList.add('mention')
+            div.innerText = `@${role.name} `;
+        } else {
+            div.innerText = `<@roleId:${content}>`;
+        }
         return div;
+    }
+
+    /**
+     * Intercepts Backspace so that deleting right after a `<@userId:...>` or
+     * `<@&roleId:...>` mention removes the whole token instead of one raw character.
+     */
+    #handleKeyDown(e) {
+        switch (e.key) {
+            case 'Backspace': return this.#handleBackspace(e);
+            case 'Delete':    return this.#handleDelete(e);
+            case 'ArrowLeft': return this.#handleArrowStep(e, -1);
+            case 'ArrowRight':return this.#handleArrowStep(e, 1);
+        }
+    }
+
+    #handleBackspace(e) {
+        const start = this.textInput.selectionStart;
+        const end = this.textInput.selectionEnd;
+        if (start !== end) return; // there's a selection, let the browser handle it normally
+
+        const value = this.textInput.value;
+        const mention = this.#findMentionEndingAt(value, start);
+        if (!mention) return;
+
+        e.preventDefault();
+        this.#deleteRange(mention.start, end);
+    }
+
+    #handleDelete(e) {
+        const start = this.textInput.selectionStart;
+        const end = this.textInput.selectionEnd;
+        if (start !== end) return; // there's a selection, let the browser handle it normally
+
+        const value = this.textInput.value;
+        const mention = this.#findMentionStartingAt(value, start);
+        if (!mention) return;
+
+        e.preventDefault();
+        this.#deleteRange(start, mention.end);
+    }
+
+    /**
+     * Left/Right arrow: if the plain next-character move would land the caret
+     * strictly inside a mention, jump clean over the whole tag instead so the
+     * caret can only ever rest at a mention's start or end.
+     */
+    #handleArrowStep(e, delta) {
+        if (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) return; // leave selection/word-jump to the browser
+        const start = this.textInput.selectionStart;
+        const end = this.textInput.selectionEnd;
+        if (start !== end) return; // leave collapsing a selection to the browser
+
+        const value = this.textInput.value;
+        const mention = this.#findMentionAt(value, start + delta);
+        if (!mention) return;
+
+        e.preventDefault();
+        const target = delta < 0 ? mention.start : mention.end;
+        this.textInput.setSelectionRange(target, target);
+        this.#syncMessage();
+    }
+
+    #deleteRange(start, end) {
+        const value = this.textInput.value;
+        this.textInput.value = value.slice(0, start) + value.slice(end);
+        this.textInput.setSelectionRange(start, start);
+        this.#syncMessage();
+    }
+
+    /**
+     * Looks for a userAt/roleAt mention whose match ends exactly at `pos` in `value`.
+     * Returns {start, end} of the mention (raw markdown, e.g. `<@userId:...>`) or null.
+     */
+    #findMentionEndingAt(value, pos) {
+        return this.#findMention(value, (s, e) => e === pos);
+    }
+
+    /**
+     * Looks for a userAt/roleAt mention whose match starts exactly at `pos` in `value`.
+     */
+    #findMentionStartingAt(value, pos) {
+        return this.#findMention(value, (s) => s === pos);
+    }
+
+    /**
+     * Looks for a userAt/roleAt mention that strictly contains `pos` (not counting
+     * its own start/end boundaries).
+     */
+    #findMentionAt(value, pos) {
+        return this.#findMention(value, (s, e) => pos > s && pos < e);
+    }
+
+    #findMention(value, predicate) {
+        for (const re of [userAt, roleAt]) {
+            re.lastIndex = 0;
+            let match;
+            while ((match = re.exec(value)) !== null) {
+                const matchStart = match.index;
+                const matchEnd = matchStart + match[0].length;
+                if (predicate(matchStart, matchEnd)) {
+                    return { start: matchStart, end: matchEnd };
+                }
+                if (match[0].length === 0) re.lastIndex++;
+            }
+        }
+        return null;
     }
 
     #handlePreviewClick(e) {

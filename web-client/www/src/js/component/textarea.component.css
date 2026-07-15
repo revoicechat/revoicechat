@@ -1,3 +1,16 @@
+:host {
+    display: block;
+    position: relative;
+}
+
+.hidden {display: none!important;}
+
+#text-input {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+}
+
 #text-preview {
     width: -webkit-fill-available;
     cursor: text;
@@ -10,6 +23,41 @@
     border-radius: 5px;
     padding: 0 1rem;
     font-family: sans-serif;
+}
+
+.mention-list {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(100% + 0.5rem);
+    z-index: 20;
+    background-color: var(--pri-bg-color);
+    padding: 0.6rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    max-height: 10rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    animation: mention-pop-in 0.12s ease-out;
+}
+
+.mention-list-item {
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    color: var(--pri-text-color);
+    font-family: sans-serif;
+    cursor: pointer;
+}
+
+.mention-list-item:hover {
+    background-color: var(--green-background);
+}
+
+@keyframes mention-pop-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .placeholder {
@@ -31,6 +79,18 @@
     width: 1rem;
     height: 1rem;
     display: inline;
+}
+
+.mention {
+    background-color: var(--green-text);
+    padding: 0.25rem;
+    border-radius: 8px;
+    margin-right: 5px;
+}
+
+.mention:hover {
+    cursor: pointer;
+    background-color: var(--green-background);
 }
 
 @keyframes blink {

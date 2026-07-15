@@ -129,7 +129,7 @@ class EmojiPicker {
 async function initCustomGeneral(picker) {
     /** @type {EmoteRepresentation[]} */
     const emojis = await CoreServer.fetch(`/emote/global`);
-    initCustomEmojiCategory(picker, EmojiPicker.CUSTOM_GENERAL,
+    await initCustomEmojiCategory(picker, EmojiPicker.CUSTOM_GENERAL,
         '<img src="src/img/favicon.png" alt="revoice"/>',
         Array.from(emojis).map(emoji => {
             return {
@@ -146,7 +146,7 @@ async function initCustomServer(picker) {
     if (RVC.server.id) {
         /** @type {EmoteRepresentation[]} */
         const emojis = await CoreServer.fetch(`/emote/server/${RVC.server.id}`);
-        initCustomEmojiCategory(picker, EmojiPicker.CUSTOM_SERVER,
+        await initCustomEmojiCategory(picker, EmojiPicker.CUSTOM_SERVER,
             '🏠',
             Array.from(emojis).map(emoji => {
                 return {
@@ -163,7 +163,7 @@ async function initCustomServer(picker) {
 async function initCustomUser(picker) {
     /** @type {EmoteRepresentation[]} */
     const emojis = await CoreServer.fetch(`/emote/me`);
-    initCustomEmojiCategory(picker, EmojiPicker.CUSTOM_PERSO,
+    await initCustomEmojiCategory(picker, EmojiPicker.CUSTOM_PERSO,
         `<img class="emoji ${RVC.user.id}"
                    src="${MediaServer.profiles(RVC.user.id)}"
                    data-id="${RVC.user.id}"
@@ -180,7 +180,7 @@ async function initCustomUser(picker) {
     )
 }
 
-function initCustomEmojiCategory(picker, name, icon, emojis) {
+async function initCustomEmojiCategory(picker, name, icon, emojis) {
     const emojiCategory = {
         icon: icon,
         emojis: []
