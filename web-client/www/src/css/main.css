@@ -813,6 +813,8 @@ svg {
     padding: 0.75rem;
     height: 4rem;
     border-top-width: 1px;
+    border-radius: 20px;
+    margin: 0 0.35rem 0.35rem;
 }
 
 .status-bloc-1 {
@@ -1769,3 +1771,7 @@ summary::marker {
 
 .mp-total-moderation {border-left-color: var(--total-moderation-color);}
 .mp-total-moderation .mp-stat-value {color: var(--total-moderation-color);}
+
+revoice-textarea {
+    width: -webkit-fill-available;
+}

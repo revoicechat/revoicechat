@@ -117,7 +117,7 @@ class MessageComponent extends HTMLElement {
         const slottedElements = textPatternsSlot.assignedElements();
         for (const element of slottedElements) {
             if (element.tagName === 'SCRIPT' && element.type === 'application/json') {
-                this.textPatterns = JSON.parse(element.textContent)
+                this.textPatterns = element.textContent.trim() ? JSON.parse(element.textContent.trim()) : []
                 break;
             }
         }

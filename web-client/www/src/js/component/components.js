@@ -10,3 +10,4 @@ import './opengraph.component.js';
 import './theme.component.js';
 import './server.roles.component.js';
 import './status.dot.component.js';
+import './textarea.component.js';

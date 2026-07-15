@@ -1,0 +1,39 @@
+#text-preview {
+    width: -webkit-fill-available;
+    cursor: text;
+    min-height: 3rem;
+    margin: 0;
+    background-color: var(--ter-bg-color);
+    color: var(--pri-text-color);
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    padding: 0 1rem;
+    font-family: sans-serif;
+}
+
+.placeholder {
+    color: var(--pri-placeholder-color)!important;
+}
+
+.cursor-caret {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: currentColor;
+    vertical-align: text-bottom;
+    margin: 0 -1px;
+    pointer-events: none;
+    animation: blink 1s step-end infinite;
+}
+
+.emoji {
+    width: 1rem;
+    height: 1rem;
+    display: inline;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}

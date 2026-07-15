@@ -101,6 +101,7 @@ export default class UserSettingsController {
     #loadTheme(storedSettings) {
         if (storedSettings.theme) {
             this.#theme = storedSettings.theme;
+            this.#loadInTextarea();
         }
     }
 
@@ -440,11 +441,18 @@ export default class UserSettingsController {
         for (const elt of document.querySelectorAll("revoice-message")) {
             elt.dataset.theme = theme;
         }
+        this.#loadInTextarea();
         document.documentElement.dataset.theme = theme;
         for (const elt of document.querySelectorAll(`revoice-theme-preview`)) {
             elt.parentElement.disabled = false
         }
         document.querySelector(`revoice-theme-preview[theme="${theme}"]`).parentElement.disabled = true;
+    }
+
+    #loadInTextarea() {
+        for (const elt of document.querySelectorAll("revoice-textarea")) {
+            elt.dataset.theme = this.#theme;
+        }
     }
 
     #emoteLoad() {
