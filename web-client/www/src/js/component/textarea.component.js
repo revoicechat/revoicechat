@@ -237,16 +237,26 @@ class TextareaComponent extends HTMLElement {
     }
 
     #userAtPart(content) {
+        const user = RVC.room.currentUsers.find(u => u.id === content);
         const div = document.createElement('span')
-        div.classList.add('mention')
-        div.innerText = `@${content} `;
+        if (user) {
+            div.classList.add('mention')
+            div.innerText = `@${user.displayName} `;
+        } else {
+            div.innerText = `<@userId:${content}>`;
+        }
         return div;
     }
 
     #roleAtPart(content) {
+        const role = RVC.room.currentRoles.find(r => r.id === content);
         const div = document.createElement('span')
-        div.classList.add('mention')
-        div.innerText = `@${content} `;
+        if (role) {
+            div.classList.add('mention')
+            div.innerText = `@${role.name} `;
+        } else {
+            div.innerText = `<@roleId:${content}>`;
+        }
         return div;
     }
 

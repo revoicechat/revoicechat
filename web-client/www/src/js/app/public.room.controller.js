@@ -12,6 +12,11 @@ export default class PublicRoom extends RoomController{
     voiceController;
     #serverId;
 
+    /** @type {UserRepresentation[]} */
+    currentUsers = []
+    /** @type {ServerRoleRepresentation[]} */
+    currentRoles = []
+
     /**
      * @param {UserController} user
      */
@@ -226,6 +231,9 @@ export default class PublicRoom extends RoomController{
         const users = await CoreServer.fetch(`/room/${this.id}/user`, 'GET');
         /** @type {ServerRoleRepresentation[]} */
         const roles = await CoreServer.fetch(`/server/${this.#serverId}/role`, 'GET');
+
+        this.currentRoles = roles ?? []
+        this.currentUsers = users?.allUser ?? []
 
         const excludedUsers = [];
         const offlineUsers = [];

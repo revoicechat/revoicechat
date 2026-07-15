@@ -33,6 +33,18 @@
     display: inline;
 }
 
+.mention {
+    background-color: var(--green-text);
+    padding: 0.25rem;
+    border-radius: 8px;
+    margin-right: 5px;
+}
+
+.mention:hover {
+    cursor: pointer;
+    background-color: var(--green-background);
+}
+
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50%       { opacity: 0; }

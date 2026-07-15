@@ -1,6 +1,8 @@
 import {EmojiPicker, initCustomGeneral, initCustomServer, initCustomUser} from "../component/emoji.component.js";
 
 const emojiPicker = new EmojiPicker();
+let customEmoji = [];
+
 emojiPicker.init().then(async () => {
     await initPicker()
     const pickerContainer = document.getElementById('emoji-picker');
@@ -35,6 +37,7 @@ async function initPicker() {
     const pickerContainer = document.getElementById('emoji-picker');
     pickerContainer.querySelector('#emoji-picker-content')?.remove();
     pickerContainer.appendChild(emojiPicker.create());
+    initCustomEmoji()
 }
 
 function handlePickerForMessage(emoji) {
@@ -49,12 +52,16 @@ function handlePickerForMessage(emoji) {
     messageInput.selectionStart = messageInput.selectionEnd = cursorPos + emojiText.length;
 }
 
-function getCustomEmoji() {
-    return [
+function initCustomEmoji() {
+    customEmoji = [
         ...emojiPicker.categories[EmojiPicker.CUSTOM_PERSO].emojis,
         ...emojiPicker.categories[EmojiPicker.CUSTOM_SERVER].emojis,
         ...emojiPicker.categories[EmojiPicker.CUSTOM_GENERAL].emojis
     ]
+}
+
+function getCustomEmoji() {
+    return customEmoji
 }
 
 export {reloadEmojis, getCustomEmoji, emojiPicker}
