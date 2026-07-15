@@ -1,3 +1,10 @@
+/**
+ * Voice Crypto
+ * Structure :
+ * [  12 bytes ] Initiation Vector
+ * [  X bytes  ] Payload
+ */
+
 export class VoiceCrypto {
     #key;
 
