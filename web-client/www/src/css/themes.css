@@ -341,12 +341,6 @@ body {
     background-color: var(--sec-bg-color);
 }
 
-/* Status */
-.status-container {
-    border-color: var(--pri-bd-color);
-    background-color: var(--ter-bg-color);
-}
-
 .status-bloc-1 .status {
     color: var(--pri-placeholder-color);
 }
@@ -370,7 +364,7 @@ body {
 /* Voice control */
 .voice-control {
     border-color: var(--pri-bd-color);
-    background-color: var(--ter-bg-color);
+    /*background-color: var(--ter-bg-color);*/
 }
 
 .voice-control .element .disconnected {

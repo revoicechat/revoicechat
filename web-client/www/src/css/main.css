@@ -693,7 +693,7 @@ svg {
     justify-content: flex-end;
     padding: 0.75rem;
     height: 4rem;
-    border-top-width: 1px;
+    border-bottom-width: 1px;
 }
 
 .voice-control .element {
@@ -805,16 +805,20 @@ svg {
     fill: var(--pri-bg-color) !important;
 }
 
-/* STATUS */
+.control-pannel {
+    border-color: var(--pri-bd-color);
+    background-color: var(--ter-bg-color);
+    border-top-width: 1px;
+    border-radius: 20px;
+    margin: 0 0.35rem 0.35rem;
+}
 
+/* STATUS */
 .status-container {
     display: flex;
     align-items: center;
     padding: 0.75rem;
     height: 4rem;
-    border-top-width: 1px;
-    border-radius: 20px;
-    margin: 0 0.35rem 0.35rem;
 }
 
 .status-bloc-1 {
@@ -1774,4 +1778,7 @@ summary::marker {
 
 revoice-textarea {
     width: -webkit-fill-available;
+}
+revoice-message {
+    overflow: visible;
 }

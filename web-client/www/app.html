@@ -105,48 +105,50 @@
                 <!-- Room List -->
                 <div class="rooms scrollbar" id="rooms"></div>
 
-                <!-- Voice control -->
-                <div class="voice-control hidden" id="voice-control-panel">
-                    <div class="element">
-                        <button id="stream-webcam" title="Enable your camera" data-i18n-title="voice.camera.enable">
-                            <revoice-icon-camera></revoice-icon-camera>
-                        </button>
+                <div class="control-pannel">
+                    <!-- Voice control -->
+                    <div class="voice-control hidden" id="voice-control-panel">
+                        <div class="element">
+                            <button id="stream-webcam" title="Enable your camera" data-i18n-title="voice.camera.enable">
+                                <revoice-icon-camera></revoice-icon-camera>
+                            </button>
+                        </div>
+                        <div class="element">
+                            <button id="stream-display" title="Share your screen" data-i18n-title="voice.screen.share">
+                                <revoice-icon-display></revoice-icon-display>
+                            </button>
+                        </div>
+                        <div class="element">
+                            <button id="voice-self-mute" title="Mute" data-i18n-title="voice.mute">
+                                <revoice-icon-microphone></revoice-icon-microphone>
+                            </button>
+                        </div>
+                        <div class="element">
+                            <button id="voice-self-deaf" title="Deaf" data-i18n-title="voice.deaf">
+                                <revoice-icon-speaker></revoice-icon-speaker>
+                            </button>
+                        </div>
+                        <div class="element hidden" id="ban-voice" data-i18n="ban.sanctioned"></div>
+                        <div class="element">
+                            <button id="voice-join-action" class="connect join">[JOIN]</button>
+                        </div>
                     </div>
-                    <div class="element">
-                        <button id="stream-display" title="Share your screen" data-i18n-title="voice.screen.share">
-                            <revoice-icon-display></revoice-icon-display>
-                        </button>
-                    </div>
-                    <div class="element">
-                        <button id="voice-self-mute" title="Mute" data-i18n-title="voice.mute">
-                            <revoice-icon-microphone></revoice-icon-microphone>
-                        </button>
-                    </div>
-                    <div class="element">
-                        <button id="voice-self-deaf" title="Deaf" data-i18n-title="voice.deaf">
-                            <revoice-icon-speaker></revoice-icon-speaker>
-                        </button>
-                    </div>
-                    <div class="element hidden" id="ban-voice" data-i18n="ban.sanctioned"></div>
-                    <div class="element">
-                        <button id="voice-join-action" class="connect join">[JOIN]</button>
-                    </div>
-                </div>
 
-                <!-- Status -->
-                <div id="status-container" class="status-container">
-                    <div class="status-bloc-1">
-                        <div class="relative">
-                            <img id="user-picture" alt="PFP" class="icon" />
-                            <revoice-status-dot id="user-dot" color="gray"></revoice-status-dot>
+                    <!-- Status -->
+                    <div id="status-container" class="status-container">
+                        <div class="status-bloc-1">
+                            <div class="relative">
+                                <img id="user-picture" alt="PFP" class="icon" />
+                                <revoice-status-dot id="user-dot" color="gray"></revoice-status-dot>
+                            </div>
+                            <div class="user">
+                                <h2 class="name" id="user-name">[USERNAME]</h2>
+                                <p class="status" id="user-status">[USER STATUS]</p>
+                            </div>
                         </div>
-                        <div class="user">
-                            <h2 class="name" id="user-name">[USERNAME]</h2>
-                            <p class="status" id="user-status">[USER STATUS]</p>
+                        <div class="pull-right">
+                            <button id="user-setting-open"><revoice-icon-cog-6></revoice-icon-cog-6></button>
                         </div>
-                    </div>
-                    <div class="pull-right">
-                        <button id="user-setting-open"><revoice-icon-cog-6></revoice-icon-cog-6></button>
                     </div>
                 </div>
             </div>
