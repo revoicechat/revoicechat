@@ -3,8 +3,10 @@ const code      = /`([^`]+)`/g;
 const bold      = /\*\*(.+?)\*\*/g;
 const italic    = /(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g;
 const emote     = /:(\w+):/g;
-const userAt    = /<@userId:([0-9a-fA-F\-]{36})>/g;
-const roleAt    = /<@&roleId:([0-9a-fA-F\-]{36})>/g;
+const userAt    = /<@userId:([0-9a-fA-F-]{36})>/g;
+const roleAt    = /<@&roleId:([0-9a-fA-F-]{36})>/g;
+
+const messagePlaceholder = "Send a message";
 
 const textPatterns = [
     {type: 'codeBlock', regexp: codeBlock, groups: ['lang', 'content'] },
@@ -79,6 +81,7 @@ class TextareaComponent extends HTMLElement {
     #syncMessage() {
         this.#cursorPos = this.textInput.selectionStart;
         this.#render();
+        this.#updatePlaceholder(true)
     }
 
     #render() {
@@ -108,22 +111,29 @@ class TextareaComponent extends HTMLElement {
     }
 
     #renderPart(part) {
+        let el;
         switch (part.type) {
-            case 'text':      return this.#textPart(part.content);
-            case 'codeBlock': return this.#codeBlockPart(part.content, part.lang);
-            case 'code':      return this.#codePart(part.content);
-            case 'bold':      return this.#boldPart(part.content);
-            case 'italic':    return this.#italicPart(part.content);
-            case 'emote':     return this.#emotePart(part.content);
-            case 'userAt':    return this.#userAtPart(part.content);
-            case 'roleAt':    return this.#roleAtPart(part.content);
+            case 'text':      el = this.#textPart(part.content); break;
+            case 'codeBlock': el = this.#codeBlockPart(part.content, part.lang); break;
+            case 'code':      el = this.#codePart(part.content); break;
+            case 'bold':      el = this.#boldPart(part.content); break;
+            case 'italic':    el = this.#italicPart(part.content); break;
+            case 'emote':     el = this.#emotePart(part.content); break;
+            case 'userAt':    el = this.#userAtPart(part.content); break;
+            case 'roleAt':    el = this.#roleAtPart(part.content); break;
         }
+        el._rawLength = part._rawLength;
+        return el;
     }
 
-    #updatePlaceholder() {
+    #updatePlaceholder(withCaret = false) {
         this.textPreview.classList.remove('placeholder')
         if (!this.textInput.value) {
-            this.textPreview.innerHTML = `Send a message`;
+            if (withCaret) {
+                this.textPreview.innerHTML = `<span class="cursor-caret"></span>${messagePlaceholder}`
+            } else {
+                this.textPreview.innerHTML = messagePlaceholder;
+            }
             this.textPreview.classList.add('placeholder')
         }
     }
@@ -233,15 +243,7 @@ class TextareaComponent extends HTMLElement {
         for (const child of children) {
             if (child.classList?.contains('cursor-caret')) continue;
             if (child === e.target || child.contains?.(e.target)) {
-                // Drill inside this element to get sub-offset
-                let innerOffset = 0;
-                const caret = document.caretRangeFromPoint?.(e.clientX, e.clientY)
-                    ?? document.caretPositionFromPoint?.(e.clientX, e.clientY);
-                if (caret) {
-                    const node   = caret.startContainer ?? caret.offsetNode;
-                    const offset = caret.startOffset    ?? caret.offset;
-                    innerOffset  = this.#innerTextOffset(child, node, offset);
-                }
+                const innerOffset = this.#offsetWithinElement(child, e.clientX, e.clientY);
                 rawOffset += Math.min(innerOffset, child._rawLength ?? 0);
                 break;
             }
@@ -250,88 +252,80 @@ class TextareaComponent extends HTMLElement {
 
         this.textInput.focus();
         this.textInput.setSelectionRange(rawOffset, rawOffset);
+        this.#syncMessage();
     }
 
-    #innerTextOffset(root, targetNode, offset) {
-        if (root === targetNode) return offset;
+    /**
+     * Finds the closest character offset to (x, y) within `root`.
+     *
+     * We deliberately avoid {@link document.caretRangeFromPoint} / {@link document.caretPositionFromPoint} here:
+     * Both are unreliable across a shadow DOM boundary — in Chrome and
+     * Firefox they frequently resolve to the shadow host element instead of the
+     * actual text node inside the shadow tree, which silently breaks offset
+     * lookups (the caller can't find the returned node inside `root`, so it
+     * falls back to "end of element" every time). Since we already know which
+     * child was clicked (via {@link e.target}), we hit-test per character instead using
+     * {@link Range.getBoundingClientRect()}, which works fine on nodes we already hold
+     * a reference to, shadow DOM or not.
+     */
+    #offsetWithinElement(root, x, y) {
         const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
         let count = 0, n;
+        let closest = { dist: Infinity, offset: 0 };
+
         while ((n = walker.nextNode())) {
-            if (n === targetNode) {
-                return count + offset;
+            const result = this.#scanTextNode(n, x, y, count);
+            if (result.exact !== null) {
+                return result.exact;
+            }
+            if (result.closest.dist < closest.dist) {
+                closest = result.closest;
             }
             count += n.textContent.length;
         }
-        return count;
+        return closest.dist === Infinity ? count : closest.offset;
     }
 
-    #updateCursor() {
-        this.#removeCursor();
-        const pos = this.textInput.selectionStart;
-        if (pos === null || !this.textInput.matches(':focus')) return;
-        let remaining = pos;
-        const children = Array.from(this.textPreview.childNodes);
-        for (let i = 0; i < children.length; i++) {
-            const child = children[i];
-            if (child.classList?.contains('cursor-caret')) continue;
-            const len = child._rawLength ?? child.textContent.length;
-            const isLast = (i === children.length - 1);
-            // Enter this element if cursor is inside it, or it's the last one
-            if (remaining < len || (isLast && remaining <= len)) {
-                this.#insertCursorInElement(child, remaining);
-                return;
+    /** Scans a single text node character-by-character for a hit at (x, y).
+     *  `base` is the running offset of this node's start within the root element. */
+    #scanTextNode(node, x, y, base) {
+        const range = document.createRange();
+        const text = node.textContent;
+        let closest = { dist: Infinity, offset: base };
+
+        for (let i = 0; i < text.length; i++) {
+            const rect = this.#charRect(range, node, i);
+            if (!rect) continue;
+
+            const mid = rect.left + rect.width / 2;
+            const onLine = y >= rect.top && y <= rect.bottom;
+
+            if (onLine && x <= mid) {
+                return { exact: base + i, closest };
             }
-            remaining -= len;
-        }
-        const caret = this.#makeCaret();
-        this.textPreview.appendChild(caret);
-    }
-
-    #insertCursorInElement(el, charOffset) {
-        if (el.childNodes.length === 1 && el.childNodes[0].nodeType === Node.TEXT_NODE) {
-            const textNode = el.childNodes[0];
-            const range = document.createRange();
-            const offset = Math.min(charOffset, textNode.textContent.length);
-            range.setStart(textNode, offset);
-            range.collapse(true);
-            range.insertNode(this.#makeCaret());
-            return;
-        }
-        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-        let remaining = charOffset;
-        let n;
-        while ((n = walker.nextNode())) {
-            const len = n.textContent.length;
-            if (remaining <= len) {
-                const range = document.createRange();
-                range.setStart(n, remaining);
-                range.collapse(true);
-                range.insertNode(this.#makeCaret());
-                return;
+            if (onLine && x <= rect.right) {
+                return { exact: base + i + 1, closest };
             }
-            remaining -= len;
+
+            const dist = Math.hypot(x - mid, y - (rect.top + rect.height / 2));
+            if (dist < closest.dist) {
+                closest = { dist, offset: x <= mid ? base + i : base + i + 1 };
+            }
         }
-        el.appendChild(this.#makeCaret());
+        return { exact: null, closest };
     }
 
-    #makeCaret() {
-        const caret = document.createElement('span');
-        caret.className = 'cursor-caret';
-        return caret;
+    /** Bounding rect of the single character at offset `i` in `node`, or null if empty. */
+    #charRect(range, node, i) {
+        range.setStart(node, i);
+        range.setEnd(node, i + 1);
+        const rect = range.getBoundingClientRect();
+        return (rect.width || rect.height) ? rect : null;
     }
 
     #removeCursor() {
         this.shadowRoot.querySelectorAll('.cursor-caret').forEach(el => el.remove());
     }
-}
-
-class MarkdownPart {
-    /** @type {"text"|"code"} */
-    type;
-    /** @type {string|null} */
-    lang;
-    /** @type {string} */
-    content;
 }
 
 customElements.define('revoice-textarea', TextareaComponent);
