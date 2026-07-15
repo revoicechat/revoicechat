@@ -61,6 +61,10 @@ class TextareaComponent extends HTMLElement {
         componentCssLink.href = "src/js/component/textarea.component.css";
         componentCssLink.rel = "stylesheet";
         this.shadowRoot.appendChild(componentCssLink);
+        const theme = document.createElement("link");
+        theme.href = "src/css/highlightjs/dark.css";
+        theme.rel = "stylesheet";
+        this.shadowRoot.appendChild(theme);
     }
 
     #initTextPreview() {

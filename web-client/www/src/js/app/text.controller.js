@@ -656,16 +656,16 @@ export default class TextController {
         CONTENT.setAttribute("url-preview", urlPreview && messageData?.messageUrlPreview?.toString())
         CONTENT.innerHTML = `
             <script type="application/json" slot="medias">
-                ${JSON.stringify(messageData.medias)}
+                ${messageData.medias ? JSON.stringify(messageData.medias) : ''}
             </script>
             <script type="text/markdown" slot="content">
                 ${messageData.text}
             </script>
             <script type="application/json" slot="reactions">
-                ${JSON.stringify(messageData.reactions)}
+                ${messageData.reactions ? JSON.stringify(messageData.reactions) : ''}
             </script>
             <script type="application/json" slot="textPatterns">
-                ${JSON.stringify(messageData.textPatterns)}
+                ${messageData.textPatterns ? JSON.stringify(messageData.textPatterns) : ''}
             </script>
         `;
         return CONTENT;
