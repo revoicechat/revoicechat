@@ -1,3 +1,6 @@
+import {renderEmojis} from "./emoji.component.js";
+import {getCustomEmoji} from "../app/emoji.js";
+
 const codeBlock = /^```(\w+)?\n([\s\S]*?)^```$/gm
 const code      = /`([^`]+)`/g;
 const bold      = /\*\*(.+?)\*\*/g;
@@ -178,6 +181,7 @@ class TextareaComponent extends HTMLElement {
     #textPart(content) {
         const text = document.createElement('span')
         text.innerText = content;
+        renderEmojis(text)
         return text;
     }
 
@@ -221,9 +225,14 @@ class TextareaComponent extends HTMLElement {
     }
 
     #emotePart(content) {
+        const customEmote = getCustomEmoji().find(e => e.data === `:${content}:`)
         const div = document.createElement('span')
+        if (customEmote) {
+            div.innerHTML = customEmote.content;
+        } else {
+            div.innerText = `:${content}:`;
+        }
         div.classList.add('emote')
-        div.innerText = `:${content}:`;
         return div;
     }
 

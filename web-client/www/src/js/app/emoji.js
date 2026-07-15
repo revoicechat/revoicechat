@@ -49,5 +49,12 @@ function handlePickerForMessage(emoji) {
     messageInput.selectionStart = messageInput.selectionEnd = cursorPos + emojiText.length;
 }
 
+function getCustomEmoji() {
+    return [
+        ...emojiPicker.categories[EmojiPicker.CUSTOM_PERSO].emojis,
+        ...emojiPicker.categories[EmojiPicker.CUSTOM_SERVER].emojis,
+        ...emojiPicker.categories[EmojiPicker.CUSTOM_GENERAL].emojis
+    ]
+}
 
-export {reloadEmojis, emojiPicker}
+export {reloadEmojis, getCustomEmoji, emojiPicker}
