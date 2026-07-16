@@ -1,7 +1,7 @@
 import {containsOnlyEmotes, countEmotes} from "../lib/emote.utils.js";
 import MediaServer from "../app/media/media.server.js";
 import CoreServer from "../app/core/core.server.js";
-import {isUUID} from "../lib/string.utils.js";
+import {isUUID, isValidGifUrl} from "../lib/string.utils.js";
 import {renderEmojis} from "./emoji.component.js";
 import Modal from "./modal.component.js";
 import {sanitizeHtml} from "../lib/tools.js";
@@ -137,7 +137,7 @@ class MessageComponent extends HTMLElement {
         this.shadowRoot.appendChild(link);
     }
 
-    #render() {
+    async #render() {
         const contentDiv = this.shadowRoot.getElementById('content');
 
         // Check if there's slotted content
@@ -166,6 +166,8 @@ class MessageComponent extends HTMLElement {
                     } else {
                         contentDiv.classList.add('only-emoji')
                     }
+                } else if (isValidGifUrl(this.markdown)) {
+                    contentDiv.innerHTML = `<img src="${this.markdown}" alt="gif"/>`
                 } else {
                     let htmlContent = marked.parse(this.#removeTags(this.markdown));
                     htmlContent = this.#injectTextPattern(htmlContent);
