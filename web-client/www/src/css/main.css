@@ -1687,7 +1687,7 @@ summary::marker {
     cursor: pointer;
 }
 
-#overlay-setting-user-picture {
+#overlay-setting-server-picture, #overlay-setting-user-picture {
     height: 5rem;
     width: 5rem;
     display: flex;
@@ -1699,7 +1699,7 @@ summary::marker {
     transition: 0.2s ease;
 }
 
-#overlay-setting-user-picture:hover {
+#overlay-setting-server-picture:hover, #overlay-setting-user-picture:hover {
     opacity: 1;
 }
 
