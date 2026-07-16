@@ -20,7 +20,7 @@
 *
 */
 
-const UNSUPPORTED_ERROR = "Unsupported image type",
+const UNSUPPORTED_ERROR = "Unsupported image type";
 
 class SimpleImage
 {
@@ -80,7 +80,7 @@ class SimpleImage
         }
     }
 
-    private function output()
+    public function output()
     {
         switch ($this->image_type) {
             case IMAGETYPE_JPEG:
