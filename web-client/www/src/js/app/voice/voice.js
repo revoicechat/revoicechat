@@ -1,6 +1,6 @@
 import Codec from "../utils/codec.js";
 import Listener from "./voice.listener.js";
-import { EncodedVoice, DecodedVoice } from "./voice.transport.js";
+import { EncodedVoiceTransport, DecodedVoiceTransport } from "./voice.transport.js";
 import { VoiceCrypto } from "./voice.crypto.js";
 
 export default class VoiceCall {
@@ -103,7 +103,7 @@ export default class VoiceCall {
         await this.#encodeAudio();
 
         // Setup receiver and decoder
-        this.#socket.onmessage = async (message) => { await this.#decodeAudio(new DecodedVoice(await this.#voiceCrypto.decrypt(message.data))) }
+        this.#socket.onmessage = async (message) => { await this.#dispatchAudio(new DecodedVoiceTransport(await this.#voiceCrypto.decrypt(message.data))) }
 
         // Setup main output gain
         this.#outputGain = this.#audioContext.createGain();
@@ -277,7 +277,7 @@ export default class VoiceCall {
             output: (chunk) => {
                 if (this.#socket.readyState === WebSocket.OPEN) { 
                     this.#voiceCrypto.encrypt(
-                        new EncodedVoice(Math.round(this.#audioTimestamp / 1000), this.#user.id, this.#gateState, EncodedVoice.user, chunk, false).data
+                        new EncodedVoiceTransport(Math.round(this.#audioTimestamp / 1000), this.#user.id, this.#gateState, EncodedVoiceTransport.user, chunk, false).data
                     ).then((res) => this.#socket.send(res));
                 }
             },
@@ -428,9 +428,9 @@ export default class VoiceCall {
         }
     }
 
-    async #decodeAudio(decodedVoice) {
-        const userId = decodedVoice.user.id;
-        const userType = decodedVoice.user.type;
+    async #dispatchAudio(decodedVoiceTransport) {
+        const userId = decodedVoiceTransport.user.id;
+        const userType = decodedVoiceTransport.user.type;
 
         // User has no settings yet
         if (!this.#settings.users[userId]) {
@@ -439,7 +439,7 @@ export default class VoiceCall {
 
         // User has no Listener yet
         if (!this.#users[userId]) {
-            const listenerCodec = (userType === EncodedVoice.music ? Codec.DEFAULT_VOICE_MUSIC : Codec.DEFAULT_VOICE_USER);
+            const listenerCodec = (userType === EncodedVoiceTransport.music ? Codec.DEFAULT_VOICE_MUSIC : Codec.DEFAULT_VOICE_USER);
             const isSupported = (await AudioDecoder.isConfigSupported(listenerCodec)).supported;
             if (isSupported) {
                 this.#users[userId] = new Listener(userId, this.#controller, listenerCodec, this.#settings.users[userId], this.#audioContext, this.#outputGain);
@@ -449,6 +449,6 @@ export default class VoiceCall {
         }
 
         // Decode audio through Listener
-        this.#users[userId].decodeAudio(decodedVoice, this.#settings.self.deaf);
+        this.#users[userId].decodeAudio(decodedVoiceTransport, this.#settings.self.deaf);
     }
 }
