@@ -2,6 +2,7 @@ package fr.revoicechat.core.service.user;
 
 import static fr.revoicechat.core.model.InvitationType.APPLICATION_JOIN;
 import static fr.revoicechat.core.nls.UserErrorCode.*;
+import static java.time.Clock.systemDefaultZone;
 import static java.util.function.Predicate.not;
 
 import java.time.OffsetDateTime;
@@ -81,7 +82,7 @@ public class UserService {
   private NewUser generateUser(NewUserSignup signer, InvitationLink invitationLink, UserType type) {
     var user = new User();
     user.setId(UUID.randomUUID());
-    user.setCreatedDate(OffsetDateTime.now());
+    user.setCreatedDate(OffsetDateTime.now(systemDefaultZone()));
     user.setDisplayName(signer.username());
     user.setLogin(signer.username());
     user.setEmail(signer.email());

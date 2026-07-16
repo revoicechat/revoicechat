@@ -1,5 +1,7 @@
 package fr.revoicechat.core.service.room;
 
+import static java.time.Clock.systemDefaultZone;
+
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -60,7 +62,7 @@ public class RoomReadStatusService {
       roomReadStatus.setRoom(getRoom(roomId));
     }
     roomReadStatus.setLastMessageId(lastMessageId);
-    roomReadStatus.setLastReadAt(OffsetDateTime.now());
+    roomReadStatus.setLastReadAt(OffsetDateTime.now(systemDefaultZone()));
     entityManager.persist(roomReadStatus);
   }
 

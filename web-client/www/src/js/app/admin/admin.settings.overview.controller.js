@@ -1,9 +1,6 @@
 import CoreServer from "../core/core.server.js";
 
 export default class AdminSettingsOverviewController {
-    constructor() {
-
-    }
 
     async load() {
         const settings = await CoreServer.fetch("/settings")
