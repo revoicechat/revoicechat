@@ -3,6 +3,7 @@ import {i18n} from "../../lib/i18n.js";
 import CoreServer from "../core/core.server.js";
 import Modal from "../../component/modal.component.js";
 import MediaServer from "../media/media.server.js";
+import {copyToClipboard} from "../../lib/tools.js";
 
 export class ServerSettingsOverviewController {
     #newPictureFile = null;
@@ -18,6 +19,8 @@ export class ServerSettingsOverviewController {
         document.getElementById('server-setting-overview-uuid').innerText = this.serverSettings.server.id;
         document.getElementById('server-setting-overview-name').innerText = this.serverSettings.server.name;
         document.getElementById('server-setting-overview-name-input').value = this.serverSettings.server.name;
+        document.getElementById('server-setting-uuid-copy').addEventListener('click', () => copyToClipboard(this.serverSettings.server.id));
+        document.getElementById('overlay-setting-server-picture').addEventListener('click', () => document.getElementById("overview-server-picture-new").click());
 
         const settingServerPicture = document.getElementById("setting-server-picture");
         settingServerPicture.src = MediaServer.serverProfiles(this.serverSettings.server.id);
@@ -49,20 +52,24 @@ export class ServerSettingsOverviewController {
     }
 
     #addOverviewEventHandler() {
-        document.getElementById('server-setting-overview-name').classList.add('hidden');
         document.getElementById('server-setting-overview-name-input').classList.remove('hidden');
         const button = document.getElementById(`server-setting-overview-save`);
         button.classList.remove('hidden');
         button.onclick = () => this.#overviewSave();
 
-        const buttonUpload = document.getElementById(`server-overview-select-picture`);
-        buttonUpload.classList.remove('hidden');
-        buttonUpload.onclick = () => document.getElementById("overview-server-picture-new").click();;
+        document.getElementById("overview-server-picture-new").addEventListener("change", () => {
+            const file = document.getElementById("overview-server-picture-new").files[0];
+            if (file) {
+                this.#newPictureFile = file;
+                document.getElementById("overview-picture").value = file.name;
+                document.getElementById("setting-server-picture").src = URL.createObjectURL(file);
+                document.getElementById("setting-server-picture").style.display = "block";
+            }
+        });
 
     }
 
     #removeOverviewEventHandler() {
-        document.getElementById('server-setting-overview-name').classList.remove('hidden');
         document.getElementById('server-setting-overview-name-input').classList.add('hidden');
         const button = document.getElementById(`server-setting-overview-save`);
         button.classList.add('hidden');

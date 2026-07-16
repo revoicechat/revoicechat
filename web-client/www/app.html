@@ -257,17 +257,12 @@
                     <button class="sub-category hidden" id="server-setting-tab-invitations">
                         <revoice-icon-envelope></revoice-icon-envelope> <span data-i18n="server.invitations">Invitations</span>
                     </button>
-                </div>
-
-                <!-- Delete -->
-                <div class="category">
+                    <hr class="light-border">
+                    <!-- Delete -->
                     <button class="sub-category red background-darkred hidden" id="server-delete">
                         <revoice-icon-trash></revoice-icon-trash> <span data-i18n="server.delete">Delete</span>
                     </button>
-                </div>
-
-                <!-- Exit -->
-                <div class="category">
+                    <!-- Exit -->
                     <button class="sub-category" id="server-setting-close">
                         <revoice-icon-circle-x></revoice-icon-circle-x> <span data-i18n="common.exit">Exit</span>
                     </button>
@@ -281,19 +276,34 @@
                 <!-- Overview -->
                 <div class="hidden" id="server-setting-content-overview">
                     <h1 data-i18n="server.overview">Overview</h1>
-                    <p><span data-i18n="server.id">Server ID</span> : <span id="server-setting-overview-uuid" class="selectable">[SERVER UUID]</span></p>
+                    <p class="subtitle" data-i18n="server.overview.subtitle">Manage server profile</p>
 
+                    <p class="copiable-input">
+                        <button id="server-setting-uuid-copy" class="copy-button"><revoice-icon-clipboard></revoice-icon-clipboard></button>
+                        <code id="server-setting-overview-uuid" class="selectable">[SERVER UUID]</code>
+                    </p>
+                    <br />
+                    <div class="two-col-config">
+                        <div class="setting-user-picture">
+                            <div id="overlay-setting-server-picture">
+                                <revoice-icon-picture-camera></revoice-icon-picture-camera>
+                            </div>
+                            <img id="setting-server-picture" alt="Preview PFP" class="icon large-icon">
+                        </div>
+                        <div>
+                            <p id="server-setting-overview-name">[NAME]</p>
+                            <p class="subtitle" data-i18n="server.overview.picture.upload">Click the avatar to upload a photo</p>
+                        </div>
+                    </div>
                     <input type="file" id="overview-server-picture-new" accept="image/webp,image/png,image/jpg,image/jpeg,image/gif" style="display:none;">
                     <input type="hidden" id="overview-server-picture" name="imagePath">
-                    <img id="setting-server-picture" alt="Preview PFP" class="icon large-icon">
                     <br />
-                    <div class="config-buttons">
-                        <button class="button" id="server-overview-select-picture" data-i18n="server.picture.upload">Upload a server picture</button>
+                    <div>
+                        <label>
+                            <span data-i18n="server.name">Server name</span>
+                            <input type="text" id="server-setting-overview-name-input" value="[SERVER NAME]" class="hidden">
+                        </label>
                     </div>
-
-                    <h2 data-i18n="server.name">Server name</h2>
-                    <p><span id="server-setting-overview-name" class="selectable">[SERVER NAME]</span></p>
-                    <input type="text" id="server-setting-overview-name-input" value="[SERVER NAME]" class="hidden">
 
                     <button id="server-setting-overview-save" class="config-button hidden" data-i18n="common.save">Save</button>
                 </div>
