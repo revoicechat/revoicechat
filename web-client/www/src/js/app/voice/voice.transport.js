@@ -7,7 +7,7 @@
  * [  4 bytes ] Payload length (uint32)
  * [  X bytes ] Payload (voice)
  */
-export class EncodedVoice {
+export class EncodedVoiceTransport {
     static user = 0;
     static music = 1;
     
@@ -46,7 +46,7 @@ export class EncodedVoice {
     }
 }
 
-export class DecodedVoice {
+export class DecodedVoiceTransport {
     timestamp = null;
     user = {
         id: null,

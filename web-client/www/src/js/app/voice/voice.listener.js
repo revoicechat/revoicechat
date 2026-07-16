@@ -66,10 +66,10 @@ export default class Listener {
         this.#gainNode.gain.setValueAtTime(volume, this.#audioContext.currentTime);
     }
 
-    decodeAudio(decodedVoice, selfDeaf) {
-        const timestamp = decodedVoice.timestamp;
-        const gateState = decodedVoice.user.gateState;
-        const data = decodedVoice.data;
+    decodeAudio(decodedVoiceTransport, selfDeaf) {
+        const timestamp = decodedVoiceTransport.timestamp;
+        const gateState = decodedVoiceTransport.user.gateState;
+        const data = decodedVoiceTransport.data;
 
         // If user sending packet is locally muted OR we are deaf, we stop
         if (this.#muted || selfDeaf) {
