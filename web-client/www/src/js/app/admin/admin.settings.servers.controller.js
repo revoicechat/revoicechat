@@ -1,9 +1,6 @@
 import CoreServer from "../core/core.server.js";
 
 export default class AdminSettingsServersController {
-    constructor() {
-
-    }
 
     async load() {
         const servers = await CoreServer.fetch("/server")

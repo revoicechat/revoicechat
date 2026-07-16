@@ -1,6 +1,7 @@
 package fr.revoicechat.core.service.message;
 
 import static fr.revoicechat.core.model.MediaOrigin.ATTACHMENT;
+import static java.time.Clock.systemDefaultZone;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -77,8 +78,8 @@ public class MessageService {
     var message = new Message();
     message.setId(UUID.randomUUID());
     message.setText(newMessage.text());
-    message.setCreatedDate(OffsetDateTime.now());
-    message.setCreatedDate(OffsetDateTime.now());
+    message.setCreatedDate(OffsetDateTime.now(systemDefaultZone()));
+    message.setCreatedDate(OffsetDateTime.now(systemDefaultZone()));
     message.setReactions(new MessageReactions(new ArrayList<>()));
     message.setRoom(room);
     Optional.ofNullable(newMessage.answerTo())
@@ -104,7 +105,7 @@ public class MessageService {
     messageAuthorization.asserRisk(message, MessageRiskType.MESSAGE_UPDATE);
     messageValidation.isValid(message.getRoom().getId(), creation);
     message.setText(creation.text());
-    message.setUpdatedDate(OffsetDateTime.now());
+    message.setUpdatedDate(OffsetDateTime.now(systemDefaultZone()));
     entityManager.persist(message);
     return message;
   }

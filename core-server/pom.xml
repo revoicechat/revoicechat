@@ -29,16 +29,16 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <skipITs>true</skipITs>
     <compiler-plugin.version>3.15.0</compiler-plugin.version>
-    <quarkus.platform.version>3.35.2</quarkus.platform.version>
-    <surefire-plugin.version>3.5.5</surefire-plugin.version>
-    <io.smallrye.jandex.version>3.5.3</io.smallrye.jandex.version>
+    <quarkus.platform.version>3.37.3</quarkus.platform.version>
+    <surefire-plugin.version>3.5.6</surefire-plugin.version>
+    <io.smallrye.jandex.version>3.6.0</io.smallrye.jandex.version>
     <org.reflection.version>0.10.2</org.reflection.version>
     <org.jsoup.version>1.22.2</org.jsoup.version>
     <org.assertj.version>3.27.7</org.assertj.version>
     <org.jbcrypt.version>0.4</org.jbcrypt.version>
-    <google.zxing.version>3.5.3</google.zxing.version>
-    <jqno.equalsverifier.version>3.16.1</jqno.equalsverifier.version>
-    <common.codec.version>1.17.1</common.codec.version>
+    <google.zxing.version>3.5.4</google.zxing.version>
+    <jqno.equalsverifier.version>4.5</jqno.equalsverifier.version>
+    <common.codec.version>1.22.0</common.codec.version>
     <quarkus.test.coverage.enabled>true</quarkus.test.coverage.enabled>
     <sonar.coverage.jacoco.xmlReportPaths>../target/coverage/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
   </properties>

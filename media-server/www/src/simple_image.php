@@ -20,12 +20,14 @@
 *
 */
 
+const UNSUPPORTED_ERROR = "Unsupported image type",
+
 class SimpleImage
 {
-    var $image;
-    var $image_type;
+    public $image;
+    public $image_type;
 
-    function load($filename)
+    public function load($filename)
     {
         $image_info = getimagesize($filename);
         $this->image_type = $image_info[2];
@@ -48,12 +50,12 @@ class SimpleImage
                 break;
 
             default:
-                error_log("Unsupported image type");
+                error_log(UNSUPPORTED_ERROR);
                 break;
         }
     }
 
-    function save($filename, $compression = 75, $permissions = null)
+    public function save($filename, $compression = 75, $permissions = null)
     {
         switch ($this->image_type) {
             case IMAGETYPE_JPEG:
@@ -69,7 +71,7 @@ class SimpleImage
                 break;
 
             default:
-                error_log("Unsupported image type");
+                error_log(UNSUPPORTED_ERROR);
                 break;
         }
 
@@ -78,7 +80,7 @@ class SimpleImage
         }
     }
 
-    function output()
+    private function output()
     {
         switch ($this->image_type) {
             case IMAGETYPE_JPEG:
@@ -94,43 +96,43 @@ class SimpleImage
                 break;
 
             default:
-                error_log("Unsupported image type");
+                error_log(UNSUPPORTED_ERROR);
                 break;
         }
     }
 
-    function getWidth()
+    private function getWidth()
     {
         return imagesx($this->image);
     }
 
-    function getHeight()
+    private function getHeight()
     {
         return imagesy($this->image);
     }
 
-    function resizeToHeight(int $height)
+    public function resizeToHeight(int $height)
     {
         $ratio = $height / $this->getHeight();
         $width = intval($this->getWidth() * $ratio);
         $this->resize($width, $height);
     }
 
-    function resizeToWidth(int $width)
+    public function resizeToWidth(int $width)
     {
         $ratio = $width / $this->getWidth();
         $height = intval($this->getheight() * $ratio);
         $this->resize($width, $height);
     }
 
-    function scale($scale)
+    public function scale($scale)
     {
         $width =  intval($this->getWidth() * $scale / 100);
         $height = intval($this->getheight() * $scale / 100);
         $this->resize($width, $height);
     }
 
-    function resize(int $width, int $height)
+    public function resize(int $width, int $height)
     {
         $new_image = imagecreatetruecolor($width, $height);
 

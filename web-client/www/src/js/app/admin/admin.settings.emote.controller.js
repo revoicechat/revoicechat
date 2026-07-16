@@ -1,11 +1,8 @@
 import CoreServer from "../core/core.server.js";
 
 export class AdminSettingsEmoteController {
-    constructor() {
-        this.#load();
-    }
 
-    async #load() {
+    async load() {
         const response = await CoreServer.fetch(`/emote/global`);
         const emoji_manager = document.createElement('revoice-emoji-manager');
         emoji_manager.setAttribute('path', `global`);

@@ -1,5 +1,7 @@
 <?php
 
+const SETTING_PATH = '/../../settings.ini';
+
 function url_with_id($type, &$matches)
 {
     return preg_match('#^.*/' . $type . '/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$#', $_SERVER['REQUEST_URI'], $matches);
@@ -101,28 +103,28 @@ function curl_core(string $url, $data = null, $method = null, $auth_needed = tru
 
 function get_current_user_from_auth()
 {
-    $settings = parse_ini_file(__DIR__ . '/../../settings.ini', true);
+    $settings = parse_ini_file(__DIR__ . SETTING_PATH, true);
     $url = $settings['api']['user_me_url'];
     return curl_core($url);
 }
 
 function get_server_by_id($id)
 {
-    $settings = parse_ini_file(__DIR__ . '/../../settings.ini', true);
+    $settings = parse_ini_file(__DIR__ . SETTING_PATH, true);
     $url = $settings['api']['server_by_id_url'] . "/$id";
     return curl_core($url);
 }
 
 function attachment_update_status(string $id, string $status)
 {
-    $settings = parse_ini_file(__DIR__ . '/../../settings.ini', true);
+    $settings = parse_ini_file(__DIR__ . SETTING_PATH, true);
     $url = $settings['api']['media_url'] . "/$id";
     curl_core($url, $status, "PATCH");
 }
 
 function profile_update_picture(string $id)
 {
-    $settings = parse_ini_file(__DIR__ . '/../../settings.ini', true);
+    $settings = parse_ini_file(__DIR__ . SETTING_PATH, true);
     $url = $settings['api']['profile_picture_url'] . "/$id";
     curl_core($url, null, "PATCH");
 }

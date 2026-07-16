@@ -1,6 +1,7 @@
 package fr.revoicechat.moderation.service;
 
 import static fr.revoicechat.moderation.nls.SanctionErrorCode.*;
+import static java.time.Clock.systemDefaultZone;
 import static java.util.Comparator.comparing;
 
 import java.time.LocalDateTime;
@@ -68,7 +69,7 @@ public class SanctionRevoker {
       throw new ResourceNotFoundException(Sanction.class, id);
     }
     sanction.setRevokedBy(userHolder.getId());
-    sanction.setRevokedAt(LocalDateTime.now());
+    sanction.setRevokedAt(LocalDateTime.now(systemDefaultZone()));
     entityManager.persist(sanction);
     updateStatus(sanction, RequestStatus.ACCEPTED);
     Notification.of(new SanctionNotification(sanction)).sendTo(new OnlineNotificationRegistrable(sanction.getTargetedUser()));

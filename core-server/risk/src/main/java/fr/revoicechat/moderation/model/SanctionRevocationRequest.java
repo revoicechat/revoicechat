@@ -1,5 +1,7 @@
 package fr.revoicechat.moderation.model;
 
+import static java.time.Clock.systemDefaultZone;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -69,6 +71,6 @@ public class SanctionRevocationRequest {
 
   public boolean canRequestAgain() {
     return getStatus() == RequestStatus.REJECTED
-        && LocalDateTime.now().minusMonths(3).isAfter(getRequestAt());
+        && LocalDateTime.now(systemDefaultZone()).minusMonths(3).isAfter(getRequestAt());
   }
 }

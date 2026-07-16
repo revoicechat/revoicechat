@@ -2,11 +2,9 @@ package fr.revoicechat.core.representation;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import fr.revoicechat.core.model.MessageReactions.MessageReaction;
-import fr.revoicechat.core.representation.message.MessageMention;
 import fr.revoicechat.core.representation.message.TextPattern;
 import fr.revoicechat.notification.data.UserNotificationRepresentation;
 

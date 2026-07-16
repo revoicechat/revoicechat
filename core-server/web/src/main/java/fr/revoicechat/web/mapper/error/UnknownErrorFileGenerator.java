@@ -1,5 +1,7 @@
 package fr.revoicechat.web.mapper.error;
 
+import static java.time.Clock.systemDefaultZone;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
@@ -22,7 +24,7 @@ public class UnknownErrorFileGenerator {
   String errorLogDirectoryPath;
 
   public String generate(Throwable exception) {
-    String timestamp = LocalDateTime.now().format(FORMATTER);
+    String timestamp = LocalDateTime.now(systemDefaultZone()).format(FORMATTER);
     String uuid = UUID.randomUUID().toString();
     String fileName = timestamp + "-ERR-" + uuid + ".log";
     Path logDir = Paths.get(errorLogDirectoryPath);

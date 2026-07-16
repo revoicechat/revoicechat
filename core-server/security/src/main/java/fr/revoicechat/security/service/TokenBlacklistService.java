@@ -1,5 +1,7 @@
 package fr.revoicechat.security.service;
 
+import static java.time.Clock.systemDefaultZone;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -38,7 +40,7 @@ public class TokenBlacklistService {
   @Transactional
   public void cleanupExpiredTokens() {
     entityManager.createQuery("DELETE FROM BlacklistedToken b WHERE b.expiresAt < :now")
-                 .setParameter("now", LocalDateTime.now())
+                 .setParameter("now", LocalDateTime.now(systemDefaultZone()))
                  .executeUpdate();
   }
 }

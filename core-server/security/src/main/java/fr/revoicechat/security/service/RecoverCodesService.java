@@ -1,6 +1,7 @@
 package fr.revoicechat.security.service;
 
 import static fr.revoicechat.security.model.RecoverCodeStatus.*;
+import static java.time.Clock.systemDefaultZone;
 import static java.util.stream.Collectors.toSet;
 
 import java.security.NoSuchAlgorithmException;
@@ -94,7 +95,7 @@ public class RecoverCodesService {
     entity.setUserId(userId);
     entity.setCode(hashed);
     entity.setStatus(ACTIVE);
-    entity.setCreatedAt(LocalDateTime.now());
+    entity.setCreatedAt(LocalDateTime.now(systemDefaultZone()));
     entityManager.persist(entity);
 
     existingCodes.add(plaintext);

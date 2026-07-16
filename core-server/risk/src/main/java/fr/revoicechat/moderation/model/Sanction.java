@@ -1,5 +1,7 @@
 package fr.revoicechat.moderation.model;
 
+import static java.time.Clock.systemDefaultZone;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 import jakarta.persistence.Column;
@@ -120,12 +122,12 @@ public class Sanction {
   }
 
   private boolean isExpired() {
-    return getExpiresAt() != null && getExpiresAt().isBefore(LocalDateTime.now());
+    return getExpiresAt() != null && getExpiresAt().isBefore(LocalDateTime.now(systemDefaultZone()));
   }
 
   private boolean hasBeenRevoked() {
     return getRevokedBy() != null
            && getRevokedAt() != null
-           && getRevokedAt().isBefore(LocalDateTime.now());
+           && getRevokedAt().isBefore(LocalDateTime.now(systemDefaultZone()));
   }
 }

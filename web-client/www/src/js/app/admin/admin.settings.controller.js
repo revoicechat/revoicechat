@@ -25,6 +25,7 @@ export default class AdminSettingsController {
         this.invitation.load();
         this.members.load();
         this.moderation.load();
+        await this.emote.load();
         this.select('overview');
     }
 

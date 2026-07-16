@@ -1,5 +1,7 @@
 package fr.revoicechat.moderation.service;
 
+import static java.time.Clock.systemDefaultZone;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -31,7 +33,7 @@ public class SanctionCreator {
     sanction.setTargetedUser(newSanction.targetedUser());
     sanction.setServer(serverId);
     sanction.setType(newSanction.type());
-    sanction.setStartAt(LocalDateTime.now());
+    sanction.setStartAt(LocalDateTime.now(systemDefaultZone()));
     sanction.setExpiresAt(newSanction.expiresAt());
     sanction.setIssuedBy(userHolder.getId());
     sanction.setReason(newSanction.reason());
