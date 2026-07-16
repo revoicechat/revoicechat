@@ -63,11 +63,12 @@ export default class VoiceController {
         this.#activeRoom = roomId;
 
         try {
-            this.#voiceCall = new VoiceCall(this.#user);
-            await this.#voiceCall.open(CoreServer.voiceUrl(), roomId, ReVoiceChat.getToken(), this, (reason) => this.#voiceError(reason));
+            this.#voiceCall = new VoiceCall(CoreServer.voiceUrl(), roomId, this.#user, ReVoiceChat.getToken(), this);
 
             // Update users in room
-            await this.#updateJoinedUsers();
+            const onlySelf = await this.#updateJoinedUsers();
+
+            await this.#voiceCall.open(onlySelf, (reason) => this.#voiceError(reason));
 
             // Update self
             this.updateSelf(this.#user.settings.voice);
@@ -534,6 +535,7 @@ export default class VoiceController {
         }
 
         const connectedUsers = result.connectedUser;
+        let onlySelf = true;
 
         for (const connectedUser of connectedUsers) {
             const userId = connectedUser.id;
@@ -542,8 +544,11 @@ export default class VoiceController {
             if (this.#user.id !== userId) {
                 this.#updateUserControls(userId);
                 this.updateUserExtension(userId);
+                onlySelf = false;
             }
         }
+
+        return onlySelf;
     }
 
     isCallActive() {

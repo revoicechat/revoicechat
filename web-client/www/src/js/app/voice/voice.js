@@ -60,22 +60,7 @@ export default class VoiceCall {
     #controller;
     #voiceCrypto = null /** @type {VoiceCrypto} */;
 
-    constructor(user) {
-        if (!user) {
-            throw new Error('user is null or undefined');
-        }
-
-        this.#user = user;
-
-        if (user.settings) {
-            this.#settings = user.settings.voice;
-        }
-        else {
-            this.#settings = VoiceCall.DEFAULT_SETTINGS;
-        }
-    }
-
-    async open(voiceUrl, roomId, token, controller, anormalClosureHandler) {
+    constructor(voiceUrl, roomId, user, token, controller) {
         if (!voiceUrl) {
             throw new Error('VoiceUrl is null or undefined');
         }
@@ -88,26 +73,25 @@ export default class VoiceCall {
             throw new Error('token is null or undefined');
         }
 
+        if (!user) {
+            throw new Error('user is null or undefined');
+        }
+
         this.#state = VoiceCall.CONNECTING;
+
+        this.#user = user;
+        if (user.settings) {
+            this.#settings = user.settings.voice;
+        }
+        else {
+            this.#settings = VoiceCall.DEFAULT_SETTINGS;
+        }
+
         this.#controller = controller;
 
         // Create WebSocket
         this.#socket = new WebSocket(`${voiceUrl}/${roomId}`, ["Bearer." + token]);
         this.#socket.binaryType = "arraybuffer";
-
-        // Create crypto
-        this.#voiceCrypto = new VoiceCrypto();
-        await this.#voiceCrypto.init();
-
-        // Setup encoder and transmitter
-        await this.#encodeAudio();
-
-        // Setup receiver and decoder
-        this.#socket.onmessage = async (message) => { await this.#dispatchAudio(new DecodedVoiceTransport(await this.#voiceCrypto.decrypt(message.data))) }
-
-        // Setup main output gain
-        this.#outputGain = this.#audioContext.createGain();
-        this.#outputGain.gain.setValueAtTime(this.#user.settings.getVoiceVolume(), this.#audioContext.currentTime);
 
         // Socket states
         this.#socket.onclose = async (e) => {
@@ -119,6 +103,24 @@ export default class VoiceCall {
         };
         this.#socket.onerror = async (e) => { await this.close(); console.error('VoiceCall : WebSocket error:', e) };
 
+        this.#voiceCrypto = new VoiceCrypto(this.#socket, this.#dispatchAudio);
+    }
+
+    async open(onlySelf, anormalClosureHandler) {
+        this.#socket.onopen = async () => {
+            // Init crypto
+            await this.#voiceCrypto.init(onlySelf);
+        }
+
+        // Setup encoder and transmitter
+        await this.#encodeAudio();
+
+        // Setup receiver and decoder
+        this.#socket.onmessage = async (message) => { await this.#voiceCrypto.process(message.data) }
+
+        // Setup main output gain
+        this.#outputGain = this.#audioContext.createGain();
+        this.#outputGain.gain.setValueAtTime(this.#user.settings.getVoiceVolume(), this.#audioContext.currentTime);
         this.#state = VoiceCall.OPEN;
     }
 
@@ -275,7 +277,7 @@ export default class VoiceCall {
         // Setup Encoder
         this.#encoder = new AudioEncoder({
             output: (chunk) => {
-                if (this.#socket.readyState === WebSocket.OPEN) { 
+                if (this.#socket.readyState === WebSocket.OPEN) {
                     this.#voiceCrypto.encrypt(
                         new EncodedVoiceTransport(Math.round(this.#audioTimestamp / 1000), this.#user.id, this.#gateState, EncodedVoiceTransport.user, chunk, false).data
                     ).then((res) => this.#socket.send(res));
@@ -428,7 +430,8 @@ export default class VoiceCall {
         }
     }
 
-    async #dispatchAudio(decodedVoiceTransport) {
+    async #dispatchAudio(encodedVoiceTransport) {
+        const decodedVoiceTransport = new DecodedVoiceTransport(encodedVoiceTransport);
         const userId = decodedVoiceTransport.user.id;
         const userType = decodedVoiceTransport.user.type;
 
