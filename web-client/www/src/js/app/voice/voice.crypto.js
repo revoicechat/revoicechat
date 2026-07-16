@@ -20,11 +20,8 @@ export class VoiceCrypto {
     #tempKeyPair;
     #dispatchAudioCallback;
 
-    constructor(socket, dispatchAudio) {
+    constructor(socket) {
         this.#socket = socket;
-        this.#dispatchAudioCallback = dispatchAudio;
-
-        console.log(this.#socket);
     }
 
     async init(onlySelf) {
@@ -36,7 +33,6 @@ export class VoiceCrypto {
     }
 
     async #generateKey() {
-        console.log("Generating voiceKey");
         this.#voiceKey = await crypto.subtle.generateKey(
             {
                 name: "AES-GCM",
@@ -48,7 +44,6 @@ export class VoiceCrypto {
     }
 
     async #requestKey() {
-        console.log("Requesting voiceKey");
         this.#tempKeyPair = await crypto.subtle.generateKey(
             {
                 name: "RSA-OAEP",
@@ -80,8 +75,6 @@ export class VoiceCrypto {
     }
 
     async #importVoiceKey(voiceKeyBuffer) {
-        console.log("Importing voiceKey");
-
         const decryptedVoiceKey = await crypto.subtle.decrypt(
             {
                 name: "RSA-OAEP",
@@ -102,8 +95,6 @@ export class VoiceCrypto {
     }
 
     async #exportVoiceKey(publicKeyBuffer) {
-        console.log("Exporting voiceKey");
-
         const publicKey = await crypto.subtle.importKey(
             "spki",
             publicKeyBuffer,
@@ -114,8 +105,6 @@ export class VoiceCrypto {
             false,
             ["encrypt"]
         );
-
-        console.log("Encrypting voiceKey")
 
         const exportedVoiceKey = await crypto.subtle.exportKey(
             "raw",
@@ -146,8 +135,6 @@ export class VoiceCrypto {
     }
 
     async encrypt(data) {
-        console.log("Encrypting voice");
-
         if (!this.#voiceKey) {
             console.warn("No voiceKey set");
             return;
@@ -174,8 +161,6 @@ export class VoiceCrypto {
     }
 
     async #decrypt(data) {
-        console.log("Decrypting voice");
-
         if (!this.#voiceKey) {
             console.warn("No voiceKey set");
             return;
@@ -188,35 +173,17 @@ export class VoiceCrypto {
 
     async process(data) {
         const type = new Uint8Array(data)[0];
-        const payload = new Uint8Array(data, 1, data.byteLength - 1);
+        const payload = data.slice(1);
 
         switch (type) {
             case 0:
                 await this.#exportVoiceKey(payload);
-                break;
+                return null;
             case 1:
                 await this.#importVoiceKey(payload);
-                break;
+                return null;
             case 2:
-                await this.#dispatchAudioCallback(await this.#decrypt(payload));
-                break;
+                return await this.#decrypt(payload);
         }
-    }
-
-    async test() {
-        // TEST WITH FIXED KEY
-        let importKey =
-        {
-            "alg": "A256GCM",
-            "ext": true,
-            "k": "JLBln1POmu05MCLuX0r-BnymysbNdS7x06US8wAq3fg",
-            "key_ops": [
-                "encrypt",
-                "decrypt"
-            ],
-            "kty": "oct"
-        }
-
-        this.#voiceKey = await crypto.subtle.importKey('jwk', importKey, "AES-GCM", true, ["encrypt", "decrypt"]);
     }
 }

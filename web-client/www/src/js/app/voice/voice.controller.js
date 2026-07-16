@@ -63,12 +63,14 @@ export default class VoiceController {
         this.#activeRoom = roomId;
 
         try {
-            this.#voiceCall = new VoiceCall(CoreServer.voiceUrl(), roomId, this.#user, ReVoiceChat.getToken(), this);
+            // Create VoiceCall
+            this.#voiceCall = new VoiceCall(this.#user, this);
 
-            // Update users in room
+            // Update users
             const onlySelf = await this.#updateJoinedUsers();
 
-            await this.#voiceCall.open(onlySelf, (reason) => this.#voiceError(reason));
+            // Open VoiceCall
+            await this.#voiceCall.open(CoreServer.voiceUrl(), ReVoiceChat.getToken(), roomId, onlySelf, (reason) => this.#voiceError(reason));
 
             // Update self
             this.updateSelf(this.#user.settings.voice);
