@@ -26,8 +26,9 @@ public class ServerRolesRepositoryImpl implements ServerRolesRepository {
   @Override
   public List<ServerRoles> getServerRoles(final UUID userId) {
     return entityManager.createQuery("""
-                            select u.serverRoles
+                            select r
                             from UserRoleMembership u
+                            join u.serverRoles r
                             where u.id = :userId""", ServerRoles.class)
                         .setParameter(USER_ID, userId)
                         .getResultList();
@@ -95,8 +96,9 @@ public class ServerRolesRepositoryImpl implements ServerRolesRepository {
   public void deleteMembership(final ServerRoles roles) {
     entityManager.createNativeQuery("""
                      delete from RVC_USER_SERVER_ROLES
-                     where SERVER_ROLE_ID = :serverId""", UUID.class)
+                     where SERVER_ROLE_ID = :serverId""")
+                 .asStatement()
                  .setParameter(SERVER_ID, roles.getId())
-                 .executeUpdate();
+                 .execute();
   }
 }

@@ -8,11 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import jakarta.ws.rs.NotAllowedException;
-import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response.Status;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -24,6 +19,10 @@ import fr.revoicechat.web.stub.HttpHeadersMock;
 import io.quarkus.security.ForbiddenException;
 import io.quarkus.security.UnauthorizedException;
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.ws.rs.NotAllowedException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response.Status;
 
 @QuarkusTest
 class TestGlobalExceptionMapper {

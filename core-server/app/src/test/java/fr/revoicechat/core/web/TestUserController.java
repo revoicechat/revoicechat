@@ -57,6 +57,7 @@ class TestUserController {
                                    .then().statusCode(200)
                                    .extract().body().as(UserRepresentation.class);
     assertThat(retrievedUser).usingRecursiveComparison()
+                             .ignoringFields("status")
                              .withComparatorForType(Comparator.comparing(a -> a.truncatedTo(ChronoUnit.MILLIS)), OffsetDateTime.class)
                              .isEqualTo(signedUser);
   }

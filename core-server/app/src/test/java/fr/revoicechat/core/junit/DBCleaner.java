@@ -14,12 +14,12 @@ class DBCleaner {
   void clean() {
     entityManager.flush();
     entityManager.clear();
-    entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY FALSE").executeUpdate();
+    entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY FALSE").asStatement().execute();
     entityManager.getMetamodel().getEntities().forEach(entityType -> {
       String entityName = entityType.getName();
-      entityManager.createQuery("DELETE FROM " + entityName).executeUpdate();
+      entityManager.createQuery("DELETE FROM " + entityName).asStatement().execute();
     });
-    entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY TRUE").executeUpdate();
+    entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY TRUE").asStatement().execute();
     entityManager.flush();
   }
 }

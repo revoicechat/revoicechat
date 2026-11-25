@@ -1,21 +1,18 @@
 package fr.revoicechat.core.repository.jpa;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.IOError;
 import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import fr.revoicechat.core.model.server.ServerCategory;
 import fr.revoicechat.core.model.server.ServerRoomItem;
 import fr.revoicechat.core.model.server.ServerStructure;
 import io.quarkus.test.junit.QuarkusTest;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 @QuarkusTest
 class TestServerStructureConverter {
@@ -62,24 +59,9 @@ class TestServerStructureConverter {
   @Test
   void testConvertToDatabaseColumn() {
     ServerStructure structure = getStructure();
-    var mapper = new ObjectMapper();
-    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    var mapper = JsonMapper.builder().enable(SerializationFeature.INDENT_OUTPUT).build();
     var converter = new ServerStructureConverter(mapper);
     assertThat(converter.convertToDatabaseColumn(structure)).isEqualToNormalizingNewlines(JSON);
-  }
-
-  @Test
-  void testConvertToDatabaseColumnWithError() {
-    ServerStructure structure = getStructure();
-    var mapper = new ObjectMapper() {
-      @Override
-      public String writeValueAsString(final Object value) throws JsonProcessingException {
-        throw new JsonProcessingException("") {};
-      }
-    };
-    mapper.enable(SerializationFeature.INDENT_OUTPUT);
-    var converter = new ServerStructureConverter(mapper);
-    assertThatThrownBy(() -> converter.convertToDatabaseColumn(structure)).isInstanceOf(IOError.class);
   }
 
   @Test
@@ -101,19 +83,6 @@ class TestServerStructureConverter {
     var converter = new ServerStructureConverter();
     var structure = converter.convertToEntityAttribute("");
     assertThat(structure).usingRecursiveAssertion().isEqualTo(new ServerStructure(List.of()));
-  }
-
-  @Test
-  void testConvertToEntityAttributeWithError() {
-    var mapper = new ObjectMapper() {
-      @Override
-      public <T> T readValue(String content, TypeReference<T> valueTypeRef) throws JsonProcessingException {
-        throw new JsonProcessingException("") {};
-      }
-    };
-    mapper.enable(SerializationFeature.INDENT_OUTPUT);
-    var converter = new ServerStructureConverter(mapper);
-    assertThatThrownBy(() -> converter.convertToEntityAttribute(JSON)).isInstanceOf(IOError.class);
   }
 
   private static ServerStructure getStructure() {

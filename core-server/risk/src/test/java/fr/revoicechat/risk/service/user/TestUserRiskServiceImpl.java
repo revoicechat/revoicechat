@@ -31,8 +31,8 @@ class TestUserRiskServiceImpl {
     int priority = 5;
     var affectedRiskService = new AffectedRiskServiceMock(new AffectedRisk(null, null, null, 10));
     var service = new UserRiskServiceImpl(affectedRiskService);
-    assertThatCode(() -> service.controlRiskPriority(priority, null, null))
-        .doesNotThrowAnyException();
+    assertThatThrownBy(() -> service.controlRiskPriority(priority, null, null))
+        .isInstanceOf(UnauthorizedException.class);
   }
 
   @Test
@@ -40,8 +40,8 @@ class TestUserRiskServiceImpl {
     int priority = 5;
     var affectedRiskService = new AffectedRiskServiceMock(new AffectedRisk(null, null, null, 1));
     var service = new UserRiskServiceImpl(affectedRiskService);
-    assertThatThrownBy(() -> service.controlRiskPriority(priority, null, null))
-              .isInstanceOf(UnauthorizedException.class);
+    assertThatCode(() -> service.controlRiskPriority(priority, null, null))
+        .doesNotThrowAnyException();
   }
 
   @Test

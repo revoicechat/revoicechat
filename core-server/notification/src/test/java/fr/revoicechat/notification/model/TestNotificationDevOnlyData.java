@@ -3,16 +3,15 @@ package fr.revoicechat.notification.model;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.revoicechat.notification.stub.NotificationPayloadMock;
 import io.quarkus.test.junit.QuarkusTest;
+import tools.jackson.databind.ObjectMapper;
 
 @QuarkusTest
 class TestNotificationDevOnlyData {
 
   @Test
-  void test() throws JsonProcessingException {
+  void test() {
     var data = new NotificationData(new NotificationPayloadMock("test"));
     var result = new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(data);
     Assertions.assertThat(result).isEqualToNormalizingNewlines("""
@@ -25,7 +24,7 @@ class TestNotificationDevOnlyData {
   }
 
   @Test
-  void ping() throws JsonProcessingException {
+  void ping() {
     var data = NotificationData.ping();
     var result = new ObjectMapper().writer().withDefaultPrettyPrinter().writeValueAsString(data);
     Assertions.assertThat(result).isEqualToNormalizingNewlines("""

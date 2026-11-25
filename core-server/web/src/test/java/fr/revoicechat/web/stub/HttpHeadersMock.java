@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Predicate;
+
 import jakarta.ws.rs.core.Cookie;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
@@ -58,5 +60,10 @@ public abstract class HttpHeadersMock implements HttpHeaders {
   @Override
   public int getLength() {
     return 0;
+  }
+
+  @Override
+  public boolean containsHeaderString(final String name, final String valueSeparatorRegex, final Predicate<String> valuePredicate) {
+    return false;
   }
 }

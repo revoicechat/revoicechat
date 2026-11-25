@@ -1,10 +1,10 @@
 package fr.revoicechat.risk.type;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fr.revoicechat.i18n.RiskLocalizedMessage;
 import fr.revoicechat.risk.service.risk.RiskTypeDeserializer;
 import fr.revoicechat.risk.service.risk.RiskTypeSerializer;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 /**
  * Define the risk type.
