@@ -1,21 +1,21 @@
 package fr.revoicechat.notification.model;
 
-import java.io.IOException;
 import java.util.Objects;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-class NotificationDataSerializer extends JsonSerializer<NotificationData> {
+class NotificationDataSerializer extends ValueSerializer<NotificationData> {
 
   @Override
-  public void serialize(NotificationData value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+  public void serialize(final NotificationData value, final JsonGenerator gen, final SerializationContext ctxt) throws JacksonException {
     gen.writeStartObject();
     NotificationPayload payload = value.data();
     NotificationType annotation = Objects.requireNonNull(payload.getClass().getDeclaredAnnotation(NotificationType.class));
-    gen.writeStringField("type", annotation.name());
-    gen.writeObjectField("data", payload);
+    gen.writeStringProperty("type", annotation.name());
+    gen.writePOJOProperty("data", payload);
     gen.writeEndObject();
   }
 }

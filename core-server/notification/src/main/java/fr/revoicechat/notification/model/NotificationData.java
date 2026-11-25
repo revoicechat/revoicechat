@@ -2,7 +2,7 @@ package fr.revoicechat.notification.model;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize(using = NotificationDataSerializer.class)
 public record NotificationData(NotificationPayload data) {

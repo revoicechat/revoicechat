@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.assertj.core.api.Assertions;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -122,6 +123,7 @@ class TestTokenBlacklistFilter {
     @Override public void setMethod(final String method) {/* */}
     @Override public MultivaluedMap<String, String> getHeaders() {return null;}
     @Override public String getHeaderString(final String name) {return "";}
+    @Override public boolean containsHeaderString(final String name, final String valueSeparatorRegex, final Predicate<String> valuePredicate) {return false;}
     @Override public Date getDate() {return null;}
     @Override public Locale getLanguage() {return null;}
     @Override public int getLength() {return 0;}

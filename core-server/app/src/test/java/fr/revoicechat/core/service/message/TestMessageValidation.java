@@ -1,6 +1,7 @@
 package fr.revoicechat.core.service.message;
 
 import static fr.revoicechat.core.nls.MessageErrorCode.*;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,19 +18,20 @@ import fr.revoicechat.core.model.Message;
 import fr.revoicechat.core.model.room.ServerRoom;
 import fr.revoicechat.core.technicaldata.media.NewMediaData;
 import fr.revoicechat.core.technicaldata.message.NewMessage;
-import fr.revoicechat.core.stub.EntityManagerMock;
 import fr.revoicechat.web.error.BadRequestException;
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.persistence.EntityManager;
 
 @QuarkusTest
 class TestMessageValidation {
 
-  private final InstanceFinderMock entityManager = new InstanceFinderMock();
-  private final MessageValidation validation = new MessageValidation(10, entityManager);
+  private EntityManager entityManager;
+  private MessageValidation validation;
 
   @BeforeEach
   void setUp() {
-    entityManager.message = null;
+    entityManager = mock(EntityManager.class);
+    validation = new MessageValidation(10, entityManager);
   }
 
   public static Stream<Arguments> messageTest() {
@@ -74,7 +76,7 @@ class TestMessageValidation {
   @Test
   void testAnswerDoesNotExist() {
     NewMessage creation = new NewMessage("test", UUID.randomUUID(), List.of());
-    entityManager.message = null;
+    doReturn(null).when(entityManager).find(any(), any());
     var ex = Assertions.catchException(() -> validation.isValid(null, creation));
     Assertions.assertThat(ex).isInstanceOf(BadRequestException.class).hasMessage(MESSAGE_ANSWERED_DOES_NOT_EXIST.translate());
   }
@@ -82,9 +84,10 @@ class TestMessageValidation {
   @Test
   void testAnswerNotInSameRoom() {
     NewMessage creation = new NewMessage("test", UUID.randomUUID(), List.of());
-    entityManager.message = new Message();
-    entityManager.message.setRoom(new ServerRoom());
-    entityManager.message.getRoom().setId(UUID.randomUUID());
+    var message = new Message();
+    message.setRoom(new ServerRoom());
+    message.getRoom().setId(UUID.randomUUID());
+    doReturn(message).when(entityManager).find(any(), any());
     var ex = Assertions.catchException(() -> validation.isValid(UUID.randomUUID(), creation));
     Assertions.assertThat(ex).isInstanceOf(BadRequestException.class).hasMessage(ANSWER_MUST_BE_IN_THE_SAME_ROOM.translate());
   }
@@ -93,20 +96,11 @@ class TestMessageValidation {
   void testAnswerNoError() {
     var roomId = UUID.randomUUID();
     NewMessage creation = new NewMessage("test", UUID.randomUUID(), List.of());
-    entityManager.message = new Message();
-    entityManager.message.setRoom(new ServerRoom());
-    entityManager.message.getRoom().setId(roomId);
+    var message = new Message();
+    message.setRoom(new ServerRoom());
+    message.getRoom().setId(roomId);
+    doReturn(message).when(entityManager).find(any(), any());
     var ex = Assertions.catchException(() -> validation.isValid(roomId, creation));
     Assertions.assertThat(ex).isNull();
-  }
-
-  private static class InstanceFinderMock extends EntityManagerMock {
-    Message message;
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T find(final Class<T> aClass, final Object o) {
-      return (T) message;
-    }
   }
 }

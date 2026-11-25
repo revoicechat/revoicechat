@@ -3,9 +3,9 @@ package fr.revoicechat.risk.representation;
 import java.util.List;
 import java.util.Set;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import fr.revoicechat.risk.service.risk.TranslatedRiskTypeSerializer;
 import fr.revoicechat.risk.type.RiskType;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 public record RiskCategoryRepresentation(
     String type,

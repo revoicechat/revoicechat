@@ -1,20 +1,18 @@
 package fr.revoicechat.risk.service.risk;
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import fr.revoicechat.risk.representation.RiskCategoryRepresentation.TranslatedRisk;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-public class TranslatedRiskTypeSerializer extends JsonSerializer<TranslatedRisk> {
+public class TranslatedRiskTypeSerializer extends ValueSerializer<TranslatedRisk> {
 
   @Override
-  public void serialize(final TranslatedRisk type, final JsonGenerator gen, final SerializerProvider serializerProvider) throws IOException {
+  public void serialize(final TranslatedRisk type, final JsonGenerator gen, final SerializationContext ctxt) throws JacksonException {
     gen.writeStartObject();
-    gen.writeStringField("type", type.type().name());
-    gen.writeObjectField("title", type.type().translate());
+    gen.writeStringProperty("type", type.type().name());
+    gen.writePOJOProperty("title", type.type().translate());
     gen.writeEndObject();
-
   }
 }

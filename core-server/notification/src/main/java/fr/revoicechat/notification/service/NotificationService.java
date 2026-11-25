@@ -1,5 +1,6 @@
 package fr.revoicechat.notification.service;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -121,10 +122,16 @@ public class NotificationService implements NotificationRegistry, NotificationSe
         sink.send(new SseImpl().newEventBuilder().data(data).build());
         return true;
       } catch (Exception _) {
-        sink.close();
+        close();
         return false;
       }
     }
-    void close() {sink.close();}
+    void close() {
+      try {
+        sink.close();
+      } catch (IOException e) {
+        LOG.error("error trying to close a sse connection", e);
+      }
+    }
   }
 }
